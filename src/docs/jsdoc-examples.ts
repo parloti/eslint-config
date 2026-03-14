@@ -6,6 +6,8 @@ import type {
   plugin as typeScriptPluginType,
 } from "typescript-eslint";
 
+import { createWrappedJsdocProcessorPlugin } from "./jsdoc-processor.js";
+
 /** Options for building TypeScript example configs. */
 interface BuildTypeScriptExampleConfigOptions {
   /** Rule overrides that disable typed-only checks for snippets. */
@@ -175,10 +177,11 @@ function buildTypeScriptProcessorConfig(
     files: typeScriptSourceFiles,
     name: "jsdoc/typescript-examples-and-default-expressions/processor",
     plugins: {
-      examples: getJsdocProcessorPlugin({
+      examples: createWrappedJsdocProcessorPlugin({
         checkDefaults: true,
         checkParams: true,
         checkProperties: true,
+        getJsdocProcessorPlugin,
         parser,
         sourceType: "module",
       }),
