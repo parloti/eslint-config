@@ -21,6 +21,7 @@ async function buildCustomErrorRules(): Promise<Linter.Config[]> {
     "no-deprecated",
     "no-named-export",
     "no-namespace",
+    "no-unused-modules",
     "order",
     "prefer-default-export",
   ]);

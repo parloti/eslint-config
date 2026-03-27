@@ -1,5 +1,6 @@
-import type { Rule } from "eslint";
-import type EslintPluginJestModule from "eslint-plugin-jest";
+import type * as vitestPluginModuleType from "@vitest/eslint-plugin";
+import type { Linter, Rule } from "eslint";
+import type * as jestPluginModuleType from "eslint-plugin-jest";
 import type config from "eslint-plugin-playwright";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -7,6 +8,24 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { jasmine } from "./jasmine";
 import { jest } from "./jest";
 import { vitest as vitestConfig } from "./vitest";
+
+/** Module namespace type for mocked Jest exports. */
+type JestPluginModule = typeof jestPluginModuleType;
+
+/** Module namespace type for mocked Vitest exports. */
+type VitestPluginModule = typeof vitestPluginModuleType;
+
+/** Mocked Jest config namespace used by the module mock. */
+const mockedJestConfigs = {
+  "flat/all": {},
+} as JestPluginModule["configs"];
+
+/** Mocked Vitest default export used by the module mock. */
+const mockedVitestPlugin = {
+  configs: {
+    all: {},
+  },
+} as unknown as VitestPluginModule["default"];
 
 /** Type definition for rule data. */
 interface PlaywrightModule {
@@ -34,6 +53,21 @@ const createPlaywrightMock = (): typeof config => ({
 /** Mutable playwright mock used by module import mocks. */
 let playwrightMock: typeof config | undefined;
 
+/**
+ * Load the playwright config under test after resetting the module graph.
+ * @returns The produced ESLint config array.
+ * @example
+ * ```typescript
+ * await loadPlaywrightConfigs();
+ * ```
+ */
+async function loadPlaywrightConfigs(): Promise<Linter.Config[]> {
+  vi.resetModules();
+  const { playwright } = await import("./playwright");
+
+  return playwright();
+}
+
 vi.mock(import("eslint-plugin-playwright"), (): PlaywrightModule => {
   if (playwrightMock === void 0) {
     throw new Error("Playwright mock not defined");
@@ -41,10 +75,13 @@ vi.mock(import("eslint-plugin-playwright"), (): PlaywrightModule => {
   return { default: playwrightMock };
 });
 
-vi.mock(
-  import("eslint-plugin-jest"),
-  () => ({ configs: { "flat/all": {} } }) as typeof EslintPluginJestModule,
-);
+vi.mock(import("eslint-plugin-jest"), () => ({
+  configs: mockedJestConfigs,
+}));
+
+vi.mock(import("@vitest/eslint-plugin"), () => ({
+  default: mockedVitestPlugin,
+}));
 
 /** Placeholder rule module used in test fixtures. */
 const dumbRuleModule = {
@@ -59,8 +96,13 @@ describe("testing configs", () => {
   });
 
   it("returns jasmine config with custom entry", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await jasmine();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
     expect(configs.some((config) => config.name === "jasmine/custom")).toBe(
       true,
@@ -68,8 +110,13 @@ describe("testing configs", () => {
   });
 
   it("returns jest config with custom entries", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await jest();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
     expect(configs.some((config) => config.name === "jest/custom")).toBe(true);
     expect(
@@ -78,13 +125,17 @@ describe("testing configs", () => {
   });
 
   it("returns vitest config with custom entry", async () => {
-    const configs = await vitestConfig();
-    const customConfig = configs.find(
-      (config) => config.name === "vitest/custom",
-    );
+    // Arrange
+    // (no setup needed)
 
+    // Act
+    const configs = await vitestConfig();
+
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
-    expect(customConfig?.rules).toMatchObject({
+    expect(
+      configs.find((config) => config.name === "vitest/custom")?.rules,
+    ).toMatchObject({
       "vitest/consistent-test-filename": [
         "error",
         { pattern: String.raw`.*\.spec\.[tj]sx?$` },
@@ -93,6 +144,7 @@ describe("testing configs", () => {
   });
 
   it("returns playwright config with custom entry", async () => {
+    // Arrange
     playwrightMock = {
       configs: {
         "flat/recommended": {
@@ -109,11 +161,10 @@ describe("testing configs", () => {
       } satisfies Record<string, Rule.RuleModule>,
     };
 
-    vi.resetModules();
-    const { playwright } = await import("./playwright");
+    // Act
+    const configs = await loadPlaywrightConfigs();
 
-    const configs = await playwright();
-
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
     expect(
       configs.some((config) => config.name === "playwright/custom-error"),
@@ -122,6 +173,7 @@ describe("testing configs", () => {
   });
 
   it("handles missing playwright recommended rules", async () => {
+    // Arrange
     playwrightMock = {
       configs: {
         "flat/recommended": {},
@@ -133,14 +185,15 @@ describe("testing configs", () => {
       },
     };
 
-    vi.resetModules();
-    const { playwright } = await import("./playwright");
-    const configs = await playwright();
+    // Act
+    const configs = await loadPlaywrightConfigs();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
   });
 
   it("ignores rules listed in the custom ignore list", async () => {
+    // Arrange
     playwrightMock = {
       configs: {
         "flat/recommended": { rules: {} },
@@ -153,10 +206,10 @@ describe("testing configs", () => {
       },
     };
 
-    vi.resetModules();
-    const { playwright } = await import("./playwright");
-    const configs = await playwright();
+    // Act
+    const configs = await loadPlaywrightConfigs();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
     expect(Object.keys(configs[0]?.rules ?? {})).toContain("playwright/no-foo");
     expect(Object.keys(configs[0]?.rules ?? {})).not.toContain("playwright/");

@@ -3,23 +3,28 @@ import { describe, expect, it } from "vitest";
 import { moduleTaxonomy } from "./module-taxonomy";
 import { pluginLoaders } from "./plugin-loaders";
 
+/** Documented plugin names derived from the taxonomy source. */
+const documentedPluginNames = moduleTaxonomy
+  .map((entry) => entry.pluginName)
+  .toSorted();
+
 describe("pluginLoaders", () => {
   it("covers every documented module in the taxonomy", () => {
-    expect(Object.keys(pluginLoaders).toSorted()).toStrictEqual(
-      moduleTaxonomy.map((entry) => entry.pluginName).toSorted(),
-    );
+    // Arrange
+    // (no setup needed)
+
+    // Act
+    const actualPluginNames = Object.keys(pluginLoaders).toSorted();
+
+    // Assert
+    expect(actualPluginNames).toStrictEqual(documentedPluginNames);
   });
 
   it("uses the documented load mode for every module", () => {
-    expect(
-      Object.fromEntries(
-        Object.entries(pluginLoaders).map(([pluginName, entry]) => [
-          pluginName,
-          entry.mode,
-        ]),
-      ),
-    ).toStrictEqual({
+    // Arrange
+    const expectedModes = {
       boundaries: "optional",
+      codeperfect: "required",
       comments: "optional",
       eslint: "required",
       "import-x": "optional",
@@ -35,6 +40,17 @@ describe("pluginLoaders", () => {
       typescript: "required",
       unicorn: "optional",
       vitest: "optional",
-    });
+    };
+
+    // Act
+    const actualModes = Object.fromEntries(
+      Object.entries(pluginLoaders).map(([pluginName, entry]) => [
+        pluginName,
+        entry.mode,
+      ]),
+    );
+
+    // Assert
+    expect(actualModes).toStrictEqual(expectedModes);
   });
 });

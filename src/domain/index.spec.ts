@@ -16,8 +16,13 @@ vi.mock(
 
 describe("domain configs", () => {
   it("returns rxjs-x configs with custom entries", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await rxjsX();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
     expect(configs.some((config) => config.name === "rxjs-x/custom")).toBe(
       true,

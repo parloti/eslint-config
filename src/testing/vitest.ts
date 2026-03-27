@@ -44,6 +44,7 @@ export async function vitest(): Promise<Linter.Config[]> {
         "vitest/no-hooks": "off",
         "vitest/prefer-expect-assertions": "off",
         "vitest/require-mock-type-parameters": "off",
+        "vitest/unbound-method": "off",
       },
     },
   );

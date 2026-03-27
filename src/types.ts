@@ -1,7 +1,7 @@
 import type { Linter } from "eslint";
 import type {
+  DependenciesRuleOptions,
   ElementDescriptors,
-  ElementTypesRuleOptions,
 } from "eslint-plugin-boundaries";
 
 /** Type definition for rule data. */
@@ -13,7 +13,7 @@ interface BoundariesConfig {
   elements: ElementDescriptors;
 
   /** Repository-owned dependency direction rules for boundaries analysis. */
-  elementTypes: Linter.RuleEntry<ElementTypesRuleOptions[]>;
+  elementTypes: Linter.RuleEntry<DependenciesRuleOptions[]>;
 
   /** Files included in repository-specific boundaries analysis. */
   files: readonly string[];
@@ -38,7 +38,7 @@ interface ConfigOptions {
 }
 
 /** Type definition for rule data. */
-type CorePluginName = "eslint" | "resolver" | "typescript";
+type CorePluginName = "codeperfect" | "eslint" | "resolver" | "typescript";
 
 /** Type definition for rule data. */
 type DocumentationPluginName = "comments" | "jsdoc";

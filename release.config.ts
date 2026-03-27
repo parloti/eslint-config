@@ -49,6 +49,6 @@ const releaseConfig = {
     "@semantic-release/npm",
     "@semantic-release/github",
   ],
-};
+} as const;
 
 export default releaseConfig;

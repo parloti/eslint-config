@@ -1,9 +1,28 @@
-import type { Rule } from "eslint";
+import type { Linter, Rule } from "eslint";
 import type index from "eslint-plugin-jsdoc";
 
 import { describe, expect, it, vi } from "vitest";
 
 import { comments, jsdoc } from ".";
+
+/** Repo-owned rules keyed by config name. */
+type RulesByConfigName = Record<string, Linter.RulesRecord | undefined>;
+
+/**
+ * Load the docs jsdoc rules keyed by config name.
+ * @returns The repo-owned rules keyed by config name.
+ * @example
+ * ```typescript
+ * await loadJsdocRulesByConfigName();
+ * ```
+ */
+async function loadJsdocRulesByConfigName(): Promise<RulesByConfigName> {
+  const configs = await jsdoc();
+
+  return Object.fromEntries(
+    configs.map((config) => [config.name ?? "", config.rules] as const),
+  ) as RulesByConfigName;
+}
 
 vi.mock(import("eslint-plugin-jsdoc"), () => ({
   default: {
@@ -19,13 +38,18 @@ vi.mock(import("eslint-plugin-jsdoc"), () => ({
         create: (): Rule.RuleListener => ({}),
       },
     },
-  } as typeof index,
+  },
 }));
 
 describe("docs configs", () => {
   it("returns eslint-comments configs with custom entries", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await comments();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
     expect(
       configs.some(
@@ -35,31 +59,35 @@ describe("docs configs", () => {
   });
 
   it("returns jsdoc configs with custom entries", async () => {
+    // Arrange
+    const expectedNames = [
+      "jsdoc/custom",
+      "jsdoc/require-jsdoc-alias",
+      "jsdoc/custom-spec",
+    ];
+
+    // Act
     const configs = await jsdoc();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "jsdoc/custom")).toBe(true);
-    expect(
-      configs.some((config) => config.name === "jsdoc/require-jsdoc-alias"),
-    ).toBe(true);
-    expect(configs.some((config) => config.name === "jsdoc/custom-spec")).toBe(
-      true,
+    expect(configs.map((config) => config.name)).toStrictEqual(
+      expect.arrayContaining(expectedNames),
     );
   });
 
   it("exposes custom jsdoc rules", async () => {
-    const configs = await jsdoc();
-    const customConfig = configs.find(
-      (config) => config.name === "jsdoc/custom",
-    );
-    const requireJsdocConfig = configs.find(
-      (config) => config.name === "jsdoc/require-jsdoc-alias",
-    );
+    // Arrange
+    // (no setup needed)
 
-    expect(customConfig?.rules).toMatchObject({
+    // Act
+    const rulesByConfigName = await loadJsdocRulesByConfigName();
+
+    // Assert
+    expect(rulesByConfigName["jsdoc/custom"]).toMatchObject({
       "jsdoc/text-escaping": "off",
     });
-    expect(requireJsdocConfig?.rules).toMatchObject({
+    expect(rulesByConfigName["jsdoc/require-jsdoc-alias"]).toMatchObject({
       "jsdoc/require-jsdoc": ["error", expect.any(Object)],
     });
   });

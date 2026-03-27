@@ -2,10 +2,47 @@ import type { Linter } from "eslint";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import type * as configsModuleType from "./configs";
+import type { ConfigOptions } from "./types";
+
 import {
   fullCompositionNames,
   reducedCompositionNames,
 } from "./config-composition";
+
+/** Minimal config-composition options used in these tests. */
+type CompositionOptions = Pick<ConfigOptions, "disabledPlugins" | "rules">;
+
+/** Module namespace type for mocked config loader exports. */
+type ConfigsModule = typeof configsModuleType;
+
+/** Mutable configs module used by import mocks. */
+let configsModuleMock: Partial<ConfigsModule> | undefined;
+
+vi.mock(import("./configs"), () => {
+  if (configsModuleMock === void 0) {
+    throw new Error("Configs module mock not defined");
+  }
+
+  return configsModuleMock;
+});
+
+/**
+ * Load and execute the composed config builder under test.
+ * @param options Config options passed to the composed builder.
+ * @returns The composed ESLint config array.
+ * @example
+ * ```typescript
+ * await loadComposedConfig({});
+ * ```
+ */
+async function loadComposedConfig(
+  options: CompositionOptions,
+): Promise<Linter.Config[]> {
+  const { config } = await import("./index");
+
+  return config(options);
+}
 
 /**
  * Mock all plugin loaders to return small sample configurations.
@@ -15,66 +52,124 @@ import {
  * ```
  */
 function mockAllEnabled(): void {
-  vi.doMock("./configs", () => ({
+  configsModuleMock = {
     boundaries: (): Linter.Config[] => [{ name: "architecture-boundaries" }],
+    codeperfect: (): Linter.Config[] => [{ name: "core-codeperfect" }],
     comments: (): Linter.Config[] => [{ name: "docs-comments" }],
     eslint: (): Linter.Config[] => [{ name: "core-eslint" }],
-    importX: (): Linter.Config[] => [{ name: "architecture-import-x" }],
+    importX: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("architecture-import-x");
+
+      return configs;
+    },
     jasmine: (): Linter.Config[] => [{ name: "testing-jasmine" }],
     jest: (): Linter.Config[] => [{ name: "testing-jest" }],
-    jsdoc: (): Linter.Config[] => [{ name: "docs-jsdoc" }],
-    perfectionist: (): Linter.Config[] => [{ name: "style-perfectionist" }],
-    playwright: (): Linter.Config[] => [{ name: "testing-playwright" }],
-    prettier: (): Linter.Config[] => [{ name: "style-prettier" }],
+    jsdoc: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("docs-jsdoc");
+
+      return configs;
+    },
+    perfectionist: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("style-perfectionist");
+
+      return configs;
+    },
+    playwright: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("testing-playwright");
+
+      return configs;
+    },
+    prettier: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("style-prettier");
+
+      return configs;
+    },
     resolver: (): Linter.Config[] => [{ name: "core-resolver" }],
-    rxjsX: (): Linter.Config[] => [{ name: "domain-rxjs" }],
-    stylistic: (): Linter.Config[] => [{ name: "style-stylistic" }],
+    rxjsX: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("domain-rxjs");
+
+      return configs;
+    },
+    stylistic: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("style-stylistic");
+
+      return configs;
+    },
     typescript: (): Linter.Config[] => [{ name: "core-typescript" }],
-    unicorn: (): Linter.Config[] => [{ name: "style-unicorn" }],
-    vitest: (): Linter.Config[] => [{ name: "testing-vitest" }],
-  }));
+    unicorn: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("style-unicorn");
+
+      return configs;
+    },
+    vitest: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("testing-vitest");
+
+      return configs;
+    },
+  } as unknown as Partial<ConfigsModule>;
+}
+
+/**
+ * Resolve one async config loader result while satisfying mock-loader lint rules.
+ * @param name The mock config name to return.
+ * @returns A promise that resolves to one named config.
+ * @example
+ * ```typescript
+ * await resolveAsyncConfig("docs-jsdoc");
+ * ```
+ */
+async function resolveAsyncConfig(name: string): Promise<Linter.Config[]> {
+  const configs = await Promise.resolve([{ name }]);
+
+  return configs;
 }
 
 describe("config composition", () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
-    vi.doUnmock("./configs");
+    configsModuleMock = void 0;
   });
 
   it("preserves the documented composition order", async () => {
+    // Arrange
     vi.resetModules();
     mockAllEnabled();
 
-    const { config } = await import("./index");
-    const result = await config({});
+    // Act
+    const result = await loadComposedConfig({});
 
+    // Assert
     expect(result.map((entry) => entry.name)).toStrictEqual(
       fullCompositionNames,
     );
   });
 
   it("removes disabled modules without disturbing remaining order", async () => {
+    // Arrange
     vi.resetModules();
     mockAllEnabled();
 
-    const { config } = await import("./index");
-    const result = await config({
+    // Act
+    const result = await loadComposedConfig({
       disabledPlugins: ["boundaries", "prettier", "vitest"],
     });
 
+    // Assert
     expect(result.map((entry) => entry.name)).toStrictEqual(
       reducedCompositionNames,
     );
   });
 
   it("applies rule overrides after all enabled modules", async () => {
+    // Arrange
     vi.resetModules();
     mockAllEnabled();
 
-    const { config } = await import("./index");
-    const result = await config({ rules: { "no-console": "off" } });
+    // Act
+    const result = await loadComposedConfig({ rules: { "no-console": "off" } });
 
+    // Assert
     expect(result.at(-1)).toMatchObject({
       name: "custom/rule-overrides",
       rules: { "no-console": "off" },

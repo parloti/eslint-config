@@ -1,17 +1,24 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { BoundariesConfig } from "../types";
 
 import { boundaries } from "./boundaries";
 
 describe("boundaries config", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("returns empty configs without setup", () => {
+    // Arrange
     const stderrSpy = vi
       .spyOn(process.stderr, "write")
       .mockImplementation(() => true);
 
+    // Act
     const configs = boundaries();
 
+    // Assert
     expect(configs).toStrictEqual([]);
     expect(stderrSpy).toHaveBeenCalledWith(
       expect.stringContaining("Skipped boundaries config"),
@@ -21,19 +28,20 @@ describe("boundaries config", () => {
         "Provide repository-owned boundaries files, elements, and element-types.",
       ),
     );
-
-    stderrSpy.mockRestore();
   });
 
   it("builds configs when configured", () => {
+    // Arrange
     const config: BoundariesConfig = {
       elements: [{ pattern: "src/shared", type: "shared" }],
       elementTypes: ["error", { default: "disallow", rules: [] }],
       files: ["src/**/*.ts"],
     };
 
+    // Act
     const configs = boundaries(config);
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
     expect(
       configs.some((entry) =>
@@ -43,6 +51,7 @@ describe("boundaries config", () => {
   });
 
   it("passes through files and ignores options", () => {
+    // Arrange
     const config: BoundariesConfig = {
       elements: [{ pattern: "src/shared", type: "shared" }],
       elementTypes: ["error", { default: "disallow", rules: [] }],
@@ -50,8 +59,10 @@ describe("boundaries config", () => {
       ignores: ["**/*.spec.ts"],
     };
 
+    // Act
     const configs = boundaries(config);
 
+    // Assert
     expect(
       configs.some((entry) => entry.files?.includes("src/**/*.ts") === true),
     ).toBe(true);
@@ -61,6 +72,7 @@ describe("boundaries config", () => {
   });
 
   it("does not infer a default topology when files are missing", () => {
+    // Arrange
     const stderrSpy = vi
       .spyOn(process.stderr, "write")
       .mockImplementation(() => true);
@@ -69,13 +81,13 @@ describe("boundaries config", () => {
       elementTypes: ["error", { default: "disallow", rules: [] }],
     } as unknown as BoundariesConfig;
 
+    // Act
     const configs = boundaries(config);
 
+    // Assert
     expect(configs).toStrictEqual([]);
     expect(stderrSpy).toHaveBeenCalledWith(
       expect.stringContaining("Skipped boundaries config"),
     );
-
-    stderrSpy.mockRestore();
   });
 });

@@ -1,13 +1,8 @@
 import type { Linter } from "eslint";
+import type * as jsdocModuleType from "eslint-plugin-jsdoc";
 import type { Mock } from "vitest";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-
-/** Mocked parser shape used by the docs tests. */
-interface IMockedParser {
-  /** Mocked parser entry point. */
-  parseForESLint: Mock;
-}
 
 /** Mocked processor plugin shape used by the docs tests. */
 interface IMockedProcessorPlugin {
@@ -17,45 +12,37 @@ interface IMockedProcessorPlugin {
     examples: object;
   };
 }
-
 /** Options for mocking the docs dependencies. */
 interface IMockJsdocModulesOptions {
-  /** Mocked TypeScript disable-type-checked config. */
-  disableTypeChecked: object;
-
   /** Optional mocked JSDoc processor factory. */
   getJsdocProcessorPlugin?: Mock<() => IMockedProcessorPlugin>;
-
   /** Mocked jsdoc preset config map. */
   jsdocConfigs: Record<string, unknown>;
-
   /** Mocked jsdoc rules map. */
   jsdocRules: Record<string, unknown> | undefined;
-
-  /** Mocked parser object. */
-  parser: IMockedParser;
-
-  /** Mocked plugin object. */
-  plugin: Record<string, never>;
 }
-
 /** Named preset config shape used by the docs tests. */
 interface INamedPresetConfig {
   /** Mocked preset name. */
   name: string;
 }
 
-/** Typed test doubles used by the TypeScript example-config test. */
-interface ITypeScriptExampleMocks {
+/** Typed test doubles used by the processor-availability test. */
+interface IProcessorMocks {
   /** Mocked JSDoc processor factory. */
   getJsdocProcessorPlugin: Mock<() => IMockedProcessorPlugin>;
-
-  /** Mocked parser object exposed by typescript-eslint. */
-  parser: IMockedParser;
-
-  /** Mocked plugin object exposed by typescript-eslint. */
-  plugin: Record<string, never>;
 }
+
+/** Module namespace type for eslint-plugin-jsdoc mocks. */
+type JsdocModule = typeof jsdocModuleType;
+
+/** Mutable jsdoc plugin default export used by module mocks. */
+let jsdocPluginMock: JsdocModule["default"] | undefined;
+
+/** Mutable jsdoc processor factory used by module mocks. */
+let jsdocProcessorPluginMock:
+  | IProcessorMocks["getJsdocProcessorPlugin"]
+  | undefined;
 
 /** Named upstream preset configs used by the docs tests. */
 const typeScriptPresetNames = [
@@ -66,11 +53,26 @@ const typeScriptPresetNames = [
   "flat/stylistic-typescript-error",
 ] as const;
 
+vi.mock(import("eslint-plugin-jsdoc"), () => {
+  if (jsdocPluginMock === void 0) {
+    throw new Error("JSDoc plugin mock not defined");
+  }
+
+  return {
+    default: jsdocPluginMock,
+    ...(jsdocProcessorPluginMock === void 0
+      ? {}
+      : { getJsdocProcessorPlugin: jsdocProcessorPluginMock }),
+  } as unknown as Partial<JsdocModule>;
+});
+
 /**
  * Create a named preset config map for the mocked jsdoc plugin.
  * @returns The named preset config map.
  * @example
- * console.log(createNamedTypeScriptPresetConfigs());
+ * ```typescript
+ *  console.log(createNamedTypeScriptPresetConfigs());
+ * ```
  */
 function createNamedTypeScriptPresetConfigs(): Record<
   string,
@@ -82,13 +84,15 @@ function createNamedTypeScriptPresetConfigs(): Record<
 }
 
 /**
- * Create typed test doubles for the TypeScript example-config test.
- * @returns Mocked parser, plugin, and processor factory values.
+ * Create typed test doubles for the processor-availability test.
+ * @returns Mocked processor factory values.
  * @example
- * console.log(createTypeScriptExampleMocks());
+ * ```typescript
+ *  console.log(createProcessorMocks());
+ * ```
  */
-function createTypeScriptExampleMocks(): ITypeScriptExampleMocks {
-  const getJsdocProcessorPlugin: ITypeScriptExampleMocks["getJsdocProcessorPlugin"] =
+function createProcessorMocks(): IProcessorMocks {
+  const getJsdocProcessorPlugin: IProcessorMocks["getJsdocProcessorPlugin"] =
     vi.fn(() => ({
       processors: {
         examples: {},
@@ -97,97 +101,71 @@ function createTypeScriptExampleMocks(): ITypeScriptExampleMocks {
 
   return {
     getJsdocProcessorPlugin,
-    parser: {
-      parseForESLint: vi.fn(),
-    },
-    plugin: {},
   };
 }
 
 /**
- * Assert that the TypeScript example configs were created as expected.
+ * Assert that jsdoc example configs are not emitted by the package.
  * @param configs The produced config array.
- * @param mocks The mocked parser, plugin, and processor factory.
+ * @param mocks The mocked processor factory.
  * @example
- * console.log("expectTypeScriptExampleConfigs");
+ * ```typescript
+ *  console.log("expectNoTypeScriptExampleConfigs");
+ * ```
  */
-function expectTypeScriptExampleConfigs(
+function expectNoTypeScriptExampleConfigs(
   configs: Linter.Config[],
-  mocks: ITypeScriptExampleMocks,
+  mocks: IProcessorMocks,
 ): void {
-  const { getJsdocProcessorPlugin, parser, plugin } = mocks;
-  const customRulesConfig = configs.find(
+  const customRulesConfig: Linter.Config | undefined = configs.find(
     (config) => config.name === "jsdoc/custom",
   );
-  const defaultExpressionRulesConfig = configs.find(
+  const defaultExpressionRulesConfig: Linter.Config | undefined = configs.find(
     (config) => config.name === "jsdoc/typescript-default-expressions/rules",
   );
-  const exampleRulesConfig = configs.find(
+  const exampleRulesConfig: Linter.Config | undefined = configs.find(
     (config) => config.name === "jsdoc/typescript-examples/rules",
   );
-  const processorConfig = configs.find(
+  const processorConfig: Linter.Config | undefined = configs.find(
     (config) =>
       config.name ===
       "jsdoc/typescript-examples-and-default-expressions/processor",
   );
 
-  expect(getJsdocProcessorPlugin).toHaveBeenCalledWith({
-    checkDefaults: true,
-    checkParams: true,
-    checkProperties: true,
-    parser,
-    sourceType: "module",
-  });
-  expect(processorConfig).toMatchObject({
-    files: ["**/*.cts", "**/*.mts", "**/*.ts", "**/*.tsx"],
-    processor: "examples/examples",
-  });
-  expect(exampleRulesConfig).toMatchObject({
-    files: ["**/*.md/*.js"],
-    languageOptions: {
-      parser,
-      sourceType: "module",
-    },
-    plugins: {
-      "@typescript-eslint": plugin,
-    },
-    rules: {
-      "@typescript-eslint/await-thenable": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "jsdoc/require-jsdoc": "off",
-      "no-unused-expressions": "off",
-    },
-  });
+  expect(mocks.getJsdocProcessorPlugin).not.toHaveBeenCalled();
   expect(customRulesConfig?.rules).toMatchObject({
-    "jsdoc/require-throws": "error",
-  });
-  expect(defaultExpressionRulesConfig).toMatchObject({
-    files: [
-      "**/*.jsdoc-defaults",
-      "**/*.jsdoc-params",
-      "**/*.jsdoc-properties",
+    "jsdoc/convert-to-jsdoc-comments": [
+      "error",
+      { enforceJsdocLineStyle: "single" },
     ],
-    languageOptions: {
-      parser,
-      sourceType: "module",
-    },
-    plugins: {
-      "@typescript-eslint": plugin,
-    },
-    rules: {
-      "@typescript-eslint/await-thenable": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
-      strict: "off",
-    },
+    "jsdoc/text-escaping": "off",
   });
+  expect(defaultExpressionRulesConfig).toBeUndefined();
+  expect(exampleRulesConfig).toBeUndefined();
+  expect(processorConfig).toBeUndefined();
+}
+
+/**
+ * Load the docs module and return its comments config output.
+ * @returns The comments config array.
+ * @example
+ * ```typescript
+ *  console.log("loadCommentsConfigs");
+ * ```
+ */
+async function loadCommentsConfigs(): Promise<Linter.Config[]> {
+  const documentationModule = await import(".");
+
+  return documentationModule.comments();
 }
 
 /**
  * Load the docs module and return its JSDoc config output.
  * @returns The JSDoc config array.
  * @example
- * console.log("loadJsdocConfigs");
+ * ```typescript
+ *  console.log("loadJsdocConfigs");
+ * ```
  */
 async function loadJsdocConfigs(): Promise<Linter.Config[]> {
   const documentationModule = await import(".");
@@ -199,32 +177,18 @@ async function loadJsdocConfigs(): Promise<Linter.Config[]> {
  * Mock the optional modules needed by the docs tests.
  * @param options The mocked module inputs.
  * @example
- * console.log("mockJsdocModules");
+ * ```typescript
+ *  console.log("mockJsdocModules");
+ * ```
  */
 function mockJsdocModules(options: IMockJsdocModulesOptions): void {
-  const {
-    disableTypeChecked,
-    getJsdocProcessorPlugin,
-    jsdocConfigs,
-    jsdocRules,
-    parser,
-    plugin,
-  } = options;
+  const { getJsdocProcessorPlugin, jsdocConfigs, jsdocRules } = options;
 
-  vi.doMock("eslint-plugin-jsdoc", () => ({
-    default: {
-      configs: jsdocConfigs,
-      rules: jsdocRules,
-    },
-    getJsdocProcessorPlugin,
-  }));
-  vi.doMock("typescript-eslint", () => ({
-    configs: {
-      disableTypeChecked,
-    },
-    parser,
-    plugin,
-  }));
+  jsdocPluginMock = {
+    configs: jsdocConfigs,
+    rules: jsdocRules,
+  } as unknown as JsdocModule["default"];
+  jsdocProcessorPluginMock = getJsdocProcessorPlugin;
 }
 
 describe("docs branch coverage", () => {
@@ -233,66 +197,104 @@ describe("docs branch coverage", () => {
     vi.resetModules();
     vi.doUnmock("@eslint-community/eslint-plugin-eslint-comments");
     vi.doUnmock("@eslint-community/eslint-plugin-eslint-comments/configs");
-    vi.doUnmock("eslint-plugin-jsdoc");
-    vi.doUnmock("typescript-eslint");
+    jsdocPluginMock = void 0;
+    jsdocProcessorPluginMock = void 0;
   });
 
   it("handles eslint-comments config without rules", async () => {
+    // Arrange
     vi.resetModules();
-    vi.doMock("@eslint-community/eslint-plugin-eslint-comments", () => ({
-      rules: {},
-    }));
     vi.doMock(
-      "@eslint-community/eslint-plugin-eslint-comments/configs",
+      import("@eslint-community/eslint-plugin-eslint-comments"),
+      () => ({
+        rules: {},
+      }),
+    );
+    vi.doMock(
+      import("@eslint-community/eslint-plugin-eslint-comments/configs"),
       () => ({
         recommended: {},
       }),
     );
 
-    const documentationModule = await import(".");
-    const configs = await documentationModule.comments();
+    // Act
+    const configs = await loadCommentsConfigs();
 
-    expect(configs.length).toBeGreaterThan(0);
+    // Assert
+    expect(configs).toHaveLength(2);
   });
 
   it("handles jsdoc plugin without rules", async () => {
-    const mocks = createTypeScriptExampleMocks();
-
+    // Arrange
     vi.resetModules();
     mockJsdocModules({
-      disableTypeChecked: { rules: {} },
       jsdocConfigs: createNamedTypeScriptPresetConfigs(),
       jsdocRules: void 0,
-      parser: mocks.parser,
-      plugin: mocks.plugin,
     });
 
+    // Act
     const configs = await loadJsdocConfigs();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
-  });
+  }, 10_000);
 
-  it("adds TypeScript example processor configs when available", async () => {
-    const mocks = createTypeScriptExampleMocks();
-
+  it("keeps loading the remaining presets when one upstream entry is an array", async () => {
+    // Arrange
     vi.resetModules();
     mockJsdocModules({
-      disableTypeChecked: {
-        rules: {
-          "@typescript-eslint/await-thenable": "off",
-        },
+      jsdocConfigs: {
+        ...createNamedTypeScriptPresetConfigs(),
+        "flat/contents-typescript-error": [],
       },
-      getJsdocProcessorPlugin: mocks.getJsdocProcessorPlugin,
-      jsdocConfigs: createNamedTypeScriptPresetConfigs(),
-      jsdocRules: {
-        "require-throws": {},
-      },
-      parser: mocks.parser,
-      plugin: mocks.plugin,
+      jsdocRules: {},
     });
 
-    expect.hasAssertions();
+    // Act
+    const configs = await loadJsdocConfigs();
 
-    expectTypeScriptExampleConfigs(await loadJsdocConfigs(), mocks);
-  });
+    // Assert
+    expect(
+      configs.some(
+        (config) => config.name === "flat/recommended-typescript-error",
+      ),
+    ).toBe(true);
+  }, 10_000);
+
+  it("returns repo-owned configs when upstream presets are missing", async () => {
+    // Arrange
+    vi.resetModules();
+    vi.doMock(import("eslint-plugin-jsdoc"), () => {
+      return {
+        default: {
+          configs: {},
+          rules: {},
+        } as unknown as JsdocModule["default"],
+      } as unknown as Partial<JsdocModule>;
+    });
+    // Act
+    const configs = await loadJsdocConfigs();
+
+    // Assert
+    expect(configs.some((config) => config.name === "jsdoc/custom")).toBe(true);
+  }, 10_000);
+
+  it("does not emit processor-backed example configs when available", async () => {
+    // Arrange
+    const mocks = createProcessorMocks();
+    vi.resetModules();
+    mockJsdocModules({
+      getJsdocProcessorPlugin: mocks.getJsdocProcessorPlugin,
+      jsdocConfigs: createNamedTypeScriptPresetConfigs(),
+      jsdocRules: { "require-throws": {} },
+    });
+
+    // Act
+    const configs = await loadJsdocConfigs();
+
+    // Assert
+    expect(configs.length).toBeGreaterThan(0);
+
+    expectNoTypeScriptExampleConfigs(configs, mocks);
+  }, 10_000);
 });

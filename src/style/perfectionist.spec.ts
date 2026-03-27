@@ -1,6 +1,6 @@
 import type { Linter } from "eslint";
 
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { perfectionist } from "./perfectionist";
 
@@ -60,9 +60,45 @@ vi.mock(
 );
 
 describe("perfectionist config", () => {
+  beforeEach(() => {
+    perfectionistConfigs["recommended-natural"] = {} as Linter.Config;
+  });
+
   it("returns configs", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await perfectionist();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
+  });
+
+  it("disables perfectionist rules for generated snippet files", async () => {
+    // Arrange
+    perfectionistConfigs["recommended-natural"] = {
+      rules: {
+        "perfectionist/sort-objects": "error",
+        "sort-keys": "error",
+      },
+    } as Linter.Config;
+
+    // Act
+    const configs = await perfectionist();
+
+    // Assert
+    expect(
+      configs.find(
+        (config) => config.name === "perfectionist/generated-snippets",
+      )?.rules,
+    ).toMatchObject({
+      "perfectionist/sort-objects": "off",
+    });
+    expect(
+      configs.find(
+        (config) => config.name === "perfectionist/generated-snippets",
+      )?.rules,
+    ).not.toHaveProperty("sort-keys");
   });
 });

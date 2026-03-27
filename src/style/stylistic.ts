@@ -14,5 +14,7 @@ export async function stylistic(): Promise<Linter.Config[]> {
   const stylisticModule = await import("@stylistic/eslint-plugin");
   const { default: plugin } = stylisticModule;
 
-  return defineConfig(plugin.configs.all);
+  return defineConfig(plugin.configs.all, {
+    rules: { "@stylistic/multiline-comment-style": "off" },
+  });
 }

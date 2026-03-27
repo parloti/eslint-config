@@ -5,6 +5,7 @@ import type { LoadMode } from "./utilities";
 
 import {
   boundaries,
+  codeperfect,
   comments,
   eslint,
   importX,
@@ -71,6 +72,11 @@ const pluginLoaders = {
     loader: createBoundariesLoaderFactory,
     mode: "optional",
     pluginName: "boundaries",
+  },
+  codeperfect: {
+    loader: createStaticLoaderFactory(codeperfect),
+    mode: "required",
+    pluginName: "codeperfect",
   },
   comments: {
     loader: createStaticLoaderFactory(comments),

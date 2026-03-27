@@ -1,4 +1,24 @@
+import type { Linter } from "eslint";
+import type * as importXModuleType from "eslint-plugin-import-x";
+
 import { afterEach, describe, expect, it, vi } from "vitest";
+
+/** Module namespace type for eslint-plugin-import-x mocks. */
+type ImportXModule = typeof importXModuleType;
+
+/**
+ * Load the import-x config under test after module mocking.
+ * @returns The produced ESLint config array.
+ * @example
+ * ```typescript
+ * await loadImportXConfigs();
+ * ```
+ */
+async function loadImportXConfigs(): Promise<Linter.Config[]> {
+  const { importX } = await import(".");
+
+  return importX();
+}
 
 describe("import-x branch coverage", () => {
   afterEach(() => {
@@ -8,23 +28,29 @@ describe("import-x branch coverage", () => {
   });
 
   it("handles configs without rules", async () => {
+    // Arrange
     vi.resetModules();
-    vi.doMock("eslint-plugin-import-x", () => ({
-      flatConfigs: {
-        recommended: { rules: { "import-x/no-duplicates": "warn" } },
-        typescript: { rules: {} },
-        warnings: { rules: void 0 },
-      },
-      rules: {
-        "no-default-export": {},
-        "no-duplicates": {},
-        "some-extra": {},
-      },
-    }));
+    vi.doMock(
+      import("eslint-plugin-import-x"),
+      () =>
+        ({
+          flatConfigs: {
+            recommended: { rules: { "import-x/no-duplicates": "warn" } },
+            typescript: { rules: {} },
+            warnings: { rules: void 0 },
+          },
+          rules: {
+            "no-default-export": {},
+            "no-duplicates": {},
+            "some-extra": {},
+          },
+        }) as unknown as Partial<ImportXModule>,
+    );
 
-    const { importX } = await import(".");
-    const configs = await importX();
+    // Act
+    const configs = await loadImportXConfigs();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
     expect(
       configs.some((config) => config.name === "import-x/custom-error"),

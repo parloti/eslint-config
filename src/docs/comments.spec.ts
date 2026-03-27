@@ -4,8 +4,13 @@ import { comments } from "./comments";
 
 describe("comments config", () => {
   it("returns custom configs", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await comments();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
     expect(
       configs.some(

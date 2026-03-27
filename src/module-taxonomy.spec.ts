@@ -4,7 +4,9 @@ import { moduleTaxonomy } from "./module-taxonomy";
 
 describe("moduleTaxonomy", () => {
   it("matches the documented composition order", () => {
-    expect(moduleTaxonomy.map((entry) => entry.pluginName)).toStrictEqual([
+    // Arrange
+    const expectedPluginNames = [
+      "codeperfect",
       "eslint",
       "resolver",
       "typescript",
@@ -21,6 +23,12 @@ describe("moduleTaxonomy", () => {
       "unicorn",
       "prettier",
       "boundaries",
-    ]);
+    ];
+
+    // Act
+    const actualPluginNames = moduleTaxonomy.map((entry) => entry.pluginName);
+
+    // Assert
+    expect(actualPluginNames).toStrictEqual(expectedPluginNames);
   });
 });

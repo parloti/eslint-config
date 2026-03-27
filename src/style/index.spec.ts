@@ -29,26 +29,46 @@ vi.mock(
 
 describe("style configs", () => {
   it("returns perfectionist configs", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await perfectionist();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
   });
 
   it("returns prettier configs", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await prettier();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
   });
 
   it("returns stylistic configs", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await stylistic();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
   });
 
   it("returns unicorn configs", async () => {
+    // Arrange
+    // (no setup needed)
+
+    // Act
     const configs = await unicorn();
 
+    // Assert
     expect(configs.length).toBeGreaterThan(0);
   });
 });

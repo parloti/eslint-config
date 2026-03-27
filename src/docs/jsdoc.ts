@@ -2,12 +2,6 @@ import type { Linter } from "eslint";
 
 import { defineConfig } from "eslint/config";
 
-import {
-  buildTypeScriptExampleConfigs,
-  resolveDisableTypeCheckedRules,
-  resolveJsdocProcessorPlugin,
-} from "./jsdoc-examples.js";
-
 /** Upstream JSDoc flat preset names consumed by this config. */
 const jsdocPresetNames = [
   "flat/recommended-typescript-error",
@@ -22,7 +16,9 @@ const jsdocPresetNames = [
  * @param availableRules Set of available jsdoc rule names.
  * @returns The rules record for ESLint.
  * @example
- * console.log(buildCustomErrorRules(new Set(["require-throws"])));
+ * ```typescript
+ *  console.log(buildCustomErrorRules(new Set(["require-throws"])));
+ * ```
  */
 const buildCustomErrorRules = (
   availableRules: Set<string>,
@@ -65,7 +61,9 @@ const requireJsdocContexts = [
  * @param configs Upstream JSDoc config map.
  * @returns The available flat presets.
  * @example
- * console.log(buildPresetConfigs({ "flat/recommended-typescript-error": {} as Linter.Config }).length);
+ * ```typescript
+ *  console.log(buildPresetConfigs({ "flat/recommended-typescript-error": {} as Linter.Config }).length);
+ * ```
  */
 function buildPresetConfigs(configs: Record<string, unknown>): Linter.Config[] {
   return jsdocPresetNames.flatMap((configName) => {
@@ -86,21 +84,24 @@ function buildPresetConfigs(configs: Record<string, unknown>): Linter.Config[] {
 /**
  * Build the final repo-owned JSDoc configs on top of the upstream presets.
  * @param customError Repo-owned JSDoc rule overrides.
- * @param typeScriptExampleConfigs Processor-backed TypeScript example configs.
  * @returns The final ESLint config array.
  * @example
- * console.log(buildRepoJsdocConfigs({}, []).length);
+ * ```typescript
+ *  console.log(buildRepoJsdocConfigs({}).length);
+ * ```
  */
 function buildRepoJsdocConfigs(
   customError: Linter.RulesRecord,
-  typeScriptExampleConfigs: Linter.Config[],
 ): Linter.Config[] {
   return defineConfig(
-    ...typeScriptExampleConfigs,
     {
       name: "jsdoc/custom",
       rules: {
         ...customError,
+        "jsdoc/convert-to-jsdoc-comments": [
+          "error",
+          { enforceJsdocLineStyle: "single" },
+        ],
         "jsdoc/text-escaping": "off",
       },
     },
@@ -131,35 +132,20 @@ function buildRepoJsdocConfigs(
  * Build the jsdoc plugin configuration and any overrides needed by this project.
  * @returns Return value output.
  * @example
- * console.log(await jsdoc());
+ * ```typescript
+ *  console.log(await jsdoc());
+ * ```
  */
 async function jsdoc(): Promise<Linter.Config[]> {
   const jsdocModule = await import("eslint-plugin-jsdoc");
-  const typeScriptModule = await import("typescript-eslint");
   const { default: jsdocPlugin } = jsdocModule;
   const { configs, rules } = jsdocPlugin;
-  const getJsdocProcessorPlugin = resolveJsdocProcessorPlugin(jsdocModule);
-  const {
-    configs: typeScriptConfigs,
-    parser,
-    plugin: typeScriptPlugin,
-  } = typeScriptModule;
 
-  const availableRules = new Set(Object.keys(rules ?? {})),
-    customError = buildCustomErrorRules(availableRules),
-    disableTypeCheckedRules = resolveDisableTypeCheckedRules(typeScriptConfigs),
-    presetConfigs = buildPresetConfigs(configs),
-    typeScriptExampleConfigs = buildTypeScriptExampleConfigs({
-      disableTypeCheckedRules,
-      getJsdocProcessorPlugin,
-      parser,
-      typeScriptPlugin,
-    });
+  const availableRules = new Set(Object.keys(rules ?? {}));
+  const customError = buildCustomErrorRules(availableRules);
+  const presetConfigs = buildPresetConfigs(configs);
 
-  return defineConfig(
-    ...presetConfigs,
-    ...buildRepoJsdocConfigs(customError, typeScriptExampleConfigs),
-  );
+  return defineConfig(...presetConfigs, ...buildRepoJsdocConfigs(customError));
 }
 
 export { jsdoc };

@@ -1,5 +1,6 @@
 /** Expected config names when all documented modules are enabled in order. */
 const fullCompositionNames = [
+  "core-codeperfect",
   "core-eslint",
   "core-resolver",
   "core-typescript",
@@ -20,6 +21,7 @@ const fullCompositionNames = [
 
 /** Expected config names when selected optional modules are disabled. */
 const reducedCompositionNames = [
+  "core-codeperfect",
   "core-eslint",
   "core-resolver",
   "core-typescript",

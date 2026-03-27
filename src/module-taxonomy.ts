@@ -21,6 +21,7 @@ interface ModuleTaxonomyEntry {
 
 /** Ordered module taxonomy matching RFC-0003. */
 const moduleTaxonomy = [
+  { category: "core", pluginName: "codeperfect" },
   { category: "core", pluginName: "eslint" },
   { category: "core", pluginName: "resolver" },
   { category: "core", pluginName: "typescript" },
