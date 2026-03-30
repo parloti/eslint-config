@@ -15,15 +15,14 @@ vi.mock(
 describe("rxjs-x config", () => {
   it("returns custom configs", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "rxjs-x/custom";
 
     // Act
-    const configs = await getRxjsXConfig();
+    const actualHasExpectedConfig = await getRxjsXConfig().then((configs) =>
+      configs.some((config) => config.name === expectedConfigName),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "rxjs-x/custom")).toBe(
-      true,
-    );
+    expect(actualHasExpectedConfig).toBe(true);
   });
 });

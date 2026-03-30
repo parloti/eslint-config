@@ -14,15 +14,12 @@ describe("architecture configs", () => {
     };
 
     // Act
-    const configs = boundaries(config);
+    const actualHasElementTypesRule = boundaries(config).some((entry) =>
+      Object.hasOwn(entry.rules ?? {}, "boundaries/element-types"),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      configs.some((entry) =>
-        Object.hasOwn(entry.rules ?? {}, "boundaries/element-types"),
-      ),
-    ).toBe(true);
+    expect(actualHasElementTypesRule).toBe(true);
   });
 
   it("returns import-x configs with custom entries", async () => {
@@ -35,14 +32,13 @@ describe("architecture configs", () => {
     ];
 
     // Act
-    const configs = await importX();
+    const actualConfigNames = await importX().then((configs) =>
+      configs.map((config) => config.name),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      expectedNames.every((name) =>
-        configs.some((config) => config.name === name),
-      ),
-    ).toBe(true);
+    expect(actualConfigNames).toStrictEqual(
+      expect.arrayContaining(expectedNames),
+    );
   });
 });

@@ -47,69 +47,55 @@ vi.mock(import("typescript-eslint"), () => ({
 describe("core configs", () => {
   it("returns eslint configs with custom entries", () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigNames = ["@eslint/js/custom", "@eslint/js/custom-spec"];
 
     // Act
-    const configs = eslint();
+    const actualConfigNames = eslint().map((config) => config.name);
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "@eslint/js/custom")).toBe(
-      true,
+    expect(actualConfigNames).toStrictEqual(
+      expect.arrayContaining(expectedConfigNames),
     );
-    expect(
-      configs.some((config) => config.name === "@eslint/js/custom-spec"),
-    ).toBe(true);
   });
 
   it("returns resolver settings", async () => {
     // Arrange
-    // (no setup needed)
+    const minimumConfigCount = 1;
 
     // Act
     const configs = await resolver();
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
+    expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
     expect(configs[0]?.settings).toBeDefined();
   });
 
   it("returns typescript configs with custom entries", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigNames = [
+      "@typescript-eslint/custom",
+      "@typescript-eslint/custom-spec",
+    ];
 
     // Act
-    const configs = await typescript();
+    const actualConfigNames = await typescript().then((configs) =>
+      configs.map((config) => config.name),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      configs.some((config) => config.name === "@typescript-eslint/custom"),
-    ).toBe(true);
-    expect(
-      configs.some(
-        (config) => config.name === "@typescript-eslint/custom-spec",
-      ),
-    ).toBe(true);
+    expect(actualConfigNames).toStrictEqual(
+      expect.arrayContaining(expectedConfigNames),
+    );
   });
 
   it("re-exports the core config builders", () => {
     // Arrange
-    // (no setup needed)
+    const expectedMatches = [true, true, true, true, true, true, true, true];
 
     // Act
     const actualMatches = loadCoreExportMatches();
 
     // Assert
-    expect(actualMatches).toStrictEqual([
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-    ]);
+    expect(actualMatches).toStrictEqual(expectedMatches);
   });
 });

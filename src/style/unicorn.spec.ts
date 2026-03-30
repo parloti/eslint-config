@@ -55,12 +55,12 @@ vi.mock(
 describe("unicorn config", () => {
   it("returns configs", async () => {
     // Arrange
-    // (no setup needed)
+    const minimumConfigCount = 1;
 
     // Act
     const configs = await unicorn();
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
+    expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
   });
 });

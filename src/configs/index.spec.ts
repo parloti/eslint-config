@@ -134,83 +134,56 @@ async function loadTestingExportMatches(): Promise<boolean[]> {
 describe("configs barrel", () => {
   it("re-exports architecture config builders", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedMatches = [true, true];
 
     // Act
     const matches = await loadArchitectureExportMatches();
 
     // Assert
-    expect(matches).toStrictEqual([true, true]);
+    expect(matches).toStrictEqual(expectedMatches);
   });
 
   it("re-exports core config builders", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedMatches = [true, true, true, true, true, true, true, true];
 
     // Act
     const matches = await loadCoreExportMatches();
 
     // Assert
-    expect(matches).toStrictEqual([
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-    ]);
+    expect(matches).toStrictEqual(expectedMatches);
   });
 
   it("re-exports documentation and domain config builders", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedMatches = [true, true, true, true, true, true];
 
     // Act
     const matches = await loadDocumentationExportMatches();
 
     // Assert
-    expect(matches).toStrictEqual([true, true, true, true, true, true]);
+    expect(matches).toStrictEqual(expectedMatches);
   });
 
   it("re-exports style config builders", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedMatches = [true, true, true, true, true, true, true, true];
 
     // Act
     const matches = await loadStyleExportMatches();
 
     // Assert
-    expect(matches).toStrictEqual([
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-    ]);
+    expect(matches).toStrictEqual(expectedMatches);
   });
 
   it("re-exports testing config builders", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedMatches = [true, true, true, true, true, true, true, true];
 
     // Act
     const matches = await loadTestingExportMatches();
 
     // Assert
-    expect(matches).toStrictEqual([
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-    ]);
+    expect(matches).toStrictEqual(expectedMatches);
   });
 });

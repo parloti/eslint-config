@@ -5,17 +5,14 @@ import { comments } from "./comments";
 describe("comments config", () => {
   it("returns custom configs", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "@eslint-community/eslint-comments/custom";
 
     // Act
-    const configs = await comments();
+    const actualHasExpectedConfig = await comments().then((configs) =>
+      configs.some((config) => config.name === expectedConfigName),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      configs.some(
-        (config) => config.name === "@eslint-community/eslint-comments/custom",
-      ),
-    ).toBe(true);
+    expect(actualHasExpectedConfig).toBe(true);
   });
 });

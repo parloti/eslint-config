@@ -2,6 +2,8 @@ import type { Linter } from "eslint";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { PluginName } from "./types";
+
 import {
   applyRuleOverrides,
   collectAvailablePlugins,
@@ -9,37 +11,41 @@ import {
   loadPluginConfig,
 } from "./utilities";
 
-/** Captured stderr spy state for one test. */
-interface IStderrCapture {
-  /** Read the first emitted stderr message. */
-  getFirstMessage: () => string | undefined;
-
-  /** The underlying stderr spy. */
-  stderrSpy: ReturnType<typeof vi.spyOn>;
+/**
+ * Captured SUT result paired with the first stderr message.
+ * @template T The return type of the SUT.
+ */
+interface ISutOutcome<T> {
+  /** First stderr message emitted during the SUT call. */
+  firstMessage: string | undefined;
+  /** Value returned by the SUT call. */
+  result: T;
 }
 
 /**
- * Create a stderr spy that records the first emitted message.
- * @returns The captured stderr spy state.
+ * Run a SUT action while capturing the first stderr message.
+ * @template T The SUT return type.
+ * @param action The SUT action to execute.
+ * @returns The SUT result paired with the first stderr message.
  * @example
  * ```typescript
- * createStderrCapture();
+ * await captureSutWithStderr(() => applyRuleOverrides([], {}));
  * ```
  */
-function createStderrCapture(): IStderrCapture {
+async function captureSutWithStderr<T>(
+  action: () => Promise<T> | T,
+): Promise<ISutOutcome<T>> {
   let firstMessage: string | undefined;
-  const stderrSpy = vi
-    .spyOn(process.stderr, "write")
-    .mockImplementation((chunk: string | Uint8Array) => {
+  vi.spyOn(process.stderr, "write").mockImplementation(
+    (chunk: string | Uint8Array) => {
       firstMessage ??= String(chunk);
 
       return true;
-    });
+    },
+  );
+  const result = await action();
 
-  return {
-    getFirstMessage: () => firstMessage,
-    stderrSpy,
-  };
+  return { firstMessage, result };
 }
 
 /** Missing optional plugin error fixture. */
@@ -109,21 +115,22 @@ describe("utilities", () => {
       ]);
     });
 
-    it("skips overrides for missing plugins and reports the skip", () => {
+    it("skips overrides for missing plugins and reports the skip", async () => {
       // Arrange
       const config = [{ name: "base" }];
-      const stderrCapture = createStderrCapture();
 
       // Act
-      const result = applyRuleOverrides(
-        config,
-        { "vitest/expect-expect": "error" },
-        new Set(["jest"]),
+      const { firstMessage, result } = await captureSutWithStderr(() =>
+        applyRuleOverrides(
+          config,
+          { "vitest/expect-expect": "error" },
+          new Set(["jest"]),
+        ),
       );
 
       // Assert
       expect(result).toStrictEqual(config);
-      expect(stderrCapture.getFirstMessage()).toContain(
+      expect(firstMessage).toContain(
         "Skipped rule override: vitest/expect-expect",
       );
     });
@@ -153,10 +160,10 @@ describe("utilities", () => {
   describe(isPluginDisabled, () => {
     it("returns false when the disabled list is undefined", () => {
       // Arrange
-      // (no setup needed)
+      const pluginName = "jest";
 
       // Act
-      const isDisabled = isPluginDisabled("jest", void 0);
+      const isDisabled = isPluginDisabled(pluginName, void 0);
 
       // Assert
       expect(isDisabled).toBe(false);
@@ -164,10 +171,10 @@ describe("utilities", () => {
 
     it("returns false when the plugin is not disabled", () => {
       // Arrange
-      // (no setup needed)
+      const disabledList: readonly PluginName[] = ["jasmine"];
 
       // Act
-      const isDisabled = isPluginDisabled("jest", ["jasmine"]);
+      const isDisabled = isPluginDisabled("jest", disabledList);
 
       // Assert
       expect(isDisabled).toBe(false);
@@ -175,10 +182,10 @@ describe("utilities", () => {
 
     it("returns true when the plugin is disabled", () => {
       // Arrange
-      // (no setup needed)
+      const disabledList: readonly PluginName[] = ["jasmine", "jest"];
 
       // Act
-      const isDisabled = isPluginDisabled("jest", ["jasmine", "jest"]);
+      const isDisabled = isPluginDisabled("jest", disabledList);
 
       // Assert
       expect(isDisabled).toBe(true);
@@ -229,65 +236,58 @@ describe("utilities", () => {
 
     it("returns empty configs and reports optional failures", async () => {
       // Arrange
-      const stderrCapture = createStderrCapture();
+      const expectedMessage = "Failed to load ESLint plugin config: jest";
 
       // Act
-      const actualConfigs = await loadPluginConfig(
-        "jest",
-        loadMissingPluginConfig,
+      const { firstMessage, result } = await captureSutWithStderr(async () =>
+        loadPluginConfig("jest", loadMissingPluginConfig),
       );
 
       // Assert
-      expect(actualConfigs).toStrictEqual([]);
-      expect(stderrCapture.getFirstMessage()).toContain(
-        "Failed to load ESLint plugin config: jest",
-      );
-      expect(stderrCapture.getFirstMessage()).toContain(
-        "Install the plugin or disable it",
-      );
+      expect(result).toStrictEqual([]);
+      expect(firstMessage).toContain(expectedMessage);
+      expect(firstMessage).toContain("Install the plugin or disable it");
     });
 
     it("rethrows required loader failures after reporting them", async () => {
       // Arrange
-      const stderrCapture = createStderrCapture();
+      const expectedMessage =
+        'Install the required peer dependency backing "typescript"';
 
       // Act
-      const actualError = await (async (): Promise<unknown> => {
-        try {
-          await loadPluginConfig(
-            "typescript",
-            loadRequiredPeerConfig,
-            "required",
-          );
-        } catch (caughtError: unknown) {
-          return caughtError;
-        }
+      const { firstMessage, result: actualError } = await captureSutWithStderr(
+        async () => {
+          try {
+            await loadPluginConfig(
+              "typescript",
+              loadRequiredPeerConfig,
+              "required",
+            );
+          } catch (caughtError: unknown) {
+            return caughtError;
+          }
 
-        return void 0;
-      })();
+          return void 0;
+        },
+      );
 
       // Assert
       expect(actualError).toBe(requiredPeerError);
-      expect(stderrCapture.getFirstMessage()).toContain(
-        'Install the required peer dependency backing "typescript"',
-      );
+      expect(firstMessage).toContain(expectedMessage);
     });
 
     it("classifies missing optional integrations as skips", async () => {
       // Arrange
-      const stderrCapture = createStderrCapture();
+      const expectedMessage = "Skipped optional ESLint plugin config: jest";
 
       // Act
-      const actualConfigs = await loadPluginConfig(
-        "jest",
-        loadMissingJestPluginConfig,
+      const { firstMessage, result } = await captureSutWithStderr(async () =>
+        loadPluginConfig("jest", loadMissingJestPluginConfig),
       );
 
       // Assert
-      expect(actualConfigs).toStrictEqual([]);
-      expect(stderrCapture.getFirstMessage()).toContain(
-        "Skipped optional ESLint plugin config: jest",
-      );
+      expect(result).toStrictEqual([]);
+      expect(firstMessage).toContain(expectedMessage);
     });
   });
 });

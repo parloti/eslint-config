@@ -22,15 +22,14 @@ vi.mock(import("typescript-eslint"), () => ({
 describe("typescript config", () => {
   it("returns custom configs", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "@typescript-eslint/custom";
 
     // Act
-    const configs = await typescript();
+    const actualHasExpectedConfig = await typescript().then((configs) =>
+      configs.some((config) => config.name === expectedConfigName),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      configs.some((config) => config.name === "@typescript-eslint/custom"),
-    ).toBe(true);
+    expect(actualHasExpectedConfig).toBe(true);
   });
 });

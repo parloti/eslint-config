@@ -39,15 +39,12 @@ describe("boundaries config", () => {
     };
 
     // Act
-    const configs = boundaries(config);
+    const actualHasElementTypesRule = boundaries(config).some((entry) =>
+      Object.hasOwn(entry.rules ?? {}, "boundaries/element-types"),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      configs.some((entry) =>
-        Object.hasOwn(entry.rules ?? {}, "boundaries/element-types"),
-      ),
-    ).toBe(true);
+    expect(actualHasElementTypesRule).toBe(true);
   });
 
   it("passes through files and ignores options", () => {
@@ -63,12 +60,12 @@ describe("boundaries config", () => {
     const configs = boundaries(config);
 
     // Assert
-    expect(
-      configs.some((entry) => entry.files?.includes("src/**/*.ts") === true),
-    ).toBe(true);
-    expect(
-      configs.some((entry) => entry.ignores?.includes("**/*.spec.ts") === true),
-    ).toBe(true);
+    expect(configs).toStrictEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ files: ["src/**/*.ts"] }),
+        expect.objectContaining({ ignores: ["**/*.spec.ts"] }),
+      ]),
+    );
   });
 
   it("does not infer a default topology when files are missing", () => {

@@ -17,18 +17,16 @@ vi.mock(
 describe("domain configs", () => {
   it("returns rxjs-x configs with custom entries", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigNames = ["rxjs-x/custom", "rxjs-x/custom-spec"];
 
     // Act
-    const configs = await rxjsX();
+    const actualConfigNames = await rxjsX().then((configs) =>
+      configs.map((config) => config.name),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "rxjs-x/custom")).toBe(
-      true,
-    );
-    expect(configs.some((config) => config.name === "rxjs-x/custom-spec")).toBe(
-      true,
+    expect(actualConfigNames).toStrictEqual(
+      expect.arrayContaining(expectedConfigNames),
     );
   });
 });

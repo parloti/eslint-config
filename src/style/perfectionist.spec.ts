@@ -66,13 +66,13 @@ describe("perfectionist config", () => {
 
   it("returns configs", async () => {
     // Arrange
-    // (no setup needed)
+    const minimumConfigCount = 1;
 
     // Act
     const configs = await perfectionist();
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
+    expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
   });
 
   it("disables perfectionist rules for generated snippet files", async () => {

@@ -30,45 +30,45 @@ vi.mock(
 describe("style configs", () => {
   it("returns perfectionist configs", async () => {
     // Arrange
-    // (no setup needed)
+    const minimumConfigCount = 1;
 
     // Act
     const configs = await perfectionist();
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
+    expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
   });
 
   it("returns prettier configs", async () => {
     // Arrange
-    // (no setup needed)
+    const minimumConfigCount = 1;
 
     // Act
     const configs = await prettier();
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
+    expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
   });
 
   it("returns stylistic configs", async () => {
     // Arrange
-    // (no setup needed)
+    const minimumConfigCount = 1;
 
     // Act
     const configs = await stylistic();
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
+    expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
   });
 
   it("returns unicorn configs", async () => {
     // Arrange
-    // (no setup needed)
+    const minimumConfigCount = 1;
 
     // Act
     const configs = await unicorn();
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
+    expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
   });
 });

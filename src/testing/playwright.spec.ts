@@ -17,12 +17,12 @@ async function hasPlaywrightBuilder(): Promise<boolean> {
 describe("playwright config", () => {
   it("exports a config builder", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedResult = true;
 
     // Act
     const isBuilderFunction = await hasPlaywrightBuilder();
 
     // Assert
-    expect(isBuilderFunction).toBe(true);
+    expect(isBuilderFunction).toBe(expectedResult);
   });
 });

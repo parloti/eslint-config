@@ -97,45 +97,44 @@ describe("testing configs", () => {
 
   it("returns jasmine config with custom entry", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "jasmine/custom";
 
     // Act
-    const configs = await jasmine();
+    const actualHasExpectedConfig = await jasmine().then((configs) =>
+      configs.some((config) => config.name === expectedConfigName),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "jasmine/custom")).toBe(
-      true,
-    );
+    expect(actualHasExpectedConfig).toBe(true);
   });
 
   it("returns jest config with custom entries", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigNames = ["jest/custom", "jest/custom-global-overrides"];
 
     // Act
-    const configs = await jest();
+    const actualConfigNames = await jest().then((configs) =>
+      configs.map((config) => config.name),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "jest/custom")).toBe(true);
-    expect(
-      configs.some((config) => config.name === "jest/custom-global-overrides"),
-    ).toBe(true);
+    expect(actualConfigNames).toStrictEqual(
+      expect.arrayContaining(expectedConfigNames),
+    );
   });
 
   it("returns vitest config with custom entry", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "vitest/custom";
 
     // Act
-    const configs = await vitestConfig();
+    const actualVitestCustomRules = await vitestConfig().then(
+      (configs) =>
+        configs.find((config) => config.name === expectedConfigName)?.rules,
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      configs.find((config) => config.name === "vitest/custom")?.rules,
-    ).toMatchObject({
+    expect(actualVitestCustomRules).toMatchObject({
       "vitest/consistent-test-filename": [
         "error",
         { pattern: String.raw`.*\.spec\.[tj]sx?$` },
@@ -165,10 +164,11 @@ describe("testing configs", () => {
     const configs = await loadPlaywrightConfigs();
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      configs.some((config) => config.name === "playwright/custom-error"),
-    ).toBe(true);
+    expect(configs).toStrictEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "playwright/custom-error" }),
+      ]),
+    );
     expect(configs[0]?.rules).toMatchObject({ "playwright/no-foo": "error" });
   });
 
@@ -207,11 +207,12 @@ describe("testing configs", () => {
     };
 
     // Act
-    const configs = await loadPlaywrightConfigs();
+    const actualRuleKeys = await loadPlaywrightConfigs().then((configs) =>
+      Object.keys(configs[0]?.rules ?? {}),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(Object.keys(configs[0]?.rules ?? {})).toContain("playwright/no-foo");
-    expect(Object.keys(configs[0]?.rules ?? {})).not.toContain("playwright/");
+    expect(actualRuleKeys).toContain("playwright/no-foo");
+    expect(actualRuleKeys).not.toContain("playwright/");
   });
 });

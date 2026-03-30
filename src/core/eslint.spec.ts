@@ -5,15 +5,14 @@ import { eslint } from "./eslint";
 describe("eslint config", () => {
   it("returns custom configs", () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "@eslint/js/custom";
 
     // Act
-    const configs = eslint();
+    const actualHasExpectedConfig = eslint().some(
+      (config) => config.name === expectedConfigName,
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "@eslint/js/custom")).toBe(
-      true,
-    );
+    expect(actualHasExpectedConfig).toBe(true);
   });
 });

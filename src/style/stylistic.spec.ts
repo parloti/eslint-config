@@ -5,12 +5,12 @@ import { stylistic } from "./stylistic";
 describe("stylistic config", () => {
   it("returns configs", async () => {
     // Arrange
-    // (no setup needed)
+    const minimumConfigCount = 1;
 
     // Act
     const configs = await stylistic();
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
+    expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
   });
 });

@@ -75,28 +75,36 @@ describe("diagnostics", () => {
   });
 
   describe(isMissingModuleError, () => {
-    it("returns true for common missing module messages", () => {
+    it("returns true for a Cannot-find-module error", () => {
       // Arrange
-      // (no setup needed)
+      const missingModuleMessage = "Cannot find module 'vitest'";
 
       // Act
-      const actualResults = [
-        new Error("Cannot find module 'vitest'"),
-        "ERR_MODULE_NOT_FOUND",
-      ].map((errorLike) => isMissingModuleError(errorLike));
+      const actualResult = isMissingModuleError(
+        new Error(missingModuleMessage),
+      );
 
       // Assert
-      expect(actualResults).toStrictEqual([true, true]);
+      expect(actualResult).toBe(true);
+    });
+
+    it("returns true for an ERR_MODULE_NOT_FOUND string", () => {
+      // Arrange
+      const moduleNotFoundSignal = "ERR_MODULE_NOT_FOUND";
+
+      // Act
+      const actualResult = isMissingModuleError(moduleNotFoundSignal);
+
+      // Assert
+      expect(actualResult).toBe(true);
     });
 
     it("returns false for non-missing module messages", () => {
       // Arrange
-      // (no setup needed)
+      const errorMessage = "Unexpected parse error";
 
       // Act
-      const actualResult = isMissingModuleError(
-        new Error("Unexpected parse error"),
-      );
+      const actualResult = isMissingModuleError(new Error(errorMessage));
 
       // Assert
       expect(actualResult).toBe(false);
@@ -106,7 +114,7 @@ describe("diagnostics", () => {
   describe(reportPluginLoadIssue, () => {
     it("reports skipped optional integrations distinctly", () => {
       // Arrange
-      // (no setup needed)
+      const expectedMessage = "Skipped optional ESLint plugin config: vitest";
 
       // Act
       const outcome = captureStderrOutcome(() => {
@@ -119,14 +127,13 @@ describe("diagnostics", () => {
 
       // Assert
       expect(outcome.writeCallCount).toBe(1);
-      expect(outcome.message).toContain(
-        "Skipped optional ESLint plugin config: vitest",
-      );
+      expect(outcome.message).toContain(expectedMessage);
     });
 
     it("reports required loader failures distinctly", () => {
       // Arrange
-      // (no setup needed)
+      const expectedMessage =
+        'Install the required peer dependency backing "typescript"';
 
       // Act
       const outcome = captureStderrOutcome(() => {
@@ -135,16 +142,14 @@ describe("diagnostics", () => {
 
       // Assert
       expect(outcome.writeCallCount).toBe(1);
-      expect(outcome.message).toContain(
-        'Install the required peer dependency backing "typescript"',
-      );
+      expect(outcome.message).toContain(expectedMessage);
     });
   });
 
   describe(reportRuleOverrideSkip, () => {
     it("reports missing plugin overrides", () => {
       // Arrange
-      // (no setup needed)
+      const expectedMessage = "Skipped rule override: vitest/no-focused-tests";
 
       // Act
       const outcome = captureStderrOutcome(() => {
@@ -153,16 +158,15 @@ describe("diagnostics", () => {
 
       // Assert
       expect(outcome.writeCallCount).toBe(1);
-      expect(outcome.message).toContain(
-        "Skipped rule override: vitest/no-focused-tests",
-      );
+      expect(outcome.message).toContain(expectedMessage);
     });
   });
 
   describe(reportMissingBoundariesConfig, () => {
     it("reports repository-owned boundaries input guidance", () => {
       // Arrange
-      // (no setup needed)
+      const expectedMessage =
+        "Provide repository-owned boundaries files, elements, and element-types.";
 
       // Act
       const outcome = captureStderrOutcome(() => {
@@ -171,9 +175,7 @@ describe("diagnostics", () => {
 
       // Assert
       expect(outcome.writeCallCount).toBe(1);
-      expect(outcome.message).toContain(
-        "Provide repository-owned boundaries files, elements, and element-types.",
-      );
+      expect(outcome.message).toContain(expectedMessage);
     });
   });
 });

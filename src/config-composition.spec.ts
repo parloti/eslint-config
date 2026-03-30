@@ -137,12 +137,12 @@ describe("config composition", () => {
     mockAllEnabled();
 
     // Act
-    const result = await loadComposedConfig({});
+    const actualResultNames = await loadComposedConfig({}).then((configs) =>
+      configs.map((entry) => entry.name),
+    );
 
     // Assert
-    expect(result.map((entry) => entry.name)).toStrictEqual(
-      fullCompositionNames,
-    );
+    expect(actualResultNames).toStrictEqual(fullCompositionNames);
   });
 
   it("removes disabled modules without disturbing remaining order", async () => {
@@ -151,14 +151,12 @@ describe("config composition", () => {
     mockAllEnabled();
 
     // Act
-    const result = await loadComposedConfig({
+    const actualResultNames = await loadComposedConfig({
       disabledPlugins: ["boundaries", "prettier", "vitest"],
-    });
+    }).then((configs) => configs.map((entry) => entry.name));
 
     // Assert
-    expect(result.map((entry) => entry.name)).toStrictEqual(
-      reducedCompositionNames,
-    );
+    expect(actualResultNames).toStrictEqual(reducedCompositionNames);
   });
 
   it("applies rule overrides after all enabled modules", async () => {
@@ -167,10 +165,12 @@ describe("config composition", () => {
     mockAllEnabled();
 
     // Act
-    const result = await loadComposedConfig({ rules: { "no-console": "off" } });
+    const actualLastEntry = await loadComposedConfig({
+      rules: { "no-console": "off" },
+    }).then((configs) => configs.at(-1));
 
     // Assert
-    expect(result.at(-1)).toMatchObject({
+    expect(actualLastEntry).toMatchObject({
       name: "custom/rule-overrides",
       rules: { "no-console": "off" },
     });

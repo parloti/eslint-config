@@ -5,15 +5,14 @@ import { jasmine } from "./jasmine";
 describe("jasmine config", () => {
   it("returns configs", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "jasmine/custom";
 
     // Act
-    const configs = await jasmine();
+    const actualHasExpectedConfig = await jasmine().then((configs) =>
+      configs.some((config) => config.name === expectedConfigName),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "jasmine/custom")).toBe(
-      true,
-    );
+    expect(actualHasExpectedConfig).toBe(true);
   });
 });

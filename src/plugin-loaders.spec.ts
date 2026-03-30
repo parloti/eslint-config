@@ -11,13 +11,13 @@ const documentedPluginNames = moduleTaxonomy
 describe("pluginLoaders", () => {
   it("covers every documented module in the taxonomy", () => {
     // Arrange
-    // (no setup needed)
+    const expectedPluginNames = documentedPluginNames;
 
     // Act
     const actualPluginNames = Object.keys(pluginLoaders).toSorted();
 
     // Assert
-    expect(actualPluginNames).toStrictEqual(documentedPluginNames);
+    expect(actualPluginNames).toStrictEqual(expectedPluginNames);
   });
 
   it("uses the documented load mode for every module", () => {

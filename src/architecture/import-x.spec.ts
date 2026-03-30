@@ -48,12 +48,12 @@ describe("import-x branch coverage", () => {
     );
 
     // Act
-    const configs = await loadImportXConfigs();
+    const actualHasCustomErrorConfig = await loadImportXConfigs().then(
+      (configs) =>
+        configs.some((config) => config.name === "import-x/custom-error"),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      configs.some((config) => config.name === "import-x/custom-error"),
-    ).toBe(true);
+    expect(actualHasCustomErrorConfig).toBe(true);
   });
 });

@@ -44,18 +44,15 @@ vi.mock(import("eslint-plugin-jsdoc"), () => ({
 describe("docs configs", () => {
   it("returns eslint-comments configs with custom entries", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "@eslint-community/eslint-comments/custom";
 
     // Act
-    const configs = await comments();
+    const actualHasExpectedConfig = await comments().then((configs) =>
+      configs.some((config) => config.name === expectedConfigName),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(
-      configs.some(
-        (config) => config.name === "@eslint-community/eslint-comments/custom",
-      ),
-    ).toBe(true);
+    expect(actualHasExpectedConfig).toBe(true);
   });
 
   it("returns jsdoc configs with custom entries", async () => {
@@ -67,26 +64,25 @@ describe("docs configs", () => {
     ];
 
     // Act
-    const configs = await jsdoc();
+    const actualConfigNames = await jsdoc().then((configs) =>
+      configs.map((config) => config.name),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.map((config) => config.name)).toStrictEqual(
+    expect(actualConfigNames).toStrictEqual(
       expect.arrayContaining(expectedNames),
     );
   });
 
   it("exposes custom jsdoc rules", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedCustomRule = { "jsdoc/text-escaping": "off" };
 
     // Act
     const rulesByConfigName = await loadJsdocRulesByConfigName();
 
     // Assert
-    expect(rulesByConfigName["jsdoc/custom"]).toMatchObject({
-      "jsdoc/text-escaping": "off",
-    });
+    expect(rulesByConfigName["jsdoc/custom"]).toMatchObject(expectedCustomRule);
     expect(rulesByConfigName["jsdoc/require-jsdoc-alias"]).toMatchObject({
       "jsdoc/require-jsdoc": ["error", expect.any(Object)],
     });

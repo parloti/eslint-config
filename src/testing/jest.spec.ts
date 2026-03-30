@@ -19,13 +19,14 @@ vi.mock(import("eslint-plugin-jest"), () => ({
 describe("jest config", () => {
   it("returns configs", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "jest/custom";
 
     // Act
-    const configs = await jest();
+    const actualHasExpectedConfig = await jest().then((configs) =>
+      configs.some((config) => config.name === expectedConfigName),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "jest/custom")).toBe(true);
+    expect(actualHasExpectedConfig).toBe(true);
   });
 });

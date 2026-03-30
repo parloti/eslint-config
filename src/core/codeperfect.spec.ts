@@ -18,15 +18,14 @@ vi.mock(
 describe("codeperfect config", () => {
   it("returns the upstream all config", async () => {
     // Arrange
-    // (no setup needed)
+    const expectedConfigName = "codeperfect/all";
 
     // Act
-    const configs = await codeperfect();
+    const actualHasExpectedConfig = await codeperfect().then((configs) =>
+      configs.some((config) => config.name === expectedConfigName),
+    );
 
     // Assert
-    expect(configs.length).toBeGreaterThan(0);
-    expect(configs.some((config) => config.name === "codeperfect/all")).toBe(
-      true,
-    );
+    expect(actualHasExpectedConfig).toBe(true);
   });
 });
