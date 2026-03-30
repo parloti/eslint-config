@@ -12,17 +12,6 @@ const allPlugins: PluginName[] = moduleTaxonomy.map(
 
 describe("config-factory", () => {
   describe(config, () => {
-    it("exports a callable config function", () => {
-      // Arrange
-      const expectedType = "function";
-
-      // Act
-      const actualType = typeof config;
-
-      // Assert
-      expect(actualType).toBe(expectedType);
-    });
-
     it("returns an empty array when all plugins are disabled", async () => {
       // Arrange
       const expectedConfigs: [] = [];

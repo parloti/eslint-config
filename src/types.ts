@@ -13,6 +13,7 @@ interface BoundariesConfig {
   elements: ElementDescriptors;
 
   /** Repository-owned dependency direction rules for boundaries analysis. */
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments --- This is necessary to ensure correct typing of the rule options.
   elementTypes: Linter.RuleEntry<DependenciesRuleOptions[]>;
 
   /** Files included in repository-specific boundaries analysis. */
