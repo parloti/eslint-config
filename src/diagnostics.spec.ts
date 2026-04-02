@@ -4,6 +4,7 @@ import {
   isMissingModuleError,
   reportMissingBoundariesConfig,
   reportPluginLoadIssue,
+  reportRedundantPluginState,
   reportRuleOverrideSkip,
 } from "./diagnostics";
 
@@ -128,6 +129,7 @@ describe("diagnostics", () => {
       // Assert
       expect(outcome.writeCallCount).toBe(1);
       expect(outcome.message).toContain(expectedMessage);
+      expect(outcome.message).toContain('plugins: { "vitest": false }');
     });
 
     it("reports required loader failures distinctly", () => {
@@ -154,6 +156,36 @@ describe("diagnostics", () => {
       // Act
       const outcome = captureStderrOutcome(() => {
         reportRuleOverrideSkip("vitest/no-focused-tests", "vitest");
+      });
+
+      // Assert
+      expect(outcome.writeCallCount).toBe(1);
+      expect(outcome.message).toContain(expectedMessage);
+    });
+  });
+
+  describe(reportRedundantPluginState, () => {
+    it("reports redundant disable requests distinctly", () => {
+      // Arrange
+      const expectedMessage = 'Plugin "jest" is already disabled by default.';
+
+      // Act
+      const outcome = captureStderrOutcome(() => {
+        reportRedundantPluginState("jest", false);
+      });
+
+      // Assert
+      expect(outcome.writeCallCount).toBe(1);
+      expect(outcome.message).toContain(expectedMessage);
+    });
+
+    it("reports redundant enable requests distinctly", () => {
+      // Arrange
+      const expectedMessage = 'Plugin "vitest" is already enabled by default.';
+
+      // Act
+      const outcome = captureStderrOutcome(() => {
+        reportRedundantPluginState("vitest", true);
       });
 
       // Assert

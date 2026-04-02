@@ -1,2 +1,6 @@
 export { config } from "./config-factory";
-export type { BoundariesConfig, ConfigOptions } from "./types";
+export type {
+  BoundariesConfig,
+  ConfigOptions,
+  PluginStateOverrides,
+} from "./types";

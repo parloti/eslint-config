@@ -37,7 +37,7 @@ function isMissingModuleError(error: unknown): boolean {
 function reportMissingBoundariesConfig(): void {
   const header = `${ansi.bold}${ansi.red}Skipped boundaries config${ansi.reset}`;
   const detail = `${ansi.yellow}Provide repository-owned boundaries files, elements, and element-types.${ansi.reset}`;
-  const hint = `${ansi.cyan}Hint:${ansi.reset} Provide boundaries config via config({ boundaries: { ... } }) or disable the plugin with disabledPlugins: ["boundaries"].`;
+  const hint = `${ansi.cyan}Hint:${ansi.reset} Provide boundaries config via config({ boundaries: { ... } }) or disable the plugin with plugins: { "boundaries": false }.`;
   process.stderr.write(`${[header, detail, hint].join("\n")}\n`);
 }
 
@@ -66,7 +66,27 @@ function reportPluginLoadIssue(
   const hint =
     mode === "required"
       ? `${ansi.cyan}Hint:${ansi.reset} Install the required peer dependency backing "${pluginName}" before using config().`
-      : `${ansi.cyan}Hint:${ansi.reset} Install the plugin or disable it via config({ disabledPlugins: ["${pluginName}"] }).`;
+      : `${ansi.cyan}Hint:${ansi.reset} Install the plugin or disable it via config({ plugins: { "${pluginName}": false } }).`;
+  process.stderr.write(`${[header, detail, hint].join("\n")}\n`);
+}
+
+/**
+ * Reports that a plugin-state override is redundant with the default state.
+ * @param pluginName Input pluginName value.
+ * @param enabled Input enabled value.
+ * @example
+ * ```typescript
+ * reportRedundantPluginState("jest", false);
+ * ```
+ */
+function reportRedundantPluginState(
+  pluginName: PluginName,
+  enabled: boolean,
+): void {
+  const stateLabel = enabled ? "enabled" : "disabled";
+  const header = `${ansi.bold}${ansi.yellow}Redundant plugin state override: ${pluginName}${ansi.reset}`;
+  const detail = `${ansi.yellow}Plugin "${pluginName}" is already ${stateLabel} by default.${ansi.reset}`;
+  const hint = `${ansi.cyan}Hint:${ansi.reset} Remove the redundant override from config({ plugins: { "${pluginName}": ${String(enabled)} } }).`;
   process.stderr.write(`${[header, detail, hint].join("\n")}\n`);
 }
 
@@ -90,5 +110,6 @@ export {
   isMissingModuleError,
   reportMissingBoundariesConfig,
   reportPluginLoadIssue,
+  reportRedundantPluginState,
   reportRuleOverrideSkip,
 };

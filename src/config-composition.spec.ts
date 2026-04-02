@@ -6,18 +6,28 @@ import type * as configsModuleType from "./configs";
 import type { ConfigOptions } from "./types";
 
 import {
+  defaultCompositionNames,
   fullCompositionNames,
   reducedCompositionNames,
 } from "./config-composition";
 
 /** Minimal config-composition options used in these tests. */
-type CompositionOptions = Pick<ConfigOptions, "disabledPlugins" | "rules">;
+type CompositionOptions = Pick<ConfigOptions, "plugins" | "rules">;
 
 /** Module namespace type for mocked config loader exports. */
 type ConfigsModule = typeof configsModuleType;
 
 /** Mutable configs module used by import mocks. */
 let configsModuleMock: Partial<ConfigsModule> | undefined;
+
+/** Captured config result paired with the first stderr message. */
+interface IConfigOutcome {
+  /** First stderr message emitted while composing config. */
+  firstMessage: string | undefined;
+
+  /** Names of composed config entries. */
+  names: (string | undefined)[];
+}
 
 vi.mock(import("./configs"), () => {
   if (configsModuleMock === void 0) {
@@ -42,6 +52,33 @@ async function loadComposedConfig(
   const { config } = await import("./index");
 
   return config(options);
+}
+
+/**
+ * Load config names while capturing the first stderr message.
+ * @param options Config options passed to the composed builder.
+ * @returns Composed config names and the first stderr message.
+ * @example
+ * ```typescript
+ * await loadCompositionOutcome({});
+ * ```
+ */
+async function loadCompositionOutcome(
+  options: CompositionOptions,
+): Promise<IConfigOutcome> {
+  let firstMessage: string | undefined;
+  vi.spyOn(process.stderr, "write").mockImplementation(
+    (chunk: string | Uint8Array) => {
+      firstMessage ??= String(chunk);
+
+      return true;
+    },
+  );
+  const names = await loadComposedConfig(options).then((configs) =>
+    configs.map((entry) => entry.name),
+  );
+
+  return { firstMessage, names };
 }
 
 /**
@@ -128,10 +165,11 @@ describe("config composition", () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
+    vi.restoreAllMocks();
     configsModuleMock = void 0;
   });
 
-  it("preserves the documented composition order", async () => {
+  it("preserves the documented default composition order", async () => {
     // Arrange
     vi.resetModules();
     mockAllEnabled();
@@ -142,21 +180,70 @@ describe("config composition", () => {
     );
 
     // Assert
-    expect(actualResultNames).toStrictEqual(fullCompositionNames);
+    expect(actualResultNames).toStrictEqual(defaultCompositionNames);
   });
 
-  it("removes disabled modules without disturbing remaining order", async () => {
+  it("removes explicitly disabled modules without disturbing remaining order", async () => {
     // Arrange
     vi.resetModules();
     mockAllEnabled();
 
     // Act
     const actualResultNames = await loadComposedConfig({
-      disabledPlugins: ["boundaries", "prettier", "vitest"],
+      plugins: { boundaries: false, prettier: false, vitest: false },
     }).then((configs) => configs.map((entry) => entry.name));
 
     // Assert
     expect(actualResultNames).toStrictEqual(reducedCompositionNames);
+  });
+
+  it("allows explicitly enabling default-disabled testing plugins", async () => {
+    // Arrange
+    vi.resetModules();
+    mockAllEnabled();
+
+    // Act
+    const outcome = await loadCompositionOutcome({
+      plugins: { jasmine: true, jest: true },
+    });
+
+    // Assert
+    expect(outcome.names).toStrictEqual(fullCompositionNames);
+    expect(outcome.firstMessage).toBeUndefined();
+  });
+
+  it("warns when a default-disabled plugin is redundantly disabled", async () => {
+    // Arrange
+    vi.resetModules();
+    mockAllEnabled();
+
+    // Act
+    const outcome = await loadCompositionOutcome({
+      plugins: { jest: false },
+    });
+
+    // Assert
+    expect(outcome.names).toStrictEqual(defaultCompositionNames);
+    expect(outcome.firstMessage).toContain(
+      "Redundant plugin state override: jest",
+    );
+  });
+
+  it("warns when a default-enabled plugin is redundantly enabled", async () => {
+    // Arrange
+    vi.resetModules();
+    mockAllEnabled();
+
+    // Act
+    const outcome = await loadCompositionOutcome({
+      plugins: { vitest: true },
+    });
+
+    // Assert
+    expect(outcome.names).toStrictEqual(defaultCompositionNames);
+    expect(outcome.firstMessage).toContain(
+      "Redundant plugin state override: vitest",
+    );
   });
 
   it("applies rule overrides after all enabled modules", async () => {

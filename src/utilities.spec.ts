@@ -2,12 +2,9 @@ import type { Linter } from "eslint";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { PluginName } from "./types";
-
 import {
   applyRuleOverrides,
   collectAvailablePlugins,
-  isPluginDisabled,
   loadPluginConfig,
 } from "./utilities";
 
@@ -157,41 +154,6 @@ describe("utilities", () => {
     });
   });
 
-  describe(isPluginDisabled, () => {
-    it("returns false when the disabled list is undefined", () => {
-      // Arrange
-      const pluginName = "jest";
-
-      // Act
-      const isDisabled = isPluginDisabled(pluginName, void 0);
-
-      // Assert
-      expect(isDisabled).toBe(false);
-    });
-
-    it("returns false when the plugin is not disabled", () => {
-      // Arrange
-      const disabledList: readonly PluginName[] = ["jasmine"];
-
-      // Act
-      const isDisabled = isPluginDisabled("jest", disabledList);
-
-      // Assert
-      expect(isDisabled).toBe(false);
-    });
-
-    it("returns true when the plugin is disabled", () => {
-      // Arrange
-      const disabledList: readonly PluginName[] = ["jasmine", "jest"];
-
-      // Act
-      const isDisabled = isPluginDisabled("jest", disabledList);
-
-      // Assert
-      expect(isDisabled).toBe(true);
-    });
-  });
-
   describe(collectAvailablePlugins, () => {
     it("collects plugin names from config entries", () => {
       // Arrange
@@ -246,7 +208,7 @@ describe("utilities", () => {
       // Assert
       expect(result).toStrictEqual([]);
       expect(firstMessage).toContain(expectedMessage);
-      expect(firstMessage).toContain("Install the plugin or disable it");
+      expect(firstMessage).toContain('plugins: { "jest": false }');
     });
 
     it("rethrows required loader failures after reporting them", async () => {

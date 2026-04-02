@@ -3,25 +3,25 @@ import { describe, expect, it } from "vitest";
 import type { BoundariesConfig, ConfigOptions } from "./types";
 
 /**
- * Read the first disabled plugin name from the public config options.
+ * Read the explicit plugin states from the public config options.
  * @param configOptions The config options under test.
- * @returns The first disabled plugin name.
+ * @returns The plugin state overrides.
  * @example
  * ```typescript
- * readDisabledPluginName({ disabledPlugins: ["jest"] });
+ * readPluginStates({ plugins: { jest: true } });
  * ```
  */
-function readDisabledPluginName(
+function readPluginStates(
   configOptions: ConfigOptions,
-): string | undefined {
-  return configOptions.disabledPlugins?.[0];
+): ConfigOptions["plugins"] {
+  return configOptions.plugins;
 }
 
 describe("types", () => {
   it("exports the public config option types", () => {
     // Arrange
     const configOptions: ConfigOptions = {
-      disabledPlugins: ["jest"],
+      plugins: { jest: true, vitest: false },
     };
     const boundariesConfig: BoundariesConfig = {
       elements: [],
@@ -30,7 +30,7 @@ describe("types", () => {
     };
 
     // Act
-    const actualPluginName = readDisabledPluginName(configOptions);
+    const actualPluginStates = readPluginStates(configOptions);
 
     // Assert
     expect({
@@ -39,14 +39,12 @@ describe("types", () => {
         ? boundariesConfig.elementTypes.length
         : 0,
       fileCount: boundariesConfig.files.length,
-      pluginName: actualPluginName,
-      plugins: configOptions.disabledPlugins,
+      pluginStates: actualPluginStates,
     }).toStrictEqual({
       elementCount: 0,
       elementTypeCount: 2,
       fileCount: 1,
-      pluginName: "jest",
-      plugins: ["jest"],
+      pluginStates: { jest: true, vitest: false },
     });
   });
 });

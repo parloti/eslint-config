@@ -1,6 +1,6 @@
 import { config } from "./src";
 
 export default await config({
-  disabledPlugins: ["boundaries", "jasmine", "jest", "playwright", "rxjs-x"],
+  plugins: { boundaries: false, playwright: false, "rxjs-x": false },
   rules: { "import-x/no-nodejs-modules": "off" },
 });

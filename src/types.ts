@@ -28,8 +28,8 @@ interface ConfigOptions {
   /** Repository-owned architecture input for the optional `boundaries` module. */
   boundaries?: BoundariesConfig;
 
-  /** List of named modules to disable from the composed configuration. */
-  disabledPlugins?: readonly PluginName[];
+  /** Explicit plugin state overrides keyed by public plugin name. */
+  plugins?: PluginStateOverrides;
 
   /**
    * Rules to disable or override.
@@ -56,10 +56,18 @@ type PluginName =
   | StylePluginName
   | TestingPluginName;
 
+/** Type definition for explicit plugin state overrides. */
+type PluginStateOverrides = Partial<Record<PluginName, boolean>>;
+
 /** Type definition for rule data. */
 type StylePluginName = "perfectionist" | "prettier" | "stylistic" | "unicorn";
 
 /** Type definition for rule data. */
 type TestingPluginName = "jasmine" | "jest" | "playwright" | "vitest";
 
-export type { BoundariesConfig, ConfigOptions, PluginName };
+export type {
+  BoundariesConfig,
+  ConfigOptions,
+  PluginName,
+  PluginStateOverrides,
+};

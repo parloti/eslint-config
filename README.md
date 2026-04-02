@@ -38,9 +38,27 @@ Disable modules that do not apply to the repository:
 import { config } from "@codeperfect/eslint-config";
 
 export default config({
-  disabledPlugins: ["boundaries", "jasmine", "jest"],
+  plugins: {
+    boundaries: false,
+    prettier: false,
+  },
 });
 ```
+
+Enable modules that are opt-in by default:
+
+```typescript
+import { config } from "@codeperfect/eslint-config";
+
+export default config({
+  plugins: {
+    jasmine: true,
+    jest: true,
+  },
+});
+```
+
+`jasmine` and `jest` are disabled by default. All other documented modules are enabled by default unless explicitly set to `false`.
 
 Override final rule severities when the repository needs a narrower policy:
 
@@ -118,8 +136,8 @@ This order is intentional and validated in tests.
 | `import-x`      | `eslint-plugin-import-x`                          | Optional import analysis module.                       |
 | `comments`      | `@eslint-community/eslint-plugin-eslint-comments` | Optional ESLint directive-comment rules.               |
 | `jsdoc`         | `eslint-plugin-jsdoc`                             | Optional JSDoc rules and package-level JSDoc defaults. |
-| `jasmine`       | `eslint-plugin-jasmine`                           | Optional Jasmine rules.                                |
-| `jest`          | `eslint-plugin-jest`                              | Optional Jest rules.                                   |
+| `jasmine`       | `eslint-plugin-jasmine`                           | Optional Jasmine rules. Disabled by default.           |
+| `jest`          | `eslint-plugin-jest`                              | Optional Jest rules. Disabled by default.              |
 | `playwright`    | `eslint-plugin-playwright`                        | Optional Playwright rules.                             |
 | `vitest`        | `@vitest/eslint-plugin`                           | Optional Vitest rules.                                 |
 | `rxjs-x`        | `eslint-plugin-rxjs-x`                            | Optional RxJS rules.                                   |

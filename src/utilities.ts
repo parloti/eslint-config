@@ -93,23 +93,6 @@ function filterRuleOverrides(
 }
 
 /**
- * Checks if a plugin is disabled in the options.
- * @param pluginName Input pluginName value.
- * @param disabledPlugins Input disabledPlugins value.
- * @returns Return value output.
- * @example
- * ```typescript
- * isPluginDisabled();
- * ```
- */
-function isPluginDisabled(
-  pluginName: PluginName,
-  disabledPlugins?: readonly PluginName[],
-): boolean {
-  return disabledPlugins?.includes(pluginName) === true;
-}
-
-/**
  * Loads a plugin config with a helpful, colorful error message on failure.
  * @param pluginName Input pluginName value.
  * @param loader Input loader value.
@@ -164,11 +147,6 @@ function shouldSkipRuleOverride(
   return false;
 }
 
-export {
-  applyRuleOverrides,
-  collectAvailablePlugins,
-  isPluginDisabled,
-  loadPluginConfig,
-};
+export { applyRuleOverrides, collectAvailablePlugins, loadPluginConfig };
 
 export type { LoadMode };

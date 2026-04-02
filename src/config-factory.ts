@@ -2,14 +2,15 @@ import type { Linter } from "eslint";
 
 import { defineConfig } from "eslint/config";
 
+import type { PluginLoaderEntry } from "./plugin-loaders";
 import type { ConfigOptions } from "./types";
 
 import { moduleTaxonomy } from "./module-taxonomy";
 import { pluginLoaders } from "./plugin-loaders";
+import { resolvePluginState } from "./plugin-state";
 import {
   applyRuleOverrides,
   collectAvailablePlugins,
-  isPluginDisabled,
   loadPluginConfig,
 } from "./utilities";
 
@@ -25,20 +26,15 @@ import {
 function buildPluginConfigLoaders(
   options: ConfigOptions,
 ): Promise<Linter.Config[]>[] {
-  const disabledPlugins = [...(options.disabledPlugins ?? [])];
   const loaders: Promise<Linter.Config[]>[] = [];
 
   for (const { pluginName } of moduleTaxonomy) {
-    const loaderEntry = pluginLoaders[pluginName];
+    const loaderEntry: PluginLoaderEntry = pluginLoaders[pluginName];
+    const loadConfig = loaderEntry.loader(options);
+    const isEnabled = resolvePluginState(pluginName, options.plugins);
 
-    if (!isPluginDisabled(pluginName, disabledPlugins)) {
-      loaders.push(
-        loadPluginConfig(
-          pluginName,
-          loaderEntry.loader(options),
-          loaderEntry.mode,
-        ),
-      );
+    if (isEnabled) {
+      loaders.push(loadPluginConfig(pluginName, loadConfig, loaderEntry.mode));
     }
   }
 
