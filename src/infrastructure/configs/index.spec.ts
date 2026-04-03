@@ -20,7 +20,7 @@ import {
 import * as architecture from "../architecture";
 import * as core from "../core";
 import * as documentation from "../docs";
-import * as domain from "../domain";
+import * as rxjs from "../rxjs-x";
 import * as style from "../style";
 import * as testing from "../testing";
 
@@ -81,7 +81,7 @@ async function loadDocumentationExportMatches(): Promise<boolean[]> {
     actualBuilders.jsdoc === jsdoc,
     actualBuilders.jsdoc === documentation.jsdoc,
     actualBuilders.rxjsX === rxjsX,
-    actualBuilders.rxjsX === domain.rxjsX,
+    actualBuilders.rxjsX === rxjs.rxjsX,
   ];
 }
 

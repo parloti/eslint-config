@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { BoundariesConfig } from "../types";
+import type { BoundariesConfig } from "../../domain";
 
 import { boundaries, importX } from ".";
 
@@ -14,12 +14,12 @@ describe("architecture configs", () => {
     };
 
     // Act
-    const actualHasElementTypesRule = boundaries(config).some((entry) =>
-      Object.hasOwn(entry.rules ?? {}, "boundaries/element-types"),
+    const actualHasDependenciesRule = boundaries(config).some((entry) =>
+      Object.hasOwn(entry.rules ?? {}, "boundaries/dependencies"),
     );
 
     // Assert
-    expect(actualHasElementTypesRule).toBe(true);
+    expect(actualHasDependenciesRule).toBe(true);
   });
 
   it("returns import-x configs with custom entries", async () => {

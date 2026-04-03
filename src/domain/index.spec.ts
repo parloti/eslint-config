@@ -1,32 +1,46 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { rxjsX } from "./rxjs-x";
+import {
+  defaultCompositionNames,
+  moduleTaxonomy,
+  reducedCompositionNames,
+} from ".";
 
-vi.mock(
-  import("eslint-plugin-rxjs-x"),
-  () =>
-    ({
-      default: {
-        configs: {
-          strict: { name: "rxjs-x/strict" },
-        },
-      },
-    }) as unknown as Record<string, unknown>,
-);
+/**
+ * Load whether the domain barrel re-exports its runtime metadata.
+ * @returns Equality results for the runtime metadata exports.
+ * @example
+ * ```typescript
+ * await loadDomainExportMatches();
+ * ```
+ */
+async function loadDomainExportMatches(): Promise<boolean[]> {
+  const actualDomain = await import(".");
+
+  return [
+    actualDomain.defaultCompositionNames === defaultCompositionNames,
+    actualDomain.moduleTaxonomy === moduleTaxonomy,
+    actualDomain.reducedCompositionNames === reducedCompositionNames,
+  ];
+}
 
 describe("domain configs", () => {
-  it("returns rxjs-x configs with custom entries", async () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("re-exports runtime taxonomy and composition metadata", async () => {
     // Arrange
-    const expectedConfigNames = ["rxjs-x/custom", "rxjs-x/custom-spec"];
+    const expectedFirstPlugin = "codeperfect";
+    const expectedMatches = [true, true, true];
 
     // Act
-    const actualConfigNames = await rxjsX().then((configs) =>
-      configs.map((config) => config.name),
-    );
+    const actualMatches = await loadDomainExportMatches();
 
     // Assert
-    expect(actualConfigNames).toStrictEqual(
-      expect.arrayContaining(expectedConfigNames),
-    );
+    expect(actualMatches).toStrictEqual(expectedMatches);
+    expect(defaultCompositionNames.at(0)).toBe("core-codeperfect");
+    expect(reducedCompositionNames).toContain("architecture-import-x");
+    expect(moduleTaxonomy.at(0)?.pluginName).toBe(expectedFirstPlugin);
   });
 });

@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type { PluginName } from "./types";
+import type { PluginName } from "../domain";
 
+import { moduleTaxonomy } from "../domain";
 import { config } from "./config-factory";
-import { moduleTaxonomy } from "./module-taxonomy";
 import { isPluginDisabledByDefault } from "./plugin-state";
 
 /** All plugin names from the taxonomy, used to disable every plugin. */

@@ -1,4 +1,4 @@
-import type { PluginName, PluginStateOverrides } from "./types";
+import type { PluginName, PluginStateOverrides } from "../domain";
 
 import { reportRedundantPluginState } from "./diagnostics";
 

@@ -2,7 +2,8 @@ import type { Linter } from "eslint";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import type * as configsModuleType from "./configs";
+// eslint-disable-next-line import-x/no-internal-modules -- The test must mock the exact module consumed by plugin-loaders.
+import type * as configsModuleType from "../infrastructure/configs";
 import type { ConfigOptions } from "./types";
 
 import {
@@ -29,13 +30,17 @@ interface IConfigOutcome {
   names: (string | undefined)[];
 }
 
-vi.mock(import("./configs"), () => {
-  if (configsModuleMock === void 0) {
-    throw new Error("Configs module mock not defined");
-  }
+vi.mock(
+  // eslint-disable-next-line import-x/no-internal-modules -- The mock path must match the implementation import exactly.
+  import("../infrastructure/configs"),
+  () => {
+    if (configsModuleMock === void 0) {
+      throw new Error("Configs module mock not defined");
+    }
 
-  return configsModuleMock;
-});
+    return configsModuleMock;
+  },
+);
 
 /**
  * Load and execute the composed config builder under test.
@@ -49,7 +54,7 @@ vi.mock(import("./configs"), () => {
 async function loadComposedConfig(
   options: CompositionOptions,
 ): Promise<Linter.Config[]> {
-  const { config } = await import("./index");
+  const { config } = await import("../index");
 
   return config(options);
 }

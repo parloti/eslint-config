@@ -2,10 +2,10 @@ import type { Linter } from "eslint";
 
 import { defineConfig } from "eslint/config";
 
+import type { ConfigOptions } from "../domain";
 import type { PluginLoaderEntry } from "./plugin-loaders";
-import type { ConfigOptions } from "./types";
 
-import { moduleTaxonomy } from "./module-taxonomy";
+import { moduleTaxonomy } from "../domain";
 import { pluginLoaders } from "./plugin-loaders";
 import { resolvePluginState } from "./plugin-state";
 import {

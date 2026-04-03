@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { moduleTaxonomy } from "./module-taxonomy";
+import { moduleTaxonomy } from "../domain";
 import { pluginLoaders } from "./plugin-loaders";
 
 /** Documented plugin names derived from the taxonomy source. */

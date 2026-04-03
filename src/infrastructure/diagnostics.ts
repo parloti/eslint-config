@@ -1,4 +1,4 @@
-import type { PluginName } from "./types";
+import type { PluginName } from "../domain";
 import type { LoadMode } from "./utilities";
 
 /** ANSI escape sequences for colored console output. */

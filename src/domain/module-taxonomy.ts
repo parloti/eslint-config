@@ -6,6 +6,7 @@ type ModuleCategory =
   | "core"
   | "documentation"
   | "domain"
+  | "infrastructure"
   | "repository-architecture"
   | "style"
   | "testing";
@@ -32,7 +33,7 @@ const moduleTaxonomy = [
   { category: "testing", pluginName: "jest" },
   { category: "testing", pluginName: "playwright" },
   { category: "testing", pluginName: "vitest" },
-  { category: "domain", pluginName: "rxjs-x" },
+  { category: "infrastructure", pluginName: "rxjs-x" },
   { category: "style", pluginName: "stylistic" },
   { category: "style", pluginName: "perfectionist" },
   { category: "style", pluginName: "unicorn" },

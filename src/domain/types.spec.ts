@@ -24,9 +24,8 @@ describe("types", () => {
       plugins: { jest: true, vitest: false },
     };
     const boundariesConfig: BoundariesConfig = {
-      elements: [],
-      elementTypes: ["error", { default: "disallow", rules: [] }],
-      files: ["src/**/*.ts"],
+      extend: { ignores: ["fixtures/**/*.ts"] },
+      ignores: ["src/**/*.spec.ts"],
     };
 
     // Act
@@ -34,16 +33,20 @@ describe("types", () => {
 
     // Assert
     expect({
-      elementCount: boundariesConfig.elements.length,
+      elementCount: boundariesConfig.elements?.length ?? 0,
       elementTypeCount: Array.isArray(boundariesConfig.elementTypes)
         ? boundariesConfig.elementTypes.length
         : 0,
-      fileCount: boundariesConfig.files.length,
+      extensionIgnoreCount: boundariesConfig.extend?.ignores?.length ?? 0,
+      fileCount: boundariesConfig.files?.length ?? 0,
+      ignoreCount: boundariesConfig.ignores?.length ?? 0,
       pluginStates: actualPluginStates,
     }).toStrictEqual({
       elementCount: 0,
-      elementTypeCount: 2,
-      fileCount: 1,
+      elementTypeCount: 0,
+      extensionIgnoreCount: 1,
+      fileCount: 0,
+      ignoreCount: 1,
       pluginStates: { jest: true, vitest: false },
     });
   });

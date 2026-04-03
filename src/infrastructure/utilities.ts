@@ -1,6 +1,6 @@
 import type { Linter } from "eslint";
 
-import type { PluginName } from "./types";
+import type { PluginName } from "../domain";
 
 import { reportPluginLoadIssue, reportRuleOverrideSkip } from "./diagnostics";
 

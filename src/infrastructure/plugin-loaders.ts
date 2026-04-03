@@ -1,6 +1,6 @@
 import type { Linter } from "eslint";
 
-import type { ConfigOptions, PluginName } from "./types";
+import type { ConfigOptions, PluginName } from "../domain";
 import type { LoadMode } from "./utilities";
 
 import {

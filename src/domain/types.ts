@@ -10,18 +10,47 @@ type ArchitecturePluginName = "boundaries" | "import-x";
 /** Type definition for rule data. */
 interface BoundariesConfig {
   /** Repository-owned element descriptors for boundaries analysis. */
-  elements: ElementDescriptors;
+  elements?: ElementDescriptors;
 
   /** Repository-owned dependency direction rules for boundaries analysis. */
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-arguments --- This is necessary to ensure correct typing of the rule options.
-  elementTypes: Linter.RuleEntry<DependenciesRuleOptions[]>;
+  elementTypes?: BoundariesElementTypesRuleEntry;
+
+  /** Optional additive extensions applied after the repository defaults. */
+  extend?: BoundariesConfigExtension;
 
   /** Files included in repository-specific boundaries analysis. */
-  files: readonly string[];
+  files?: readonly string[];
 
   /** Optional ignore globs excluded from repository-specific boundaries analysis. */
   ignores?: readonly string[];
 }
+
+/** Type definition for additive boundaries extension fields. */
+interface BoundariesConfigExtension {
+  /** Additional repository-owned element descriptors appended to the defaults. */
+  elements?: ElementDescriptors;
+
+  /**
+   * Additional dependency direction rules appended to the default rule set.
+   * Only additive dependency rules are supported here.
+   */
+  elementTypes?: Pick<BoundariesElementTypesOptions, "rules">;
+
+  /** Additional files appended to the default file globs. */
+  files?: readonly string[];
+
+  /** Additional ignore globs appended to the default ignore list. */
+  ignores?: readonly string[];
+}
+
+/** Dependency rule options object used by the boundaries plugin. */
+type BoundariesElementTypesOptions = DependenciesRuleOptions;
+
+/** Rule entry shape used for repository-owned boundaries dependency rules. */
+type BoundariesElementTypesRuleEntry = [
+  Linter.RuleSeverity,
+  BoundariesElementTypesOptions,
+];
 
 /** Type definition for rule data. */
 interface ConfigOptions {
@@ -67,6 +96,9 @@ type TestingPluginName = "jasmine" | "jest" | "playwright" | "vitest";
 
 export type {
   BoundariesConfig,
+  BoundariesConfigExtension,
+  BoundariesElementTypesOptions,
+  BoundariesElementTypesRuleEntry,
   ConfigOptions,
   PluginName,
   PluginStateOverrides,
