@@ -59,11 +59,15 @@ export function eslint(): Linter.Config[] {
       },
     },
     {
-      files: ["**/*.spec.ts"],
+      files: ["**/*.spec.ts", "**/*.e2e.ts"],
       name: "@eslint/js/custom-spec",
       rules: {
         "init-declarations": "off",
         "max-lines-per-function": "off",
+        "unicorn/prevent-abbreviations": [
+          "error",
+          { ignore: [String.raw`\.e2e$`] },
+        ],
       },
     },
     {

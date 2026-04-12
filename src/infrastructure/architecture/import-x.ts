@@ -87,7 +87,7 @@ async function importX(): Promise<Linter.Config[]> {
       },
     },
     {
-      ignores: ["*", "packages/*/*", "packages/*/*/*"],
+      ignores: ["*", "packages/*/*", "tests/*/*/*"],
       name: "import-x/custom-root-config-files",
       rules: {
         "import-x/no-default-export": "error",

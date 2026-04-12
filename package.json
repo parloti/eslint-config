@@ -41,12 +41,8 @@
     "build": "npm run clean && npm run compile && npm run resolve-paths",
     "clean": "npx --yes rimraf dist",
     "compile": "tsc --build --force ./tsconfig.build.json",
-    "resolve-paths": "tsc-alias --project ./tsconfig.build.json --resolve-full-paths",
     "pack": "npm pack --pack-destination dist",
-    "\n# --------------- DOCS --------------- #": "",
-    "docs": "npm run docs:clean && npm run docs:api",
-    "docs:api": "npx --yes typedoc --options typedoc.json",
-    "docs:clean": "npx --yes rimraf docs/api",
+    "resolve-paths": "tsc-alias --project ./tsconfig.build.json --resolve-full-paths",
     "\n# --------------- LINTING --------------- #": "",
     "\t• --------------- checking --------------- •": "",
     "eslint": "npx --yes eslint --max-warnings=0",
@@ -66,9 +62,15 @@
     "typecheck:spec": "tsc --project tsconfig.spec.json --noEmit",
     "validate": "npm run lint && npm run typecheck && npm run typecheck:spec && npm run test && npm run build && npm run pack",
     "\n\t• --------------- unit --------------- •": "",
-    "tdd": "npx --yes vitest run --watch --silent=true --coverage.enabled=false",
+    "e2e": "npx --yes vitest run --config vitest.config.e2e.ts --coverage.enabled=false",
     "tdd:notify": "npm run tdd -- --notify",
-    "test": "npx --yes vitest run"
+    "tdd": "npx --yes vitest run --watch --silent=true --coverage.enabled=false",
+    "test": "npm run unit && npm run e2e",
+    "unit": "npx --yes vitest run",
+    "\n# --------------- DOCS --------------- #": "",
+    "docs:api": "npx --yes typedoc --options typedoc.json",
+    "docs:clean": "npx --yes rimraf docs/api",
+    "docs": "npm run docs:clean && npm run docs:api"
   },
   "dependencies": {
     "minimatch": "^10.2.4"
@@ -135,6 +137,7 @@
     "typedoc": "^0.28.18",
     "typedoc-plugin-markdown": "^4.11.0",
     "typescript": "^5.9.3",
+    "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.2"
   },
   "engines": {

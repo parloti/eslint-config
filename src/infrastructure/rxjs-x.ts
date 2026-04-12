@@ -24,7 +24,7 @@ export async function rxjsX(): Promise<Linter.Config[]> {
       },
     },
     {
-      files: ["**/*.spec.ts"],
+      files: ["**/*.spec.ts", "**/*.e2e.ts"],
       name: "rxjs-x/custom-spec",
       rules: {
         "rxjs-x/no-ignored-error": "off",

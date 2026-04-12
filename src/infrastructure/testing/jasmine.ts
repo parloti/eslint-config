@@ -23,7 +23,7 @@ export async function jasmine(): Promise<Linter.Config[]> {
 
   return defineConfig({
     extends: [configs.recommended],
-    files: ["**/*.spec.ts"],
+    files: ["**/*.spec.ts", "**/*.e2e.ts"],
     languageOptions: { globals },
     name: "jasmine/custom",
     plugins: { jasmine: { rules } },

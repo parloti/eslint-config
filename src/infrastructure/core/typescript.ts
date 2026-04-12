@@ -65,7 +65,7 @@ export async function typescript(): Promise<Linter.Config[]> {
       },
     },
     {
-      files: ["**/*.spec.ts"],
+      files: ["**/*.spec.ts", "**/*.e2e.ts"],
       name: "@typescript-eslint/custom-spec",
       rules: {
         "@typescript-eslint/init-declarations": "off",

@@ -116,12 +116,12 @@ function buildRepoJsdocConfigs(
       },
     },
     {
-      files: ["**/*.spec.ts"],
+      files: ["**/*.spec.ts", "**/*.e2e.ts"],
       name: "jsdoc/custom-spec",
       rules: {
         "jsdoc/convert-to-jsdoc-comments": [
           "error",
-          { allowedPrefixes: ["Arrange", "Act"] },
+          { allowedPrefixes: ["Arrange", "Act", "Assert"] },
         ],
       },
     },
