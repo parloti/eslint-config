@@ -32,15 +32,24 @@ describe("domain configs", () => {
   it("re-exports runtime taxonomy and composition metadata", async () => {
     // Arrange
     const expectedFirstPlugin = "codeperfect";
+    const expectedFirstConfig = "core-codeperfect";
     const expectedMatches = [true, true, true];
+    const expectedReducedCompositionName = "architecture-import-x";
 
     // Act
-    const actualMatches = await loadDomainExportMatches();
+    const result = {
+      actualFirstConfig: defaultCompositionNames.at(0),
+      actualFirstPlugin: moduleTaxonomy.at(0)?.pluginName,
+      actualHasReducedCompositionName: reducedCompositionNames.includes(
+        expectedReducedCompositionName,
+      ),
+      actualMatches: await loadDomainExportMatches(),
+    };
 
     // Assert
-    expect(actualMatches).toStrictEqual(expectedMatches);
-    expect(defaultCompositionNames.at(0)).toBe("core-codeperfect");
-    expect(reducedCompositionNames).toContain("architecture-import-x");
-    expect(moduleTaxonomy.at(0)?.pluginName).toBe(expectedFirstPlugin);
+    expect(result.actualMatches).toStrictEqual(expectedMatches);
+    expect(result.actualFirstConfig).toBe(expectedFirstConfig);
+    expect(result.actualHasReducedCompositionName).toBe(true);
+    expect(result.actualFirstPlugin).toBe(expectedFirstPlugin);
   });
 });

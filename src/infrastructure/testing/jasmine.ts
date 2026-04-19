@@ -11,7 +11,6 @@ import { defineConfig } from "eslint/config";
  * ```
  */
 export async function jasmine(): Promise<Linter.Config[]> {
-  // eslint-disable-next-line boundaries/no-unknown -- External package resolution is outside the repository topology.
   const jasmineModule = await import("eslint-plugin-jasmine");
   const globalsModule = await import("globals");
   const { configs, rules } = jasmineModule;

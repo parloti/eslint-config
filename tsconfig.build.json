@@ -9,6 +9,8 @@
     "inlineSources": true,
     "noEmitOnError": true,
     "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["node"],
     "tsBuildInfoFile": "./dist/.tsbuildinfo"
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "*.d.ts"],

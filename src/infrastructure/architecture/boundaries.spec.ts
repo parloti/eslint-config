@@ -7,6 +7,18 @@ import type {
 
 import { boundaries, defaultBoundariesConfig } from "./boundaries";
 
+/** Assertion facts derived from the resolved dependencies rule. */
+interface DependenciesRuleFacts {
+  /** The resolved dependencies rule entry. */
+  actualDependenciesRule: BoundariesElementTypesRuleEntry | undefined;
+
+  /** Whether an application source rule is present. */
+  hasApplicationFromRule: boolean | undefined;
+
+  /** Whether an entrypoint source rule is present. */
+  hasDependenciesRule: boolean | undefined;
+}
+
 /**
  * Check whether one dependencies rule entry targets a specific source type.
  * @param rule One boundaries dependency rule.
@@ -54,6 +66,31 @@ function readDependenciesRule(
   return void 0;
 }
 
+/**
+ * Read the assertion facts derived from the resolved dependencies rule.
+ * @param configs Generated ESLint config array.
+ * @returns The resolved rule and derived assertion booleans.
+ * @example
+ * ```typescript
+ * readDependenciesRuleFacts(boundaries());
+ * ```
+ */
+function readDependenciesRuleFacts(
+  configs: ReturnType<typeof boundaries>,
+): DependenciesRuleFacts {
+  const actualDependenciesRule = readDependenciesRule(configs);
+
+  return {
+    actualDependenciesRule,
+    hasApplicationFromRule: actualDependenciesRule?.[1].rules?.some((rule) =>
+      hasFromType(rule, "application"),
+    ),
+    hasDependenciesRule: actualDependenciesRule?.[1].rules?.some((rule) =>
+      hasFromType(rule, "entrypoint"),
+    ),
+  };
+}
+
 describe("boundaries config", () => {
   afterEach(() => {
     vi.restoreAllMocks();
@@ -66,14 +103,12 @@ describe("boundaries config", () => {
       .mockImplementation(() => true);
 
     // Act
-    const configs = boundaries();
+    const hasDependenciesRule = boundaries().some((entry) =>
+      Object.hasOwn(entry.rules ?? {}, "boundaries/dependencies"),
+    );
 
     // Assert
-    expect(
-      configs.some((entry) =>
-        Object.hasOwn(entry.rules ?? {}, "boundaries/dependencies"),
-      ),
-    ).toBe(true);
+    expect(hasDependenciesRule).toBe(true);
     expect(stderrSpy).not.toHaveBeenCalled();
   });
 
@@ -152,20 +187,12 @@ describe("boundaries config", () => {
     };
 
     // Act
-    const actualDependenciesRule = readDependenciesRule(boundaries(config));
+    const result = readDependenciesRuleFacts(boundaries(config));
 
     // Assert
-    expect(actualDependenciesRule?.[0]).toBe("error");
-    expect(
-      actualDependenciesRule?.[1].rules?.some((rule) =>
-        hasFromType(rule, "entrypoint"),
-      ),
-    ).toBe(true);
-    expect(
-      actualDependenciesRule?.[1].rules?.some((rule) =>
-        hasFromType(rule, "application"),
-      ),
-    ).toBe(true);
+    expect(result.actualDependenciesRule?.[0]).toBe("error");
+    expect(result.hasDependenciesRule).toBe(true);
+    expect(result.hasApplicationFromRule).toBe(true);
   });
 
   it("normalizes missing element rule arrays when overrides or extensions omit them", () => {

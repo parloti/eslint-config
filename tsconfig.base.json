@@ -10,7 +10,6 @@
     "noUnusedLocals": false,
     "noUnusedParameters": true,
     "strict": true,
-    "baseUrl": "./src",
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
