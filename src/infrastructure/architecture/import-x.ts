@@ -17,7 +17,6 @@ async function buildCustomErrorRules(): Promise<Linter.Config[]> {
 
   const customIgnore = new Set([
     "dynamic-import-chunkname",
-    "no-default-export",
     "no-deprecated",
     "no-named-export",
     "no-namespace",
@@ -87,10 +86,10 @@ async function importX(): Promise<Linter.Config[]> {
       },
     },
     {
-      ignores: ["*", "packages/*/*", "tests/*/*/*"],
+      files: ["*", "packages/*/*"],
       name: "import-x/custom-root-config-files",
       rules: {
-        "import-x/no-default-export": "error",
+        "import-x/no-default-export": "off",
       },
     },
   );
