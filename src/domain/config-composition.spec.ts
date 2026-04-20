@@ -2,8 +2,7 @@ import type { Linter } from "eslint";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-// eslint-disable-next-line import-x/no-internal-modules -- The test must mock the exact module consumed by plugin-loaders.
-import type * as configsModuleType from "../infrastructure/configs";
+import type * as InfrastructureModule from "../infrastructure";
 import type { ConfigOptions } from "./types";
 
 import {
@@ -16,7 +15,7 @@ import {
 type CompositionOptions = Pick<ConfigOptions, "plugins" | "rules">;
 
 /** Module namespace type for mocked config loader exports. */
-type ConfigsModule = typeof configsModuleType;
+type ConfigsModule = typeof InfrastructureModule;
 
 /** Mutable configs module used by import mocks. */
 let configsModuleMock: Partial<ConfigsModule> | undefined;
