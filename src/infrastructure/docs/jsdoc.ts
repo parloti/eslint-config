@@ -46,7 +46,7 @@ const requireJsdocContexts = [
   "Program > ExportDefaultDeclaration > FunctionDeclaration",
   "Program > ExportNamedDeclaration > FunctionDeclaration",
   "Program > VariableDeclaration",
-  "Program > ExportNamedDeclaration > VariableDeclaration",
+  'Program > ExportNamedDeclaration[declaration.type="VariableDeclaration"]',
   "TSInterfaceDeclaration",
   "TSTypeAliasDeclaration",
   "TSPropertySignature",
