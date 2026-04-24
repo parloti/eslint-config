@@ -34,6 +34,8 @@
     "dist"
   ],
   "scripts": {
+    "\n# --------------- GENERAL --------------- #": "",
+    "preinstall": "npm cache clean --force",
     "\n# --------------- SCM --------------- #": "",
     "commit": "npx --yes git-cz",
     "prepare": "husky",
@@ -63,9 +65,10 @@
     "validate": "npm run lint && npm run typecheck && npm run typecheck:spec && npm run test && npm run build && npm run pack",
     "\n\t• --------------- unit --------------- •": "",
     "e2e": "npx --yes vitest run --config vitest.config.e2e.ts --coverage.enabled=false",
+    "mutation": "npx --yes stryker run",
     "tdd:notify": "npm run tdd -- --notify",
     "tdd": "npx --yes vitest run --watch --silent=true --coverage.enabled=false",
-    "test": "npm run unit && npm run e2e",
+    "test": "npm run unit && npm run e2e && npm run mutation",
     "unit": "npx --yes vitest run",
     "\n# --------------- DOCS --------------- #": "",
     "docs:api": "npx --yes typedoc --options typedoc.json",
@@ -99,6 +102,7 @@
     "globals": "^17.5.0"
   },
   "devDependencies": {
+    "@codeperfect/commitlint-config-emoji": "^1.0.0",
     "@codeperfect/eslint-plugin": "^2.0.0",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
@@ -139,7 +143,9 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.58.2",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.4",
+    "@stryker-mutator/core": "^9.6.1",
+    "@stryker-mutator/vitest-runner": "^9.6.1"
   },
   "engines": {
     "node": ">=24.0.0"

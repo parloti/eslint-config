@@ -41,7 +41,7 @@ export function eslint(): Linter.Config[] {
   return defineConfig(
     configs.recommended,
     globalIgnores(
-      ["**/dist/**", "docs/", "**/coverage"],
+      ["**/dist/**", "docs/", "**/coverage", "**/.stryker-tmp"],
       "@eslint/js/custom-ignore-directory",
     ),
     {
@@ -64,10 +64,7 @@ export function eslint(): Linter.Config[] {
       rules: {
         "init-declarations": "off",
         "max-lines-per-function": "off",
-        "unicorn/prevent-abbreviations": [
-          "error",
-          { ignore: [String.raw`\.e2e$`] },
-        ],
+        "unicorn/prevent-abbreviations": ["error", { ignore: [/e2e|dev/iu] }],
       },
     },
     {
