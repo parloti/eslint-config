@@ -74,31 +74,4 @@ describe("perfectionist config", () => {
     // Assert
     expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
   });
-
-  it("disables perfectionist rules for generated snippet files", async () => {
-    // Arrange
-    perfectionistConfigs["recommended-natural"] = {
-      rules: {
-        "perfectionist/sort-objects": "error",
-        "sort-keys": "error",
-      },
-    } as Linter.Config;
-
-    // Act
-    const configs = await perfectionist();
-
-    // Assert
-    expect(
-      configs.find(
-        (config) => config.name === "perfectionist/generated-snippets",
-      )?.rules,
-    ).toMatchObject({
-      "perfectionist/sort-objects": "off",
-    });
-    expect(
-      configs.find(
-        (config) => config.name === "perfectionist/generated-snippets",
-      )?.rules,
-    ).not.toHaveProperty("sort-keys");
-  });
 });

@@ -29,7 +29,7 @@ async function playwright(): Promise<Linter.Config[]> {
 
   return defineConfig({
     extends: [configs["flat/recommended"]],
-    files: ["e2e/**/*.{spec,test}.{ts,js}"],
+    files: ["tests/e2e/**/*.ts"],
     name: "playwright/custom-error",
     rules: customError,
   });

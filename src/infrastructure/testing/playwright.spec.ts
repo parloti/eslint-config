@@ -78,7 +78,7 @@ describe("playwright config", () => {
 
     // Assert
     expect(customConfig).toMatchObject({
-      files: ["e2e/**/*.{spec,test}.{ts,js}"],
+      files: ["tests/e2e/**/*.ts"],
       name: "playwright/custom-error",
       rules: {
         "playwright/expect-expect": "error",

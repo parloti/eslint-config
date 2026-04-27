@@ -51,7 +51,7 @@ export function eslint(): Linter.Config[] {
       },
     },
     {
-      name: "@eslint/js/custom",
+      name: "@eslint/js/allow-decorators",
       rules: {
         ...customError,
         "new-cap": ["error", { capIsNewExceptionPattern: "^@" }],
@@ -60,16 +60,15 @@ export function eslint(): Linter.Config[] {
     },
     {
       files: ["**/*.spec.ts", "**/*.e2e.ts"],
-      name: "@eslint/js/custom-spec",
+      name: "@eslint/js/allow-describe-it",
       rules: {
         "init-declarations": "off",
         "max-lines-per-function": "off",
-        "unicorn/prevent-abbreviations": ["error", { ignore: [/e2e|dev/iu] }],
       },
     },
     {
       files: ["scripts/*.ts"],
-      name: "@eslint/js/custom-scripts",
+      name: "@eslint/js/allow-console-in-scripts",
       rules: { "no-console": "off" },
     },
   );

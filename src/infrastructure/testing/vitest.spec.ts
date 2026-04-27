@@ -1,21 +1,7 @@
-import type * as vitestPluginModuleType from "@vitest/eslint-plugin";
+import type * as VitestPluginModule from "@vitest/eslint-plugin";
 import type { Linter } from "eslint";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
-
-/** Mocked Vitest plugin module shape used by import mocks. */
-interface IVitestPluginMock {
-  /** Default export used by the mocked module. */
-  default:
-    | undefined
-    | {
-        /** Mocked config registry. */
-        configs?: {
-          /** Mocked all preset. */
-          all?: Linter.Config;
-        };
-      };
-}
 
 /**
  * Load the Vitest config under test after module mocking.
@@ -31,53 +17,11 @@ async function loadVitestConfigs(): Promise<Linter.Config[]> {
   return vitest();
 }
 
-/**
- * Mock the Vitest plugin module for a single test.
- * @param pluginModule The mocked Vitest plugin module.
- * @example
- * ```typescript
- * mockVitestPlugin({ default: { configs: { all: { name: "vitest/all" } } } });
- * ```
- */
-function mockVitestPlugin(pluginModule: IVitestPluginMock): void {
-  vi.doMock(import("@vitest/eslint-plugin"), () => {
-    return pluginModule as unknown as Partial<typeof vitestPluginModuleType>;
-  });
-}
-
 describe("vitest plugin branches", () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
     vi.doUnmock("@vitest/eslint-plugin");
-  });
-
-  it("returns empty when plugin is undefined", async () => {
-    // Arrange
-    vi.resetModules();
-    mockVitestPlugin({
-      default: void 0,
-    });
-
-    // Act
-    const configs = await loadVitestConfigs();
-
-    // Assert
-    expect(configs).toStrictEqual([]);
-  });
-
-  it("returns empty when plugin configs are undefined", async () => {
-    // Arrange
-    vi.resetModules();
-    mockVitestPlugin({
-      default: {},
-    });
-
-    // Act
-    const configs = await loadVitestConfigs();
-
-    // Assert
-    expect(configs).toStrictEqual([]);
   });
 
   it("returns repo-owned configs when the all preset is available", async () => {
@@ -86,12 +30,15 @@ describe("vitest plugin branches", () => {
     const allConfig: Linter.Config = {
       name: "vitest/all",
     };
-    mockVitestPlugin({
-      default: {
-        configs: {
-          all: allConfig,
+    // eslint-disable-next-line codeperfect/prefer-vitest-incremental-casts -- False positive
+    vi.doMock(import("@vitest/eslint-plugin"), () => {
+      return {
+        default: {
+          configs: {
+            all: allConfig,
+          },
         },
-      },
+      } as typeof VitestPluginModule;
     });
 
     // Act
@@ -114,12 +61,12 @@ describe("vitest plugin branches", () => {
     });
     expect(presetConfig?.name).toContain(String(allConfig.name));
     expect(customConfig).toMatchObject({
-      files: ["**/*.{spec,test}.ts"],
+      files: ["**/*.{spec,test,e2e}.ts"],
       name: "vitest/custom",
       rules: {
         "vitest/consistent-test-filename": [
           "error",
-          { pattern: String.raw`.*\.spec\.[tj]sx?$` },
+          { pattern: String.raw`.*\.spec\.ts$` },
         ],
         "vitest/no-hooks": "off",
         "vitest/prefer-expect-assertions": "off",

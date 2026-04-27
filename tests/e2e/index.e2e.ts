@@ -1,12 +1,14 @@
-import { expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 
-test("E2E placeholder", (): void => {
-  // Arrange
-  const sut = { compute: (): string => "active" };
+describe("e2e placeholder", () => {
+  it("e2e placeholder", (): void => {
+    // Arrange
+    const sut = { compute: (): string => "active" };
 
-  // Act
-  const result = sut.compute();
+    // Act
+    const result = sut.compute();
 
-  // Assert
-  expect(result).toBe("active");
+    // Assert
+    expect(result).toBe("active");
+  });
 });

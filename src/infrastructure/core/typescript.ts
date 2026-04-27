@@ -5,12 +5,10 @@ import { defineConfig } from "eslint/config";
 /** TypeScript rule names to disable. */
 const off = [
   "no-magic-numbers",
-  "no-type-alias",
-  "sort-type-constituents",
   "naming-convention",
   "no-use-before-define",
   "member-ordering",
-  "no-unsafe-type-assertion",
+  "prefer-readonly-parameter-types",
 ];
 
 /** TypeScript rules disabled as a map. */
@@ -40,9 +38,17 @@ export async function typescript(): Promise<Linter.Config[]> {
       },
     },
     {
+      name: "@typescript-eslint/deprecated",
+      rules: {
+        "@typescript-eslint/no-type-alias": "off",
+        "@typescript-eslint/sort-type-constituents": "off",
+      },
+    },
+    {
       name: "@typescript-eslint/custom",
       rules: {
         ...customOff,
+        "@typescript-eslint/no-unsafe-type-assertion": "off",
         "@typescript-eslint/strict-boolean-expressions": [
           "error",
           {
@@ -56,12 +62,6 @@ export async function typescript(): Promise<Linter.Config[]> {
           "error",
           { ignoreDifferentlyNamedParameters: true },
         ],
-      },
-    },
-    {
-      name: "@typescript-eslint/custom-compat",
-      rules: {
-        "@typescript-eslint/prefer-readonly-parameter-types": "off",
       },
     },
     {

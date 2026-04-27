@@ -13,21 +13,11 @@ import { defineConfig } from "eslint/config";
 export async function jest(): Promise<Linter.Config[]> {
   const { configs } = await import("eslint-plugin-jest");
 
-  return defineConfig(
-    {
-      extends: [configs["flat/all"]],
-      files: ["**/integration/jest/**/*.spec.ts"],
-      name: "jest/custom",
-      rules: {
-        "jest/prefer-expect-assertions": "off",
-      },
+  return defineConfig({
+    extends: [configs["flat/all"]],
+    name: "jest/custom",
+    rules: {
+      "jest/prefer-expect-assertions": "off",
     },
-    {
-      files: ["**/integration/jest-global/**/*.spec.ts"],
-      name: "jest/custom-global-overrides",
-      rules: {
-        "jest/prefer-importing-jest-globals": "off",
-      },
-    },
-  );
+  });
 }

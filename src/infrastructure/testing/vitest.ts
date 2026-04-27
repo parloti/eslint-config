@@ -12,34 +12,20 @@ import { defineConfig } from "eslint/config";
  */
 export async function vitest(): Promise<Linter.Config[]> {
   const vitestModule = await import("@vitest/eslint-plugin");
-  const plugin = (
-    vitestModule as {
-      /** Default helper value. */
-      default?: {
-        /** Configs helper value. */
-        configs?: {
-          /** All helper value. */
-          all?: Linter.Config;
-        };
-      };
-    }
-  ).default;
-  const allConfig = plugin?.configs?.all;
-
-  if (allConfig === void 0) {
-    return [];
-  }
+  const plugin = vitestModule.default;
+  const allConfig = plugin.configs.all;
 
   return defineConfig(
     { settings: { vitest: { typecheck: true } } },
     {
       extends: [allConfig],
-      files: ["**/*.{spec,test}.ts"],
+      files: ["**/*.{spec,test,e2e}.ts"],
+      ignores: ["tests/e2e/**/*.ts"],
       name: "vitest/custom",
       rules: {
         "vitest/consistent-test-filename": [
           "error",
-          { pattern: String.raw`.*\.spec\.[tj]sx?$` },
+          { pattern: String.raw`.*\.spec\.ts$` },
         ],
         "vitest/no-hooks": "off",
         "vitest/prefer-expect-assertions": "off",

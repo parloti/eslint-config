@@ -23,10 +23,10 @@ describe("jest config", () => {
 
     // Act
     const actualHasExpectedConfig = await jest().then((configs) =>
-      configs.some((config) => config.name === expectedConfigName),
+      configs.find((config) => config.name === expectedConfigName),
     );
 
     // Assert
-    expect(actualHasExpectedConfig).toBe(true);
+    expect(actualHasExpectedConfig?.name).toBe(expectedConfigName);
   });
 });

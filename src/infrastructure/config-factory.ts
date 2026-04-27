@@ -3,7 +3,6 @@ import type { Linter } from "eslint";
 import { defineConfig } from "eslint/config";
 
 import type { ConfigOptions } from "../domain";
-import type { PluginLoaderEntry } from "./plugin-loaders";
 
 import { moduleTaxonomy } from "../domain";
 import { pluginLoaders } from "./plugin-loaders";
@@ -29,7 +28,7 @@ function buildPluginConfigLoaders(
   const loaders: Promise<Linter.Config[]>[] = [];
 
   for (const { pluginName } of moduleTaxonomy) {
-    const loaderEntry: PluginLoaderEntry = pluginLoaders[pluginName];
+    const loaderEntry = pluginLoaders[pluginName];
     const loadConfig = loaderEntry.loader(options);
     const isEnabled = resolvePluginState(pluginName, options.plugins);
 

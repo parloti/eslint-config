@@ -5,7 +5,7 @@ import { eslint } from "./eslint";
 describe("eslint config", () => {
   it("returns custom configs", () => {
     // Arrange
-    const expectedConfigName = "@eslint/js/custom";
+    const expectedConfigName = "@eslint/js/allow-decorators";
 
     // Act
     const actualHasExpectedConfig = eslint().some(
