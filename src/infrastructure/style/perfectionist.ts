@@ -15,6 +15,6 @@ export async function perfectionist(): Promise<Linter.Config[]> {
 
   return defineConfig(configs["recommended-natural"], {
     name: "perfectionist/avoid-conflict-with-eslint",
-    rules: { "sort-keys": "off" },
+    rules: { "@typescript-eslint/member-ordering": "off", "sort-keys": "off" },
   });
 }

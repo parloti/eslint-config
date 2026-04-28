@@ -14,7 +14,6 @@ import { config } from "./src";
 const base = await config({
   plugins: { playwright: false, "rxjs-x": false },
   rules: {
-    "@typescript-eslint/member-ordering": "error",
     "@typescript-eslint/unified-signatures": "error",
     "import-x/no-nodejs-modules": "off",
   },
@@ -28,20 +27,23 @@ const base = await config({
  * const vitestConfig = await vitest();
  * ```
  */
-const e2eVitest = defineConfig({
-  extends: [plugin.configs.all],
-  files: ["tests/e2e/**/*.ts"],
-  name: "vitest/custom",
-  rules: {
-    "vitest/consistent-test-filename": [
-      "error",
-      { pattern: String.raw`.*\.e2e\.ts$` },
-    ],
-    "vitest/no-hooks": "off",
-    "vitest/prefer-expect-assertions": "off",
-    "vitest/require-mock-type-parameters": "off",
-    "vitest/unbound-method": "off",
+const e2eVitest = defineConfig(
+  { settings: { vitest: { typecheck: true } } },
+  {
+    extends: [plugin.configs.all],
+    files: ["tests/e2e/**/*.ts"],
+    name: "vitest/custom",
+    rules: {
+      "vitest/consistent-test-filename": [
+        "error",
+        { pattern: String.raw`.*\.e2e\.ts$` },
+      ],
+      "vitest/no-hooks": "off",
+      "vitest/prefer-expect-assertions": "off",
+      "vitest/require-mock-type-parameters": "off",
+      "vitest/unbound-method": "off",
+    },
   },
-});
+);
 
 export default defineConfig(base, e2eVitest);

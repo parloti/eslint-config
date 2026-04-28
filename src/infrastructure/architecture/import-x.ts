@@ -92,6 +92,12 @@ async function importX(): Promise<Linter.Config[]> {
         "import-x/no-default-export": "off",
       },
     },
+    {
+      files: ["**/*.{spec,test,e2e}.ts"],
+      rules: {
+        "import-x/no-nodejs-modules": "off",
+      },
+    },
   );
 }
 
