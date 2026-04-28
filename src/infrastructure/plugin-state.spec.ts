@@ -59,7 +59,11 @@ describe("plugin-state", () => {
 
       // Assert
       expect(isDisabled).toBe(true);
-      expect(defaultDisabledPlugins).toStrictEqual(["jasmine", "jest"]);
+      expect(defaultDisabledPlugins).toStrictEqual([
+        "jasmine",
+        "jest",
+        "vitest-e2e",
+      ]);
     });
 
     it("returns false for default-enabled plugins", () => {

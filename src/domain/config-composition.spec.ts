@@ -147,6 +147,11 @@ function mockAllEnabled(): void {
 
       return configs;
     },
+    vitestE2e: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("testing-vitest-e2e");
+
+      return configs;
+    },
   } as unknown as Partial<ConfigsModule>;
 }
 
@@ -208,7 +213,7 @@ describe("config composition", () => {
 
     // Act
     const outcome = await loadCompositionOutcome({
-      plugins: { jasmine: true, jest: true },
+      plugins: { jasmine: true, jest: true, "vitest-e2e": true },
     });
 
     // Assert

@@ -6,6 +6,7 @@ import { reportRedundantPluginState } from "./diagnostics";
 const defaultDisabledPlugins = [
   "jasmine",
   "jest",
+  "vitest-e2e",
 ] as const satisfies readonly PluginName[];
 
 /**

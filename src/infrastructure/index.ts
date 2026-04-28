@@ -25,4 +25,5 @@ export {
   typescript,
   unicorn,
   vitest,
+  vitestE2e,
 } from "./configs";

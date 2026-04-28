@@ -40,6 +40,7 @@ describe("pluginLoaders", () => {
       typescript: "required",
       unicorn: "optional",
       vitest: "optional",
+      "vitest-e2e": "optional",
     };
 
     // Act

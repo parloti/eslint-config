@@ -92,7 +92,12 @@ type PluginStateOverrides = Partial<Record<PluginName, boolean>>;
 type StylePluginName = "perfectionist" | "prettier" | "stylistic" | "unicorn";
 
 /** Type definition for rule data. */
-type TestingPluginName = "jasmine" | "jest" | "playwright" | "vitest";
+type TestingPluginName =
+  | "jasmine"
+  | "jest"
+  | "playwright"
+  | "vitest"
+  | "vitest-e2e";
 
 export type {
   BoundariesConfig,

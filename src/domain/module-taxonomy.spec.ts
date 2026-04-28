@@ -17,6 +17,7 @@ describe("moduleTaxonomy", () => {
       "jest",
       "playwright",
       "vitest",
+      "vitest-e2e",
       "rxjs-x",
       "stylistic",
       "perfectionist",

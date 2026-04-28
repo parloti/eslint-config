@@ -21,6 +21,7 @@ import {
   typescript,
   unicorn,
   vitest,
+  vitestE2e,
 } from "./configs";
 
 /** Loader function for a single config module. */
@@ -152,6 +153,11 @@ const pluginLoaders = {
     loader: createStaticLoaderFactory(vitest),
     mode: "optional",
     pluginName: "vitest",
+  },
+  "vitest-e2e": {
+    loader: createStaticLoaderFactory(vitestE2e),
+    mode: "optional",
+    pluginName: "vitest-e2e",
   },
 } satisfies Record<PluginName, PluginLoaderEntry>;
 

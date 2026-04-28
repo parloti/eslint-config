@@ -30,6 +30,7 @@ const fullCompositionNames = [
   "testing-jest",
   "testing-playwright",
   "testing-vitest",
+  "testing-vitest-e2e",
   "domain-rxjs",
   "style-stylistic",
   "style-perfectionist",

@@ -54,11 +54,12 @@ export default config({
   plugins: {
     jasmine: true,
     jest: true,
+    "vitest-e2e": true,
   },
 });
 ```
 
-`jasmine` and `jest` are disabled by default. All other documented modules are enabled by default unless explicitly set to `false`.
+`jasmine`, `jest`, and `vitest-e2e` are disabled by default. All other documented modules are enabled by default unless explicitly set to `false`.
 
 Override final rule severities when the repository needs a narrower policy:
 
@@ -109,7 +110,7 @@ If that topology is missing or incomplete, the `boundaries` module is skipped an
 1. core: `eslint`, `resolver`, `typescript`
 2. architecture: `import-x`
 3. documentation: `comments`, `jsdoc`
-4. testing: `jasmine`, `jest`, `playwright`, `vitest`
+4. testing: `jasmine`, `jest`, `playwright`, `vitest`, `vitest-e2e`
 5. domain: `rxjs-x`
 6. style: `stylistic`, `perfectionist`, `unicorn`, `prettier`
 7. repository architecture overlay: `boundaries`
@@ -140,6 +141,7 @@ This order is intentional and validated in tests.
 | `jest`          | `eslint-plugin-jest`                              | Optional Jest rules. Disabled by default.              |
 | `playwright`    | `eslint-plugin-playwright`                        | Optional Playwright rules.                             |
 | `vitest`        | `@vitest/eslint-plugin`                           | Optional Vitest rules.                                 |
+| `vitest-e2e`    | `@vitest/eslint-plugin`                           | Optional Vitest e2e rules. Disabled by default.        |
 | `rxjs-x`        | `eslint-plugin-rxjs-x`                            | Optional RxJS rules.                                   |
 | `stylistic`     | `@stylistic/eslint-plugin`                        | Optional style rules.                                  |
 | `perfectionist` | `eslint-plugin-perfectionist`                     | Optional ordering rules.                               |

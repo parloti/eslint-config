@@ -33,6 +33,7 @@ const moduleTaxonomy = [
   { category: "testing", pluginName: "jest" },
   { category: "testing", pluginName: "playwright" },
   { category: "testing", pluginName: "vitest" },
+  { category: "testing", pluginName: "vitest-e2e" },
   { category: "infrastructure", pluginName: "rxjs-x" },
   { category: "style", pluginName: "stylistic" },
   { category: "style", pluginName: "perfectionist" },
