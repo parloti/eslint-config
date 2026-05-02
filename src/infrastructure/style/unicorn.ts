@@ -14,10 +14,17 @@ export async function unicorn(): Promise<Linter.Config[]> {
   const unicornModule = await import("eslint-plugin-unicorn");
   const { configs } = unicornModule.default;
 
-  return defineConfig({
-    extends: [configs.all],
-    rules: {
-      "unicorn/prevent-abbreviations": ["error", { ignore: [/e2e|dev/iu] }],
+  return defineConfig(
+    {
+      extends: [configs.all],
+      rules: {
+        "unicorn/prevent-abbreviations": ["error", { ignore: [/e2e|dev/iu] }],
+      },
     },
-  });
+    {
+      files: ["**/explicit-null.ts"],
+      name: "Allow explicit null",
+      rules: { "unicorn/no-null": "off" },
+    },
+  );
 }

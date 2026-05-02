@@ -4,10 +4,11 @@ import { defineConfig } from "eslint/config";
 
 /** TypeScript rule names to disable. */
 const off = [
-  "no-magic-numbers",
-  "naming-convention",
-  "no-use-before-define",
+  "class-methods-use-this",
   "member-ordering",
+  "naming-convention",
+  "no-magic-numbers",
+  "no-use-before-define",
   "prefer-readonly-parameter-types",
 ];
 
