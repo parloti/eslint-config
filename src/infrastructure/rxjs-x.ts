@@ -14,7 +14,7 @@ export async function rxjsX(): Promise<Linter.Config[]> {
   const pluginModule = await import("eslint-plugin-rxjs-x");
 
   return defineConfig(
-    pluginModule.default.configs.strict as Linter.Config,
+    pluginModule.default.configs.strict,
     {
       name: "rxjs-x/custom",
       rules: {

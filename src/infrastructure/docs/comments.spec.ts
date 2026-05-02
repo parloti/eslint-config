@@ -1,5 +1,4 @@
 import type * as eslintCommentsModuleType from "@eslint-community/eslint-plugin-eslint-comments";
-import type * as eslintCommentsConfigsModuleType from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import type { Linter } from "eslint";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -45,7 +44,7 @@ function mockCommentsModules(options: ICommentsModuleMockOptions): void {
     () => {
       return {
         recommended: options.recommended,
-      } as unknown as Partial<typeof eslintCommentsConfigsModuleType>;
+      };
     },
   );
 }

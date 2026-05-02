@@ -34,7 +34,7 @@ function applyRuleOverrides(
     {
       name: "custom/rule-overrides",
       rules: filteredRules,
-    } as Linter.Config,
+    },
   ];
 }
 

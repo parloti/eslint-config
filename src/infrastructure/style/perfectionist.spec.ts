@@ -42,14 +42,14 @@ interface PerfectionistModule {
 
 /** Mock config map returned by eslint-plugin-perfectionist. */
 const perfectionistConfigs: PerfectionistConfigs = {
-  "recommended-alphabetical": {} as Linter.Config,
-  "recommended-alphabetical-legacy": {} as Linter.LegacyConfig,
-  "recommended-custom": {} as Linter.Config,
-  "recommended-custom-legacy": {} as Linter.LegacyConfig,
-  "recommended-line-length": {} as Linter.Config,
-  "recommended-line-length-legacy": {} as Linter.LegacyConfig,
-  "recommended-natural": {} as Linter.Config,
-  "recommended-natural-legacy": {} as Linter.LegacyConfig,
+  "recommended-alphabetical": {},
+  "recommended-alphabetical-legacy": {},
+  "recommended-custom": {},
+  "recommended-custom-legacy": {},
+  "recommended-line-length": {},
+  "recommended-line-length-legacy": {},
+  "recommended-natural": {},
+  "recommended-natural-legacy": {},
 };
 
 vi.mock(
@@ -61,7 +61,7 @@ vi.mock(
 
 describe("perfectionist config", () => {
   beforeEach(() => {
-    perfectionistConfigs["recommended-natural"] = {} as Linter.Config;
+    perfectionistConfigs["recommended-natural"] = {};
   });
 
   it("returns configs", async () => {

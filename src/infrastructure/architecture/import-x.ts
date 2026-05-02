@@ -40,9 +40,9 @@ async function buildCustomErrorRules(): Promise<Linter.Config[]> {
   );
 
   return [
-    warnings as Linter.Config,
-    recommended as Linter.Config,
-    typescript as Linter.Config,
+    warnings,
+    recommended,
+    typescript,
     {
       name: "import-x/custom-error",
       rules: customError,

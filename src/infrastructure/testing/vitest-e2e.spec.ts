@@ -30,7 +30,7 @@ describe("vitest-e2e plugin branches", () => {
     const allConfig: Linter.Config = {
       name: "vitest/all",
     };
-    // eslint-disable-next-line codeperfect/prefer-vitest-incremental-casts -- False positive
+
     vi.doMock(import("@vitest/eslint-plugin"), () => {
       return {
         default: {

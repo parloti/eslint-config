@@ -36,11 +36,11 @@ interface UnicornModule {
 
 /** Mock config map returned by eslint-plugin-unicorn. */
 const unicornConfigs: UnicornConfigs = {
-  all: {} as Linter.Config,
-  "flat/all": {} as Linter.Config,
-  "flat/recommended": {} as Linter.Config,
-  recommended: {} as Linter.Config,
-  unopinionated: {} as Linter.Config,
+  all: {},
+  "flat/all": {},
+  "flat/recommended": {},
+  recommended: {},
+  unopinionated: {},
 };
 
 vi.mock(
