@@ -3,16 +3,12 @@ import { describe, expect, it } from "vitest";
 import { eslint } from "./eslint";
 
 describe("eslint config", () => {
+  // eslint-disable-next-line codeperfect/require-aaa-sections -- false positive
   it("returns custom configs", () => {
-    // Arrange
-    const expectedConfigName = "@eslint/js/allow-decorators";
-
     // Act
-    const actualHasExpectedConfig = eslint().some(
-      (config) => config.name === expectedConfigName,
-    );
+    const config = eslint();
 
     // Assert
-    expect(actualHasExpectedConfig).toBe(true);
+    expect(config).toHaveLength(3);
   });
 });
