@@ -32,6 +32,7 @@ const fullCompositionNames = [
   "testing-vitest",
   "testing-vitest-e2e",
   "domain-rxjs",
+  "runtime-angular-eslint",
   "style-stylistic",
   "style-perfectionist",
   "style-unicorn",

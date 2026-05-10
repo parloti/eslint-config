@@ -82,12 +82,15 @@ type PluginName =
   | CorePluginName
   | DocumentationPluginName
   | DomainPluginName
+  | RuntimePluginName
   | StylePluginName
   | TestingPluginName;
 
 /** Type definition for explicit plugin state overrides. */
 type PluginStateOverrides = Partial<Record<PluginName, boolean>>;
 
+/** Type definition for rule data. */
+type RuntimePluginName = "angular-eslint";
 /** Type definition for rule data. */
 type StylePluginName = "perfectionist" | "prettier" | "stylistic" | "unicorn";
 

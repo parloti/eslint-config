@@ -4,14 +4,10 @@ export default defineConfig({
   test: {
     coverage: {
       enabled: true,
-      exclude: ["**/index.ts"],
-      thresholds: {
-        branches: 100,
-        functions: 100,
-        lines: 100,
-        statements: 100,
-      },
+      exclude: ["**/index.ts", "**/*.types.ts"],
+      include: ["src/**/*.ts", "tests/support/**/*.ts"],
+      thresholds: { "100": true },
     },
-    environment: "node",
+    include: ["src/**/*.spec.ts", "tests/support/**/*.spec.ts"],
   },
 });

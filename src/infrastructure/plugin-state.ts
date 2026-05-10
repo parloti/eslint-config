@@ -4,6 +4,7 @@ import { reportRedundantPluginState } from "./diagnostics";
 
 /** Plugins that are opt-in rather than enabled by default. */
 const defaultDisabledPlugins = [
+  "angular-eslint",
   "jasmine",
   "jest",
   "vitest-e2e",

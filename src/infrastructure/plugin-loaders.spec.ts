@@ -23,6 +23,7 @@ describe("pluginLoaders", () => {
   it("uses the documented load mode for every module", () => {
     // Arrange
     const expectedModes = {
+      "angular-eslint": "optional",
       boundaries: "optional",
       codeperfect: "required",
       comments: "optional",

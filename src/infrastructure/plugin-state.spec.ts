@@ -60,6 +60,7 @@ describe("plugin-state", () => {
       // Assert
       expect(isDisabled).toBe(true);
       expect(defaultDisabledPlugins).toStrictEqual([
+        "angular-eslint",
         "jasmine",
         "jest",
         "vitest-e2e",

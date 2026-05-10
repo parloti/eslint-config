@@ -4,6 +4,7 @@ import type { ConfigOptions, PluginName } from "../domain";
 import type { LoadMode } from "./utilities";
 
 import {
+  angularEslint,
   boundaries,
   codeperfect,
   comments,
@@ -69,6 +70,11 @@ function createStaticLoaderFactory(
 
 /** Documented config loader registry keyed by public module name. */
 const pluginLoaders = {
+  "angular-eslint": {
+    loader: createStaticLoaderFactory(angularEslint),
+    mode: "optional",
+    pluginName: "angular-eslint",
+  },
   boundaries: {
     loader: createBoundariesLoaderFactory,
     mode: "optional",

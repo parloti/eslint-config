@@ -94,6 +94,11 @@ async function loadCompositionOutcome(
  */
 function mockAllEnabled(): void {
   configsModuleMock = {
+    angularEslint: async (): Promise<Linter.Config[]> => {
+      const configs = await resolveAsyncConfig("runtime-angular-eslint");
+
+      return configs;
+    },
     boundaries: (): Linter.Config[] => [{ name: "architecture-boundaries" }],
     codeperfect: (): Linter.Config[] => [{ name: "core-codeperfect" }],
     comments: (): Linter.Config[] => [{ name: "docs-comments" }],
@@ -213,7 +218,12 @@ describe("config composition", () => {
 
     // Act
     const outcome = await loadCompositionOutcome({
-      plugins: { jasmine: true, jest: true, "vitest-e2e": true },
+      plugins: {
+        "angular-eslint": true,
+        jasmine: true,
+        jest: true,
+        "vitest-e2e": true,
+      },
     });
 
     // Assert

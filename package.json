@@ -86,6 +86,8 @@
     "typescript-eslint": "^8.59.2"
   },
   "optionalDependencies": {
+    "@angular-eslint/eslint-plugin": "^21.3.1",
+    "@angular-eslint/eslint-plugin-template": "^21.3.1",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@vitest/eslint-plugin": "^1.6.17",
@@ -104,6 +106,8 @@
   "devDependencies": {
     "@codeperfect/commitlint-config-emoji": "^1.0.0",
     "@codeperfect/eslint-plugin": "^2.1.0",
+    "@angular-eslint/eslint-plugin": "^21.3.1",
+    "@angular-eslint/eslint-plugin-template": "^21.3.1",
     "@commitlint/config-conventional": "^21.0.0",
     "@commitlint/cz-commitlint": "^21.0.0",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",

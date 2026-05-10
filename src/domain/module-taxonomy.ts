@@ -8,6 +8,7 @@ type ModuleCategory =
   | "domain"
   | "infrastructure"
   | "repository-architecture"
+  | "runtime"
   | "style"
   | "testing";
 
@@ -35,6 +36,7 @@ const moduleTaxonomy = [
   { category: "testing", pluginName: "vitest" },
   { category: "testing", pluginName: "vitest-e2e" },
   { category: "infrastructure", pluginName: "rxjs-x" },
+  { category: "runtime", pluginName: "angular-eslint" },
   { category: "style", pluginName: "stylistic" },
   { category: "style", pluginName: "perfectionist" },
   { category: "style", pluginName: "unicorn" },

@@ -19,6 +19,7 @@ describe("moduleTaxonomy", () => {
       "vitest",
       "vitest-e2e",
       "rxjs-x",
+      "angular-eslint",
       "stylistic",
       "perfectionist",
       "unicorn",
