@@ -1,35 +1,49 @@
-import type _default from "typescript-eslint";
-
 import { describe, expect, it, vi } from "vitest";
 
 import { typescript } from "./typescript";
 
-/** Type definition for rule data. */
-type CompatibleConfigArray = TypescriptEslintModule["configs"]["all"];
-
-/** Type definition for rule data. */
-type TypescriptEslintModule = typeof _default;
-
-/** Mocked typescript-eslint config namespace used by the module mock. */
-const mockedTypescriptEslintConfigs = {
-  all: [] as CompatibleConfigArray,
-} as TypescriptEslintModule["configs"];
-
-vi.mock(import("typescript-eslint"), () => ({
-  configs: mockedTypescriptEslintConfigs,
-}));
+vi.mock(
+  import("typescript-eslint"),
+  () =>
+    ({
+      configs: {
+        strictTypeChecked: [
+          {
+            name: "@typescript-eslint/strict-type-checked",
+          },
+        ],
+        stylisticTypeChecked: [
+          {
+            name: "@typescript-eslint/stylistic-type-checked",
+          },
+        ],
+      },
+    }) as Partial<typeof import("typescript-eslint")>,
+);
 
 describe("typescript config", () => {
   it("returns custom configs", async () => {
     // Arrange
-    const expectedConfigName = "@typescript-eslint/custom";
+    const strictConfig = {
+      name: "@typescript-eslint/strict-type-checked",
+    };
+    const stylisticConfig = {
+      name: "@typescript-eslint/stylistic-type-checked",
+    };
+    const parserOptionsConfig = {
+      languageOptions: {
+        parserOptions: {
+          projectService: true,
+        },
+      },
+    };
 
     // Act
-    const actualHasExpectedConfig = await typescript().then((configs) =>
-      configs.some((config) => config.name === expectedConfigName),
-    );
+    const actualConfigs = await typescript();
 
     // Assert
-    expect(actualHasExpectedConfig).toBe(true);
+    expect(actualConfigs).toContainEqual(strictConfig);
+    expect(actualConfigs).toContainEqual(stylisticConfig);
+    expect(actualConfigs).toContainEqual(parserOptionsConfig);
   });
 });

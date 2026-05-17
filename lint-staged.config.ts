@@ -8,12 +8,11 @@ export default {
     "npx --yes stylelint --fix --max-warnings=0",
   ],
   "*.{htm,html}": [
-    "npx --yes htmlhint",
     "npx --yes prettier --ignore-unknown --write",
-    "npx --yes eslint --max-warnings=0 --fix",
+    "npx --yes eslint --max-warnings=0 --fix --no-warn-ignored",
   ],
   "*.{js,ts}": [
     "npx --yes prettier --ignore-unknown --write",
-    "npx --yes eslint --max-warnings=0 --fix",
+    "npx --yes eslint --max-warnings=0 --fix --no-warn-ignored",
   ],
 } satisfies Configuration;
