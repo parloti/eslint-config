@@ -235,11 +235,12 @@ describe("config composition", () => {
     // Arrange
     vi.resetModules();
     mockAllEnabled();
+    const untypedOptions = {
+      plugins: { jest: false },
+    } as unknown as CompositionOptions;
 
     // Act
-    const outcome = await loadCompositionOutcome({
-      plugins: { jest: false },
-    });
+    const outcome = await loadCompositionOutcome(untypedOptions);
 
     // Assert
     expect(outcome.names).toStrictEqual(defaultCompositionNames);
@@ -252,11 +253,12 @@ describe("config composition", () => {
     // Arrange
     vi.resetModules();
     mockAllEnabled();
+    const untypedOptions = {
+      plugins: { vitest: true },
+    } as unknown as CompositionOptions;
 
     // Act
-    const outcome = await loadCompositionOutcome({
-      plugins: { vitest: true },
-    });
+    const outcome = await loadCompositionOutcome(untypedOptions);
 
     // Assert
     expect(outcome.names).toStrictEqual(defaultCompositionNames);

@@ -1,4 +1,8 @@
-import type { PluginName, PluginStateOverrides } from "../domain";
+import type {
+  DefaultDisabledPluginName,
+  PluginName,
+  PluginStateOverrides,
+} from "../domain";
 
 import { reportRedundantPluginState } from "./diagnostics";
 
@@ -8,7 +12,7 @@ const defaultDisabledPlugins = [
   "jasmine",
   "jest",
   "vitest-e2e",
-] as const satisfies readonly PluginName[];
+] as const satisfies readonly DefaultDisabledPluginName[];
 
 /**
  * Checks whether a plugin is disabled by default.

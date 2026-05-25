@@ -28,6 +28,16 @@ interface ConfigOptions {
 /** Type definition for rule data. */
 type CorePluginName = "codeperfect" | "eslint" | "resolver" | "typescript";
 
+/** Plugins that are disabled by default and can only be explicitly enabled. */
+type DefaultDisabledPluginName =
+  | "angular-eslint"
+  | "jasmine"
+  | "jest"
+  | "vitest-e2e";
+
+/** Plugins that are enabled by default and can only be explicitly disabled. */
+type DefaultEnabledPluginName = Exclude<PluginName, DefaultDisabledPluginName>;
+
 /** Type definition for rule data. */
 type DocumentationPluginName = "comments" | "jsdoc";
 
@@ -45,7 +55,10 @@ type PluginName =
   | TestingPluginName;
 
 /** Type definition for explicit plugin state overrides. */
-type PluginStateOverrides = Partial<Record<PluginName, boolean>>;
+type PluginStateOverrides = Partial<
+  Record<DefaultDisabledPluginName, true> &
+    Record<DefaultEnabledPluginName, false>
+>;
 
 /** Type definition for rule data. */
 type RuntimePluginName = "angular-eslint";
@@ -64,6 +77,7 @@ export type {
   BoundariesElementTypesOptions,
   BoundariesElementTypesRuleEntry,
   ConfigOptions,
+  DefaultDisabledPluginName,
   PluginName,
   PluginStateOverrides,
 };

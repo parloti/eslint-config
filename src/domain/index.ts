@@ -8,6 +8,7 @@ export type {
   BoundariesElementTypesOptions,
   BoundariesElementTypesRuleEntry,
   ConfigOptions,
+  DefaultDisabledPluginName,
   PluginName,
   PluginStateOverrides,
 } from "./types";
