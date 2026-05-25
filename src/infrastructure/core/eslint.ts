@@ -16,7 +16,13 @@ export function eslint(): Linter.Config[] {
   return defineConfig(
     js.configs.recommended,
     globalIgnores(
-      ["**/dist/**", "docs/", "**/coverage", "**/.stryker-tmp"],
+      [
+        "**/dist",
+        "**/docs",
+        "**/coverage",
+        "**/.stryker-tmp",
+        "**/playwright-reports",
+      ],
       "@eslint/js/custom-ignore-directory",
     ),
     {

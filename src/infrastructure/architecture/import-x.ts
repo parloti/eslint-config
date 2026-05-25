@@ -12,40 +12,20 @@ import { defineConfig } from "eslint/config";
  * ```
  */
 async function buildCustomErrorRules(): Promise<Linter.Config[]> {
-  const { flatConfigs, rules } = await import("eslint-plugin-import-x");
+  const { flatConfigs } = await import("eslint-plugin-import-x");
   const { recommended, typescript, warnings } = flatConfigs;
-
-  const customIgnore = new Set([
-    "dynamic-import-chunkname",
-    "no-deprecated",
-    "no-named-export",
-    "no-namespace",
-    "no-unused-modules",
-    "order",
-    "prefer-default-export",
-  ]);
-
-  const allConfigs = new Set(
-    [warnings, recommended, typescript].flatMap((config) =>
-      Object.keys(config.rules ?? {}),
-    ),
-  );
-
-  const customError = Object.fromEntries(
-    Object.keys(rules)
-      .filter((rule) => !customIgnore.has(rule))
-      .map((rule) => `import-x/${rule}`)
-      .filter((rule) => !allConfigs.has(rule))
-      .map((rule) => [rule, "error"] as const),
-  );
 
   return [
     warnings,
     recommended,
     typescript,
     {
-      name: "import-x/custom-error",
-      rules: customError,
+      rules: {
+        "import-x/no-internal-modules": [
+          "error",
+          { allow: ["**/node_modules/**"] },
+        ],
+      },
     },
   ];
 }

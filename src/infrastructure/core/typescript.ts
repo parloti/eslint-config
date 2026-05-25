@@ -14,11 +14,20 @@ export async function typescript(): Promise<Linter.Config[]> {
   const { configs } = await import("typescript-eslint");
   const { strictTypeChecked, stylisticTypeChecked } = configs;
 
-  return defineConfig(strictTypeChecked, stylisticTypeChecked, {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
+  return defineConfig(
+    strictTypeChecked,
+    stylisticTypeChecked,
+    {
+      languageOptions: {
+        parserOptions: {
+          projectService: true,
+        },
       },
     },
-  });
+    {
+      files: ["**/*.{spec,test,e2e}.ts"],
+      name: "Test files should allow unbound methods for better assertion flexibility",
+      rules: { "@typescript-eslint/unbound-method": "off" },
+    },
+  );
 }

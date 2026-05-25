@@ -27,7 +27,7 @@ describe("import-x branch coverage", () => {
     vi.doUnmock("eslint-plugin-import-x");
   });
 
-  it("handles configs without rules", async () => {
+  it("exposes the custom node_modules allowlist", async () => {
     // Arrange
     vi.resetModules();
     vi.doMock(
@@ -48,12 +48,30 @@ describe("import-x branch coverage", () => {
     );
 
     // Act
-    const actualHasCustomErrorConfig = await loadImportXConfigs().then(
+    const actualCustomNodeModulesConfig = await loadImportXConfigs().then(
       (configs) =>
-        configs.some((config) => config.name === "import-x/custom-error"),
+        configs.find(
+          (config) => config.name === "import-x/custom-node_modules",
+        ),
     );
 
     // Assert
-    expect(actualHasCustomErrorConfig).toBe(true);
+    expect(actualCustomNodeModulesConfig).toMatchObject({
+      name: "import-x/custom-node_modules",
+      rules: {
+        "import-x/no-internal-modules": [
+          "error",
+          {
+            allow: [
+              "eslint/config",
+              "eslint-plugin-boundaries/config",
+              "eslint-plugin-prettier/recommended",
+              "vitest/config",
+              "@eslint-community/eslint-plugin-eslint-comments/configs",
+            ],
+          },
+        ],
+      },
+    });
   });
 });
