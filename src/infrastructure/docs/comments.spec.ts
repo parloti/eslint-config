@@ -1,7 +1,7 @@
 import type * as eslintCommentsModuleType from "@eslint-community/eslint-plugin-eslint-comments";
 import type { Linter } from "eslint";
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 /** Mock inputs used for the eslint-comments module tests. */
 interface ICommentsModuleMockOptions {
@@ -50,13 +50,6 @@ function mockCommentsModules(options: ICommentsModuleMockOptions): void {
 }
 
 describe("comments config", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules();
-    vi.doUnmock("@eslint-community/eslint-plugin-eslint-comments");
-    vi.doUnmock("@eslint-community/eslint-plugin-eslint-comments/configs");
-  });
-
   it("adds repo-owned rules on top of the recommended preset", async () => {
     // Arrange
     mockCommentsModules({

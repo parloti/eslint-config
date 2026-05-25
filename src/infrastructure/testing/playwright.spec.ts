@@ -1,7 +1,7 @@
 import type { Linter } from "eslint";
 import type * as playwrightPluginModuleType from "eslint-plugin-playwright";
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 /** Mocked Playwright plugin shape used by the tests. */
 interface IPlaywrightPluginMock {
@@ -45,12 +45,6 @@ function mockPlaywrightModule(plugin: IPlaywrightPluginMock): void {
 }
 
 describe("playwright config", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules();
-    vi.doUnmock("eslint-plugin-playwright");
-  });
-
   it("returns repo-owned errors that are not already in the recommended preset", async () => {
     // Arrange
     const recommendedConfig: Linter.Config = {

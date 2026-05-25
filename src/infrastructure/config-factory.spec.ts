@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { PluginName } from "../domain";
 
@@ -22,10 +22,6 @@ const defaultEnabledPlugins = allPlugins.filter(
 );
 
 describe("config-factory", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   describe(config, () => {
     it("returns an empty array when all plugins are disabled", async () => {
       // Arrange

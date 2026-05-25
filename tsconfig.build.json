@@ -6,6 +6,7 @@
     // Emit
     "outDir": "dist",
     "rootDir": "src",
+
     // Projects
     "tsBuildInfoFile": "dist/.tsbuildinfo"
   },

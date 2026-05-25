@@ -34,8 +34,6 @@
     "dist"
   ],
   "scripts": {
-    "\n# --------------- GENERAL --------------- #": "",
-    "preinstall": "npm cache clean --force",
     "\n# --------------- SCM --------------- #": "",
     "commit": "npx --yes git-cz",
     "prepare": "husky",

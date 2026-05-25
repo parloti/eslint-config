@@ -52,6 +52,7 @@ temp/
 .cache-loader/
 .eslintcache
 coverage/
+.vscode-test/
 
 # Angular build cache
 .angular/
@@ -62,7 +63,6 @@ coverage/
 # ---------------------------------------------------------
 # IDE / Editor files
 # ---------------------------------------------------------
-.vscode/
 .idea/
 *.swp
 *.swo

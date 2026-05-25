@@ -3,5 +3,10 @@
   "checkers": ["typescript"],
   "incremental": true,
   "reporters": ["progress", "clear-text", "html", "json"],
-  "testRunner": "vitest"
+  "testRunner": "vitest",
+  "thresholds": {
+    "break": 10,
+    "high": 80,
+    "low": 60
+  }
 }

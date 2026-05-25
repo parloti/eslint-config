@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
   isMissingModuleError,
@@ -69,10 +69,6 @@ function createStderrCapture(): IStderrCapture {
 }
 
 describe("diagnostics", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   describe(isMissingModuleError, () => {
     it("returns true for a Cannot-find-module error", () => {
       // Arrange

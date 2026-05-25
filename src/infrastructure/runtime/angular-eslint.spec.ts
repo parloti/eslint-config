@@ -2,7 +2,7 @@ import type * as AngularTsPluginModule from "@angular-eslint/eslint-plugin";
 import type * as AngularTemplatePluginModule from "@angular-eslint/eslint-plugin-template";
 import type { Linter } from "eslint";
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 /**
  * Load the Angular ESLint config under test after module mocking.
@@ -19,16 +19,8 @@ async function loadAngularEslintConfigs(): Promise<Linter.Config[]> {
 }
 
 describe("angular-eslint plugin branches", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules();
-    vi.doUnmock("@angular-eslint/eslint-plugin");
-    vi.doUnmock("@angular-eslint/eslint-plugin-template");
-  });
-
   it("returns repo-owned configs when both presets are available", async () => {
     // Arrange
-    vi.resetModules();
     const tsRecommendedConfig: Linter.Config = {
       name: "angular-eslint/ts-recommended",
     };

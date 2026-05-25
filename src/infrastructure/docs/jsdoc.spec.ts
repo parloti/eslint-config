@@ -1,7 +1,7 @@
 import type { Linter } from "eslint";
 import type * as jsdocModuleType from "eslint-plugin-jsdoc";
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 /** Options for mocking the JSDoc plugin module. */
 interface IJsdocModuleMockOptions {
@@ -45,12 +45,6 @@ function mockJsdocModule(options: IJsdocModuleMockOptions): void {
 }
 
 describe("jsdoc loader", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules();
-    vi.doUnmock("eslint-plugin-jsdoc");
-  });
-
   it("loads repo-owned configs from the upstream plugin shape", async () => {
     // Arrange
     mockJsdocModule({

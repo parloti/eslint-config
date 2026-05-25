@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
   defaultDisabledPlugins,
@@ -45,10 +45,6 @@ async function captureSutWithStderr<T>(
 }
 
 describe("plugin-state", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   describe(isPluginDisabledByDefault, () => {
     it("returns true for default-disabled testing plugins", () => {
       // Arrange

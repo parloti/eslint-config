@@ -1,6 +1,6 @@
 import type { Linter } from "eslint";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { loadPluginConfig } from "./utilities";
 
@@ -61,11 +61,6 @@ describe("utilities", () => {
     loadMissingJestPluginConfig.mockRejectedValue(missingJestPluginError);
     loadMissingPluginConfig.mockRejectedValue(missingPluginError);
     loadRequiredPeerConfig.mockRejectedValue(requiredPeerError);
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
-    vi.restoreAllMocks();
   });
 
   describe(loadPluginConfig, () => {

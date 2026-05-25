@@ -1,7 +1,7 @@
 import type { Linter } from "eslint";
 import type * as importXModuleType from "eslint-plugin-import-x";
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 /** Module namespace type for eslint-plugin-import-x mocks. */
 type ImportXModule = typeof importXModuleType;
@@ -21,15 +21,8 @@ async function loadImportXConfigs(): Promise<Linter.Config[]> {
 }
 
 describe("import-x branch coverage", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules();
-    vi.doUnmock("eslint-plugin-import-x");
-  });
-
   it("exposes the custom node_modules allowlist", async () => {
     // Arrange
-    vi.resetModules();
     vi.doMock(
       import("eslint-plugin-import-x"),
       () =>

@@ -1,7 +1,7 @@
 import type * as VitestPluginModule from "@vitest/eslint-plugin";
 import type { Linter } from "eslint";
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 /**
  * Load the Vitest e2e config under test after module mocking.
@@ -18,15 +18,8 @@ async function loadVitestE2eConfigs(): Promise<Linter.Config[]> {
 }
 
 describe("vitest-e2e plugin branches", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules();
-    vi.doUnmock("@vitest/eslint-plugin");
-  });
-
   it("returns repo-owned configs when the all preset is available", async () => {
     // Arrange
-    vi.resetModules();
     const allConfig: Linter.Config = {
       name: "vitest/all",
     };

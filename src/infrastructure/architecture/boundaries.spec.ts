@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { BoundariesElementTypesRuleEntry } from "../../domain";
 
@@ -76,10 +76,6 @@ const expectedElementTypesRule: BoundariesElementTypesRuleEntry = [
 ];
 
 describe("boundaries config", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   it("builds configs from the default topology without setup", () => {
     // Arrange
     const stderrSpy = vi

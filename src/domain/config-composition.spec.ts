@@ -177,15 +177,11 @@ async function resolveAsyncConfig(name: string): Promise<Linter.Config[]> {
 
 describe("config composition", () => {
   afterEach(() => {
-    vi.clearAllMocks();
-    vi.resetModules();
-    vi.restoreAllMocks();
     configsModuleMock = void 0;
   });
 
   it("preserves the documented default composition order", async () => {
     // Arrange
-    vi.resetModules();
     mockAllEnabled();
 
     // Act
@@ -199,7 +195,6 @@ describe("config composition", () => {
 
   it("removes explicitly disabled modules without disturbing remaining order", async () => {
     // Arrange
-    vi.resetModules();
     mockAllEnabled();
 
     // Act
@@ -213,7 +208,6 @@ describe("config composition", () => {
 
   it("allows explicitly enabling default-disabled testing plugins", async () => {
     // Arrange
-    vi.resetModules();
     mockAllEnabled();
 
     // Act
@@ -233,7 +227,6 @@ describe("config composition", () => {
 
   it("warns when a default-disabled plugin is redundantly disabled", async () => {
     // Arrange
-    vi.resetModules();
     mockAllEnabled();
     const untypedOptions = {
       plugins: { jest: false },
@@ -251,7 +244,6 @@ describe("config composition", () => {
 
   it("warns when a default-enabled plugin is redundantly enabled", async () => {
     // Arrange
-    vi.resetModules();
     mockAllEnabled();
     const untypedOptions = {
       plugins: { vitest: true },
