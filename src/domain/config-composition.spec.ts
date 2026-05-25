@@ -12,7 +12,7 @@ import {
 } from "./config-composition";
 
 /** Minimal config-composition options used in these tests. */
-type CompositionOptions = Pick<ConfigOptions, "plugins" | "rules">;
+type CompositionOptions = Pick<ConfigOptions, "plugins">;
 
 /** Module namespace type for mocked config loader exports. */
 type ConfigsModule = typeof InfrastructureModule;
@@ -265,22 +265,5 @@ describe("config composition", () => {
     expect(outcome.firstMessage).toContain(
       "Redundant plugin state override: vitest",
     );
-  });
-
-  it("applies rule overrides after all enabled modules", async () => {
-    // Arrange
-    vi.resetModules();
-    mockAllEnabled();
-
-    // Act
-    const actualLastEntry = await loadComposedConfig({
-      rules: { "no-console": "off" },
-    }).then((configs) => configs.at(-1));
-
-    // Assert
-    expect(actualLastEntry).toMatchObject({
-      name: "custom/rule-overrides",
-      rules: { "no-console": "off" },
-    });
   });
 });

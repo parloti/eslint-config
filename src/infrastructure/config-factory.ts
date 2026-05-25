@@ -8,11 +8,7 @@ import { moduleTaxonomy } from "../domain";
 import { reportDeprecatedBoundariesOption } from "./diagnostics";
 import { pluginLoaders } from "./plugin-loaders";
 import { resolvePluginState } from "./plugin-state";
-import {
-  applyRuleOverrides,
-  collectAvailablePlugins,
-  loadPluginConfig,
-} from "./utilities";
+import { loadPluginConfig } from "./utilities";
 
 /**
  * Builds the list of plugin config loaders.
@@ -42,7 +38,7 @@ function buildPluginConfigLoaders(
 }
 
 /**
- * Creates the ESLint configuration with optional plugin and rule customization.
+ * Creates the ESLint configuration with optional plugin customization.
  * @param options Input options value.
  * @returns Return value output.
  * @example
@@ -55,19 +51,12 @@ async function config(options: ConfigOptions = {}): Promise<Linter.Config[]> {
     reportDeprecatedBoundariesOption();
   }
 
-  const { rules: ruleOverrides } = options;
-
   const pluginConfigResults = await Promise.all(
     buildPluginConfigLoaders(options),
   );
   const pluginConfigs = pluginConfigResults.flat();
-  const finalConfig = applyRuleOverrides(
-    pluginConfigs,
-    ruleOverrides,
-    collectAvailablePlugins(pluginConfigs),
-  );
 
-  return finalConfig.length === 0 ? [] : defineConfig(...finalConfig);
+  return pluginConfigs.length === 0 ? [] : defineConfig(...pluginConfigs);
 }
 
 export { config };

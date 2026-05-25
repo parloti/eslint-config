@@ -90,26 +90,9 @@ function reportRedundantPluginState(
   process.stderr.write(`${[header, detail, hint].join("\n")}\n`);
 }
 
-/**
- * Reports a skipped rule override when the target plugin is unavailable.
- * @param ruleName Input ruleName value.
- * @param pluginName Input pluginName value.
- * @example
- * ```typescript
- * reportRuleOverrideSkip("vitest/no-focused-tests", "vitest");
- * ```
- */
-function reportRuleOverrideSkip(ruleName: string, pluginName: string): void {
-  const header = `${ansi.bold}${ansi.red}Skipped rule override: ${ruleName}${ansi.reset}`;
-  const detail = `${ansi.yellow}Plugin "${pluginName}" is not available in the final config.${ansi.reset}`;
-  const hint = `${ansi.cyan}Hint:${ansi.reset} Install the plugin or remove the rule override.`;
-  process.stderr.write(`${[header, detail, hint].join("\n")}\n`);
-}
-
 export {
   isMissingModuleError,
   reportDeprecatedBoundariesOption,
   reportPluginLoadIssue,
   reportRedundantPluginState,
-  reportRuleOverrideSkip,
 };

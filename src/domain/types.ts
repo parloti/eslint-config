@@ -17,12 +17,6 @@ type BoundariesElementTypesRuleEntry = [
 interface ConfigOptions {
   /** Explicit plugin state overrides keyed by public plugin name. */
   plugins?: PluginStateOverrides;
-
-  /**
-   * Rules to disable or override.
-   * Use 'off' to disable, or provide custom configuration.
-   */
-  rules?: Linter.RulesRecord;
 }
 
 /** Type definition for rule data. */

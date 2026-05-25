@@ -5,7 +5,6 @@ import {
   reportDeprecatedBoundariesOption,
   reportPluginLoadIssue,
   reportRedundantPluginState,
-  reportRuleOverrideSkip,
 } from "./diagnostics";
 
 /** Captured stderr spy state for one test. */
@@ -32,12 +31,11 @@ interface IStderrOutcome {
  * @returns The first emitted message and write count.
  * @example
  * ```typescript
- * captureStderrOutcome(() => reportRuleOverrideSkip("a/b", "a"));
+ * captureStderrOutcome(() => reportRedundantPluginState("vitest", true));
  * ```
  */
 function captureStderrOutcome(action: () => void): IStderrOutcome {
   const stderrCapture = createStderrCapture();
-
   action();
 
   return {
@@ -140,22 +138,6 @@ describe("diagnostics", () => {
       // Act
       const outcome = captureStderrOutcome(() => {
         reportPluginLoadIssue("typescript", new Error("boom"), "required");
-      });
-
-      // Assert
-      expect(outcome.writeCallCount).toBe(1);
-      expect(outcome.message).toContain(expectedMessage);
-    });
-  });
-
-  describe(reportRuleOverrideSkip, () => {
-    it("reports missing plugin overrides", () => {
-      // Arrange
-      const expectedMessage = "Skipped rule override: vitest/no-focused-tests";
-
-      // Act
-      const outcome = captureStderrOutcome(() => {
-        reportRuleOverrideSkip("vitest/no-focused-tests", "vitest");
       });
 
       // Assert

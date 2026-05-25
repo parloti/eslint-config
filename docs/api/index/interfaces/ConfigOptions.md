@@ -32,11 +32,3 @@ Explicit plugin state overrides keyed by public plugin name.
 
 ---
 
-### rules?
-
-> `optional` **rules**: `RulesConfig`
-
-Defined in: types.ts:35
-
-Rules to disable or override.
-Use 'off' to disable, or provide custom configuration.

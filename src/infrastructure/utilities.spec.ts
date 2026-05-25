@@ -2,11 +2,7 @@ import type { Linter } from "eslint";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  applyRuleOverrides,
-  collectAvailablePlugins,
-  loadPluginConfig,
-} from "./utilities";
+import { loadPluginConfig } from "./utilities";
 
 /**
  * Captured SUT result paired with the first stderr message.
@@ -26,7 +22,7 @@ interface ISutOutcome<T> {
  * @returns The SUT result paired with the first stderr message.
  * @example
  * ```typescript
- * await captureSutWithStderr(() => applyRuleOverrides([], {}));
+ * await captureSutWithStderr(() => loadPluginConfig("jest", async () => []));
  * ```
  */
 async function captureSutWithStderr<T>(
@@ -70,115 +66,6 @@ describe("utilities", () => {
   afterEach(() => {
     vi.clearAllMocks();
     vi.restoreAllMocks();
-  });
-
-  describe(applyRuleOverrides, () => {
-    it("returns the original config when overrides are undefined", () => {
-      // Arrange
-      const config = [{ name: "base" }];
-
-      // Act
-      const result = applyRuleOverrides(config);
-
-      // Assert
-      expect(result).toBe(config);
-    });
-
-    it("returns the original config when overrides are empty", () => {
-      // Arrange
-      const config = [{ name: "base" }];
-
-      // Act
-      const result = applyRuleOverrides(config, {});
-
-      // Assert
-      expect(result).toBe(config);
-    });
-
-    it("appends rule overrides when they are provided", () => {
-      // Arrange
-      const config = [{ name: "base" }];
-
-      // Act
-      const result = applyRuleOverrides(config, { "no-console": "off" });
-
-      // Assert
-      expect(result).toStrictEqual([
-        { name: "base" },
-        {
-          name: "custom/rule-overrides",
-          rules: { "no-console": "off" },
-        },
-      ]);
-    });
-
-    it("skips overrides for missing plugins and reports the skip", async () => {
-      // Arrange
-      const config = [{ name: "base" }];
-
-      // Act
-      const { firstMessage, result } = await captureSutWithStderr(() =>
-        applyRuleOverrides(
-          config,
-          { "vitest/expect-expect": "error" },
-          new Set(["jest"]),
-        ),
-      );
-
-      // Assert
-      expect(result).toStrictEqual(config);
-      expect(firstMessage).toContain(
-        "Skipped rule override: vitest/expect-expect",
-      );
-    });
-
-    it("keeps overrides for available plugins", () => {
-      // Arrange
-      const config = [{ name: "base" }];
-
-      // Act
-      const result = applyRuleOverrides(
-        config,
-        { "vitest/expect-expect": "error" },
-        new Set(["vitest"]),
-      );
-
-      // Assert
-      expect(result).toStrictEqual([
-        { name: "base" },
-        {
-          name: "custom/rule-overrides",
-          rules: { "vitest/expect-expect": "error" },
-        },
-      ]);
-    });
-  });
-
-  describe(collectAvailablePlugins, () => {
-    it("collects plugin names from config entries", () => {
-      // Arrange
-      const configs: Linter.Config[] = [
-        { name: "one", plugins: { vitest: {} } },
-        { name: "two", plugins: { jest: {} } },
-      ];
-
-      // Act
-      const pluginNames = [...collectAvailablePlugins(configs)].toSorted();
-
-      // Assert
-      expect(pluginNames).toStrictEqual(["jest", "vitest"]);
-    });
-
-    it("returns an empty set when no plugins are present", () => {
-      // Arrange
-      const configs: Linter.Config[] = [{ name: "one" }];
-
-      // Act
-      const pluginNames = collectAvailablePlugins(configs);
-
-      // Assert
-      expect([...pluginNames]).toStrictEqual([]);
-    });
   });
 
   describe(loadPluginConfig, () => {
