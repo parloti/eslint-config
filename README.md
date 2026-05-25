@@ -74,34 +74,25 @@ export default config({
 });
 ```
 
-Provide explicit repository-owned `boundaries` topology when needed:
+The `boundaries` module is package-owned and always uses this topology:
 
-```typescript
-import { config } from "@codeperfect/eslint-config";
+- `entrypoint`: `src/index.ts`
+- `bootstrap`: `src/bootstrap/**`
+- `presentation`: `src/presentation/**`
+- `infrastructure`: `src/infrastructure/**`
+- `application`: `src/application/**`
+- `domain`: `src/domain/**`
+- `shared`: `src/shared/**`
 
-export default config({
-  boundaries: {
-    files: ["src/**/*.ts"],
-    elements: [
-      { type: "shared", pattern: "src/shared/**/*" },
-      { type: "domain", pattern: "src/domain/**/*" },
-      { type: "app", pattern: "src/app/**/*" },
-    ],
-    elementTypes: [
-      "error",
-      {
-        default: "disallow",
-        rules: [
-          { allow: ["shared"], from: ["domain", "app"] },
-          { allow: ["domain"], from: ["app"] },
-        ],
-      },
-    ],
-  },
-});
-```
+Directional dependency rules are fixed:
 
-If that topology is missing or incomplete, the `boundaries` module is skipped and the package reports a targeted warning.
+- `entrypoint -> bootstrap`
+- `bootstrap -> presentation | infrastructure | application | domain | shared`
+- `presentation -> application | domain | shared`
+- `infrastructure -> application | domain | shared`
+- `application -> domain | shared`
+- `domain -> shared`
+- `shared -> shared`
 
 ## Composition order
 
@@ -147,7 +138,7 @@ This order is intentional and validated in tests.
 | `perfectionist` | `eslint-plugin-perfectionist`                     | Optional ordering rules.                               |
 | `unicorn`       | `eslint-plugin-unicorn`                           | Optional general best-practice rules.                  |
 | `prettier`      | `eslint-plugin-prettier`                          | Optional Prettier integration.                         |
-| `boundaries`    | `eslint-plugin-boundaries`                        | Optional, repository-owned architecture overlay.       |
+| `boundaries`    | `eslint-plugin-boundaries`                        | Optional, package-owned architecture overlay.          |
 
 ## Validation
 

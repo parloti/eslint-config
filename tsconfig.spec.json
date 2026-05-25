@@ -1,14 +1,1 @@
-{
-  "extends": "./tsconfig.base.json",
-  "include": [
-    "src/**/*.spec.ts",
-    "src/**/*.d.ts",
-    "eslint-plugin-jasmine.d.ts"
-  ],
-  "exclude": ["dist", "node_modules"],
-  "compilerOptions": {
-    "composite": false,
-    "incremental": false,
-    "types": ["node"]
-  }
-}
+{ "extends": "./tsconfig.base.json", "include": ["**/*.spec.ts", "**/*.d.ts"] }

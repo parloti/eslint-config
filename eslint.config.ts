@@ -1,15 +1,16 @@
+import { defineConfig } from "eslint/config";
+
 import { config } from "./src";
 
-/**
- * Base ESLint configuration for the project, with specific adjustments for testing files.
- * @returns The base ESLint configuration array.
- * @example
- * ```typescript
- * const baseConfig = await config();
- * ```
- */
-const base = await config({
-  plugins: { playwright: false, "rxjs-x": false, "vitest-e2e": true },
-  rules: { "import-x/no-nodejs-modules": "off" },
+/** CodePerfect ESLint configuration with custom rules and boundaries. */
+const codePerfect = await config({
+  plugins: {
+    playwright: false,
+    "rxjs-x": false,
+    "vitest-e2e": true,
+  },
 });
-export default base;
+
+/** Combined ESLint configuration for the workspace manager project. */
+const eslintConfig = defineConfig(codePerfect);
+export default eslintConfig;

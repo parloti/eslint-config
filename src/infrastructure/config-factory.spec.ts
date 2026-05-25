@@ -52,5 +52,31 @@ describe("config-factory", () => {
       // Assert
       expect(actualConfigs).toStrictEqual(expectedConfigs);
     });
+
+    it("reports deprecated boundaries option input when present at runtime", async () => {
+      // Arrange
+      const stderrSpy = vi
+        .spyOn(process.stderr, "write")
+        .mockImplementation(() => true);
+
+      const legacyOptions = {
+        boundaries: {
+          files: ["packages/*/src/**/*.ts"],
+        },
+        plugins: Object.fromEntries(
+          defaultEnabledPlugins.map((pluginName) => [pluginName, false]),
+        ),
+      } as unknown as Parameters<typeof config>[0];
+
+      // Act
+      const actualConfigs = await config(legacyOptions);
+
+      // Assert
+      expect(actualConfigs).toStrictEqual([]);
+      expect(stderrSpy).toHaveBeenCalledTimes(1);
+      expect(stderrSpy.mock.calls[0]?.[0]).toContain(
+        "Deprecated config option ignored: boundaries",
+      );
+    });
   });
 });

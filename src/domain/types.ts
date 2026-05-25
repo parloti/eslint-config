@@ -1,47 +1,8 @@
 import type { Linter } from "eslint";
-import type {
-  DependenciesRuleOptions,
-  ElementDescriptors,
-} from "eslint-plugin-boundaries";
+import type { DependenciesRuleOptions } from "eslint-plugin-boundaries";
 
 /** Type definition for rule data. */
 type ArchitecturePluginName = "boundaries" | "import-x";
-
-/** Type definition for rule data. */
-interface BoundariesConfig {
-  /** Repository-owned element descriptors for boundaries analysis. */
-  elements?: ElementDescriptors;
-
-  /** Repository-owned dependency direction rules for boundaries analysis. */
-  elementTypes?: BoundariesElementTypesRuleEntry;
-
-  /** Optional additive extensions applied after the repository defaults. */
-  extend?: BoundariesConfigExtension;
-
-  /** Files included in repository-specific boundaries analysis. */
-  files?: readonly string[];
-
-  /** Optional ignore globs excluded from repository-specific boundaries analysis. */
-  ignores?: readonly string[];
-}
-
-/** Type definition for additive boundaries extension fields. */
-interface BoundariesConfigExtension {
-  /** Additional repository-owned element descriptors appended to the defaults. */
-  elements?: ElementDescriptors;
-
-  /**
-   * Additional dependency direction rules appended to the default rule set.
-   * Only additive dependency rules are supported here.
-   */
-  elementTypes?: Pick<BoundariesElementTypesOptions, "rules">;
-
-  /** Additional files appended to the default file globs. */
-  files?: readonly string[];
-
-  /** Additional ignore globs appended to the default ignore list. */
-  ignores?: readonly string[];
-}
 
 /** Dependency rule options object used by the boundaries plugin. */
 type BoundariesElementTypesOptions = DependenciesRuleOptions;
@@ -54,9 +15,6 @@ type BoundariesElementTypesRuleEntry = [
 
 /** Type definition for rule data. */
 interface ConfigOptions {
-  /** Repository-owned architecture input for the optional `boundaries` module. */
-  boundaries?: BoundariesConfig;
-
   /** Explicit plugin state overrides keyed by public plugin name. */
   plugins?: PluginStateOverrides;
 
@@ -103,8 +61,6 @@ type TestingPluginName =
   | "vitest-e2e";
 
 export type {
-  BoundariesConfig,
-  BoundariesConfigExtension,
   BoundariesElementTypesOptions,
   BoundariesElementTypesRuleEntry,
   ConfigOptions,

@@ -41,7 +41,7 @@ interface PluginLoaderEntry {
 }
 
 /**
- * Creates the boundaries loader factory for repository-owned architecture input.
+ * Creates the boundaries loader factory for package-owned architecture input.
  * @param options Input options value.
  * @returns Return value output.
  * @example
@@ -50,7 +50,9 @@ interface PluginLoaderEntry {
  * ```
  */
 function createBoundariesLoaderFactory(options: ConfigOptions): ConfigLoader {
-  return (): Linter.Config[] => boundaries(options.boundaries);
+  void options;
+
+  return boundaries;
 }
 
 /**

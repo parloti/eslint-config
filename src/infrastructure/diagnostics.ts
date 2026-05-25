@@ -28,16 +28,16 @@ function isMissingModuleError(error: unknown): boolean {
 }
 
 /**
- * Reports that repository-owned boundaries input is missing.
+ * Reports use of the removed `config({ boundaries: ... })` input.
  * @example
  * ```typescript
- * reportMissingBoundariesConfig();
+ * reportDeprecatedBoundariesOption();
  * ```
  */
-function reportMissingBoundariesConfig(): void {
-  const header = `${ansi.bold}${ansi.red}Skipped boundaries config${ansi.reset}`;
-  const detail = `${ansi.yellow}Provide repository-owned boundaries files, elements, and element-types.${ansi.reset}`;
-  const hint = `${ansi.cyan}Hint:${ansi.reset} Provide boundaries config via config({ boundaries: { ... } }) or disable the plugin with plugins: { "boundaries": false }.`;
+function reportDeprecatedBoundariesOption(): void {
+  const header = `${ansi.bold}${ansi.yellow}Deprecated config option ignored: boundaries${ansi.reset}`;
+  const detail = `${ansi.yellow}The boundaries topology is package-owned and no longer configurable through config options.${ansi.reset}`;
+  const hint = `${ansi.cyan}Hint:${ansi.reset} Remove \`boundaries\` from config({...}) and rely on the built-in src entrypoint/bootstrap/presentation/infrastructure/application/domain/shared model, or disable the module with plugins: { "boundaries": false }.`;
   process.stderr.write(`${[header, detail, hint].join("\n")}\n`);
 }
 
@@ -108,7 +108,7 @@ function reportRuleOverrideSkip(ruleName: string, pluginName: string): void {
 
 export {
   isMissingModuleError,
-  reportMissingBoundariesConfig,
+  reportDeprecatedBoundariesOption,
   reportPluginLoadIssue,
   reportRedundantPluginState,
   reportRuleOverrideSkip,

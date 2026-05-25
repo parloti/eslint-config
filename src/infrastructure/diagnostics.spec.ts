@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   isMissingModuleError,
-  reportMissingBoundariesConfig,
+  reportDeprecatedBoundariesOption,
   reportPluginLoadIssue,
   reportRedundantPluginState,
   reportRuleOverrideSkip,
@@ -32,7 +32,7 @@ interface IStderrOutcome {
  * @returns The first emitted message and write count.
  * @example
  * ```typescript
- * captureStderrOutcome(() => reportMissingBoundariesConfig());
+ * captureStderrOutcome(() => reportRuleOverrideSkip("a/b", "a"));
  * ```
  */
 function captureStderrOutcome(action: () => void): IStderrOutcome {
@@ -194,20 +194,20 @@ describe("diagnostics", () => {
     });
   });
 
-  describe(reportMissingBoundariesConfig, () => {
-    it("reports repository-owned boundaries input guidance", () => {
+  describe(reportDeprecatedBoundariesOption, () => {
+    it("reports removed boundaries config input guidance", () => {
       // Arrange
-      const expectedMessage =
-        "Provide repository-owned boundaries files, elements, and element-types.";
+      const expectedMessage = "Deprecated config option ignored: boundaries";
 
       // Act
       const outcome = captureStderrOutcome(() => {
-        reportMissingBoundariesConfig();
+        reportDeprecatedBoundariesOption();
       });
 
       // Assert
       expect(outcome.writeCallCount).toBe(1);
       expect(outcome.message).toContain(expectedMessage);
+      expect(outcome.message).toContain('plugins: { "boundaries": false }');
     });
   });
 });

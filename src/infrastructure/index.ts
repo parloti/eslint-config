@@ -1,6 +1,4 @@
 export type {
-  BoundariesConfig,
-  BoundariesConfigExtension,
   BoundariesElementTypesOptions,
   BoundariesElementTypesRuleEntry,
   ConfigOptions,

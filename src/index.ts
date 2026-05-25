@@ -1,6 +1,6 @@
-export { config, defaultBoundariesConfig } from "./infrastructure";
-export type {
-  BoundariesConfig,
-  ConfigOptions,
-  PluginStateOverrides,
-} from "./infrastructure";
+export {
+  config,
+  type ConfigOptions,
+  defaultBoundariesConfig,
+  type PluginStateOverrides,
+} from "./bootstrap";

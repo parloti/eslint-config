@@ -1,4 +1,5 @@
 import chalk from "chalk";
+// eslint-disable-next-line import-x/no-nodejs-modules -- Node process execution is required for this local lint-staged wrapper script.
 import { execSync } from "node:child_process";
 
 /** Milliseconds per second constant for time calculations. */

@@ -5,6 +5,7 @@ import { defineConfig } from "eslint/config";
 import type { ConfigOptions } from "../domain";
 
 import { moduleTaxonomy } from "../domain";
+import { reportDeprecatedBoundariesOption } from "./diagnostics";
 import { pluginLoaders } from "./plugin-loaders";
 import { resolvePluginState } from "./plugin-state";
 import {
@@ -50,6 +51,10 @@ function buildPluginConfigLoaders(
  * ```
  */
 async function config(options: ConfigOptions = {}): Promise<Linter.Config[]> {
+  if (Object.hasOwn(options, "boundaries")) {
+    reportDeprecatedBoundariesOption();
+  }
+
   const { rules: ruleOverrides } = options;
 
   const pluginConfigResults = await Promise.all(

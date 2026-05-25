@@ -6,19 +6,11 @@
 
 # Function: boundaries()
 
-> **boundaries**(`config?`): `Config`\<`RulesConfig`\>[]
+> **boundaries**(): `Config`\<`RulesConfig`\>[]
 
-Defined in: architecture/boundaries.ts:24
+Defined in: architecture/boundaries.ts:92
 
-Load boundaries plugin configuration when explicitly configured.
-
-## Parameters
-
-### config?
-
-[`BoundariesConfig`](../../index/interfaces/BoundariesConfig.md)
-
-Input config value.
+Load boundaries plugin configuration using the package-owned fixed topology.
 
 ## Returns
 
@@ -29,8 +21,5 @@ Return value output.
 ## Example
 
 ```typescript
-const configs = boundaries({
-elements: [{ type: "shared", pattern: "src/shared" }],
-elementTypes: ["error", { default: "disallow", rules: [] }],
-});
+const configs = boundaries();
 ```
