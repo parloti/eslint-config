@@ -4,6 +4,10 @@
     // Modules
 
     // Emit
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
     "outDir": "dist",
     "rootDir": "src",
 

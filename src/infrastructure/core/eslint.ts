@@ -18,6 +18,8 @@ export function eslint(): Linter.Config[] {
     globalIgnores(
       [
         "**/dist",
+        "**/temp",
+        "**/tmp",
         "docs/",
         "packages/*/docs/",
         "apps/*/docs/",
