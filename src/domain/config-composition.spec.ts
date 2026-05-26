@@ -29,17 +29,13 @@ interface IConfigOutcome {
   names: (string | undefined)[];
 }
 
-vi.mock(
-  // eslint-disable-next-line import-x/no-internal-modules -- The mock path must match the implementation import exactly.
-  import("../infrastructure/configs"),
-  () => {
-    if (configsModuleMock === void 0) {
-      throw new Error("Configs module mock not defined");
-    }
+vi.mock(import("../infrastructure/configs"), () => {
+  if (configsModuleMock === void 0) {
+    throw new Error("Configs module mock not defined");
+  }
 
-    return configsModuleMock;
-  },
-);
+  return configsModuleMock;
+});
 
 /**
  * Load and execute the composed config builder under test.
