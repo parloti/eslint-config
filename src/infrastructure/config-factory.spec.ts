@@ -1,78 +1,155 @@
-import { describe, expect, it, vi } from "vitest";
+import type { Linter } from "eslint";
 
-import type { PluginName } from "../domain";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { moduleTaxonomy } from "../domain";
-import { config } from "./config-factory";
-import { isPluginDisabledByDefault } from "./plugin-state";
+import type * as domainModuleType from "../domain";
+import type { ConfigOptions } from "../domain";
+import type * as pluginLoadersModuleType from "./plugin-loaders";
 
-/** All plugin names from the taxonomy, used to disable every plugin. */
-const allPlugins: PluginName[] = moduleTaxonomy.map(
-  (entry) => entry.pluginName,
-);
+/** Domain module namespace type used for typed module mocks. */
+type DomainModule = typeof domainModuleType;
+/** Plugin-loaders module namespace type used for typed module mocks. */
+type PluginLoadersModule = typeof pluginLoadersModuleType;
 
-/** Explicitly disable every plugin through the public plugin-state API. */
-const allPluginsDisabled = Object.fromEntries(
-  allPlugins.map((pluginName) => [pluginName, false]),
-);
+/** Plugin taxonomy fixture used by config-factory branch tests. */
+const mockedModuleTaxonomy = [
+  { pluginName: "eslint" },
+  { pluginName: "typescript" },
+] as const;
 
-/** All default-enabled plugins from the taxonomy. */
-const defaultEnabledPlugins = allPlugins.filter(
-  (pluginName) => !isPluginDisabledByDefault(pluginName),
-);
+/**
+ * Creates a deterministic core config entry for a mocked plugin.
+ * @param pluginName Plugin key used in the generated config name.
+ * @returns Single-item config array for mocked loader output.
+ * @example
+ * ```typescript
+ * loadCoreConfig("eslint");
+ * ```
+ */
+function loadCoreConfig(pluginName: "eslint" | "typescript"): Linter.Config[] {
+  return [{ name: `${pluginName}/core` }];
+}
+
+/** Plugin loader registry fixture consumed by config-factory. */
+const mockedPluginLoaders = {
+  eslint: {
+    loader() {
+      return loadCoreConfig.bind(void 0, "eslint");
+    },
+    mode: "required",
+    pluginName: "eslint",
+  },
+  typescript: {
+    loader() {
+      return loadCoreConfig.bind(void 0, "typescript");
+    },
+    mode: "required",
+    pluginName: "typescript",
+  },
+} as const;
+
+/**
+ * Deterministic plugin-config loader result used by tests.
+ * @param pluginName Plugin name passed through config-factory orchestration.
+ * @returns Loaded plugin config array.
+ * @example
+ * ```typescript
+ * await loadEnabledPluginConfig("eslint");
+ * ```
+ */
+function loadEnabledPluginConfig(pluginName: string): Promise<Linter.Config[]> {
+  return Promise.resolve([{ name: `${pluginName}/loaded` }]);
+}
 
 describe("config-factory", () => {
-  describe(config, () => {
-    it("returns an empty array when all plugins are disabled", async () => {
-      // Arrange
-      const expectedConfigs: [] = [];
+  beforeEach(() => {
+    vi.resetModules();
+    vi.restoreAllMocks();
+  });
 
-      // Act
-      const actualConfigs = await config({ plugins: allPluginsDisabled });
+  it("returns an empty array when plugin state disables every module", async () => {
+    // Arrange
+    vi.doMock(
+      import("../domain"),
+      () =>
+        ({
+          moduleTaxonomy: mockedModuleTaxonomy,
+        }) as unknown as Partial<DomainModule>,
+    );
 
-      // Assert
-      expect(actualConfigs).toStrictEqual(expectedConfigs);
-    });
+    vi.doMock(
+      import("./plugin-loaders"),
+      () =>
+        ({
+          pluginLoaders: mockedPluginLoaders,
+        }) as unknown as Partial<PluginLoadersModule>,
+    );
 
-    it("returns an empty array when every default-enabled plugin is explicitly set to false", async () => {
-      // Arrange
-      const expectedConfigs: [] = [];
+    vi.doMock(import("./plugin-state"), () => ({
+      resolvePluginState: () => false,
+    }));
 
-      // Act
-      const actualConfigs = await config({
-        plugins: Object.fromEntries(
-          defaultEnabledPlugins.map((pluginName) => [pluginName, false]),
-        ),
-      });
+    const loadPluginConfigMock = vi.fn();
 
-      // Assert
-      expect(actualConfigs).toStrictEqual(expectedConfigs);
-    });
+    vi.doMock(import("./utilities"), () => ({
+      loadPluginConfig: loadPluginConfigMock,
+    }));
 
-    it("reports deprecated boundaries option input when present at runtime", async () => {
-      // Arrange
-      const stderrSpy = vi
-        .spyOn(process.stderr, "write")
-        .mockImplementation(() => true);
+    vi.doMock(import("./diagnostics"), () => ({
+      reportDeprecatedBoundariesOption: vi.fn(),
+    }));
 
-      const legacyOptions = {
-        boundaries: {
-          files: ["packages/*/src/**/*.ts"],
-        },
-        plugins: Object.fromEntries(
-          defaultEnabledPlugins.map((pluginName) => [pluginName, false]),
-        ),
-      } as unknown as Parameters<typeof config>[0];
+    // Act
+    const actualConfigs = await import("./config-factory").then(({ config }) =>
+      config(),
+    );
 
-      // Act
-      const actualConfigs = await config(legacyOptions);
+    // Assert
+    expect(actualConfigs).toStrictEqual([]);
+    expect(loadPluginConfigMock).not.toHaveBeenCalled();
+  });
 
-      // Assert
-      expect(actualConfigs).toStrictEqual([]);
-      expect(stderrSpy).toHaveBeenCalledTimes(1);
-      expect(stderrSpy.mock.calls[0]?.[0]).toContain(
-        "Deprecated config option ignored: boundaries",
-      );
-    });
+  it("builds configs for enabled plugins and reports deprecated boundaries", async () => {
+    // Arrange
+    const reportDeprecatedBoundariesOptionMock = vi.fn();
+
+    vi.doMock(
+      import("../domain"),
+      () =>
+        ({
+          moduleTaxonomy: mockedModuleTaxonomy,
+        }) as unknown as Partial<DomainModule>,
+    );
+
+    vi.doMock(
+      import("./plugin-loaders"),
+      () =>
+        ({
+          pluginLoaders: mockedPluginLoaders,
+        }) as unknown as Partial<PluginLoadersModule>,
+    );
+
+    vi.doMock(import("./plugin-state"), () => ({
+      resolvePluginState: (pluginName: string) => pluginName === "eslint",
+    }));
+
+    vi.doMock(import("./utilities"), () => ({
+      loadPluginConfig: vi.fn(loadEnabledPluginConfig),
+    }));
+
+    vi.doMock(import("./diagnostics"), () => ({
+      reportDeprecatedBoundariesOption: reportDeprecatedBoundariesOptionMock,
+    }));
+
+    // Act
+    const actualConfigs = await import("./config-factory").then(({ config }) =>
+      config({
+        boundaries: {},
+      } as unknown as ConfigOptions),
+    );
+
+    // Assert
+    expect(reportDeprecatedBoundariesOptionMock).toHaveBeenCalledTimes(1);
+    expect(actualConfigs).toStrictEqual([{ name: "eslint/loaded" }]);
   });
 });

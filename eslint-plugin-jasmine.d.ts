@@ -1,7 +1,8 @@
 declare module "eslint-plugin-jasmine" {
   import type { Linter, Rule } from "eslint";
 
-  declare const plugin: {
+  /** Represents the structure of the eslint-plugin-jasmine plugin. */
+  interface Plugin {
     /** Field value. */
     configs: {
       /** Field value. */
@@ -13,7 +14,9 @@ declare module "eslint-plugin-jasmine" {
 
     /** Field value. */
     rules: Record<string, Rule.RuleModule>;
-  };
+  }
+
+  declare const plugin: Plugin;
 
   export = plugin;
 }

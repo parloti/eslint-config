@@ -1,10 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import {
-  defaultDisabledPlugins,
-  isPluginDisabledByDefault,
-  resolvePluginState,
-} from "./plugin-state";
+import { resolvePluginState } from "./plugin-state";
 
 /**
  * Captured plugin-state result paired with the first stderr message.
@@ -45,36 +41,6 @@ async function captureSutWithStderr<T>(
 }
 
 describe("plugin-state", () => {
-  describe(isPluginDisabledByDefault, () => {
-    it("returns true for default-disabled testing plugins", () => {
-      // Arrange
-      const pluginName = "jest";
-
-      // Act
-      const isDisabled = isPluginDisabledByDefault(pluginName);
-
-      // Assert
-      expect(isDisabled).toBe(true);
-      expect(defaultDisabledPlugins).toStrictEqual([
-        "angular-eslint",
-        "jasmine",
-        "jest",
-        "vitest-e2e",
-      ]);
-    });
-
-    it("returns false for default-enabled plugins", () => {
-      // Arrange
-      const pluginName = "vitest";
-
-      // Act
-      const isDisabled = isPluginDisabledByDefault(pluginName);
-
-      // Assert
-      expect(isDisabled).toBe(false);
-    });
-  });
-
   describe(resolvePluginState, () => {
     it("returns the default state when no override is supplied", () => {
       // Arrange

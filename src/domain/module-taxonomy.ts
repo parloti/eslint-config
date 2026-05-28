@@ -45,4 +45,3 @@ const moduleTaxonomy = [
 ] as const satisfies readonly ModuleTaxonomyEntry[];
 
 export { moduleTaxonomy };
-export type { ModuleCategory, ModuleTaxonomyEntry };

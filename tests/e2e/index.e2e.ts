@@ -6,9 +6,9 @@ describe("e2e placeholder", () => {
     const sut = { compute: (): string => "active" };
 
     // Act
-    const result = sut.compute();
+    const actual = sut.compute();
 
     // Assert
-    expect(result).toBe("active");
+    expect(actual).toBe("active");
   });
 });

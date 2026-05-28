@@ -2,7 +2,7 @@ import { defineConfig } from "eslint/config";
 
 import { config } from "./src";
 
-/** CodePerfect ESLint configuration with custom rules and boundaries. */
+/** CodePerfect ESLint configuration. */
 const codePerfect = await config({
   plugins: {
     playwright: false,

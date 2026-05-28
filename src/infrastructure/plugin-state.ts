@@ -77,8 +77,4 @@ function resolvePluginState(
   return defaultEnabled;
 }
 
-export {
-  defaultDisabledPlugins,
-  isPluginDisabledByDefault,
-  resolvePluginState,
-};
+export { resolvePluginState };

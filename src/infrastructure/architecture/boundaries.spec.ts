@@ -83,12 +83,12 @@ describe("boundaries config", () => {
       .mockImplementation(() => true);
 
     // Act
-    const hasDependenciesRule = boundaries().some((entry) =>
+    const actualHasDependenciesRule = boundaries().some((entry) =>
       Object.hasOwn(entry.rules ?? {}, "boundaries/dependencies"),
     );
 
     // Assert
-    expect(hasDependenciesRule).toBe(true);
+    expect(actualHasDependenciesRule).toBe(true);
     expect(stderrSpy).not.toHaveBeenCalled();
   });
 

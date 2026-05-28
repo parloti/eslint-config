@@ -1,5 +1,4 @@
 export type {
-  BoundariesElementTypesOptions,
   BoundariesElementTypesRuleEntry,
   ConfigOptions,
   PluginName,

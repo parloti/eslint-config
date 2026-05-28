@@ -91,7 +91,6 @@ function reportRedundantPluginState(
 }
 
 export {
-  isMissingModuleError,
   reportDeprecatedBoundariesOption,
   reportPluginLoadIssue,
   reportRedundantPluginState,

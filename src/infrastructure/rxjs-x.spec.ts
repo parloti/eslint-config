@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { rxjsX as getRxjsXConfig } from "./rxjs-x";
+import { rxjsX } from "./rxjs-x";
 
 vi.mock(
   import("eslint-plugin-rxjs-x"),
@@ -18,7 +18,7 @@ describe("rxjs-x config", () => {
     const expectedConfigName = "rxjs-x/custom";
 
     // Act
-    const actualHasExpectedConfig = await getRxjsXConfig().then((configs) =>
+    const actualHasExpectedConfig = await rxjsX().then((configs) =>
       configs.some((config) => config.name === expectedConfigName),
     );
 

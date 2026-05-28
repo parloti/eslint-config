@@ -68,7 +68,6 @@ type TestingPluginName =
   | "vitest-e2e";
 
 export type {
-  BoundariesElementTypesOptions,
   BoundariesElementTypesRuleEntry,
   ConfigOptions,
   DefaultDisabledPluginName,

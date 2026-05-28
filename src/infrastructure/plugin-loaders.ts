@@ -170,4 +170,3 @@ const pluginLoaders = {
 } satisfies Record<PluginName, PluginLoaderEntry>;
 
 export { pluginLoaders };
-export type { ConfigLoader, PluginLoaderEntry };

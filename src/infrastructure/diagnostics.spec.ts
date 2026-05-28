@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  isMissingModuleError,
   reportDeprecatedBoundariesOption,
   reportPluginLoadIssue,
   reportRedundantPluginState,
@@ -69,43 +68,6 @@ function createStderrCapture(): IStderrCapture {
 }
 
 describe("diagnostics", () => {
-  describe(isMissingModuleError, () => {
-    it("returns true for a Cannot-find-module error", () => {
-      // Arrange
-      const missingModuleMessage = "Cannot find module 'vitest'";
-
-      // Act
-      const actualResult = isMissingModuleError(
-        new Error(missingModuleMessage),
-      );
-
-      // Assert
-      expect(actualResult).toBe(true);
-    });
-
-    it("returns true for an ERR_MODULE_NOT_FOUND string", () => {
-      // Arrange
-      const moduleNotFoundSignal = "ERR_MODULE_NOT_FOUND";
-
-      // Act
-      const actualResult = isMissingModuleError(moduleNotFoundSignal);
-
-      // Assert
-      expect(actualResult).toBe(true);
-    });
-
-    it("returns false for non-missing module messages", () => {
-      // Arrange
-      const errorMessage = "Unexpected parse error";
-
-      // Act
-      const actualResult = isMissingModuleError(new Error(errorMessage));
-
-      // Assert
-      expect(actualResult).toBe(false);
-    });
-  });
-
   describe(reportPluginLoadIssue, () => {
     it("reports skipped optional integrations distinctly", () => {
       // Arrange
