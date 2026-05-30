@@ -43,27 +43,15 @@ describe("import-x branch coverage", () => {
     // Act
     const actualCustomNodeModulesConfig = await loadImportXConfigs().then(
       (configs) =>
-        configs.find(
-          (config) => config.name === "import-x/custom-node_modules",
-        ),
+        configs.find((config) => config.name === "import-x/custom-test-files"),
     );
 
     // Assert
     expect(actualCustomNodeModulesConfig).toMatchObject({
-      name: "import-x/custom-node_modules",
+      files: ["**/*.{spec,test,e2e}.ts"],
+      name: "import-x/custom-test-files",
       rules: {
-        "import-x/no-internal-modules": [
-          "error",
-          {
-            allow: [
-              "eslint/config",
-              "eslint-plugin-boundaries/config",
-              "eslint-plugin-prettier/recommended",
-              "vitest/config",
-              "@eslint-community/eslint-plugin-eslint-comments/configs",
-            ],
-          },
-        ],
+        "import-x/no-nodejs-modules": "off",
       },
     });
   });

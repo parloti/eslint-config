@@ -49,23 +49,6 @@ async function importX(): Promise<Linter.Config[]> {
       },
     },
     {
-      name: "import-x/custom-node_modules",
-      rules: {
-        "import-x/no-internal-modules": [
-          "error",
-          {
-            allow: [
-              "eslint/config",
-              "eslint-plugin-boundaries/config",
-              "eslint-plugin-prettier/recommended",
-              "vitest/config",
-              "@eslint-community/eslint-plugin-eslint-comments/configs",
-            ],
-          },
-        ],
-      },
-    },
-    {
       files: ["*", "packages/*/*"],
       name: "import-x/custom-root-config-files",
       rules: {
@@ -74,6 +57,7 @@ async function importX(): Promise<Linter.Config[]> {
     },
     {
       files: ["**/*.{spec,test,e2e}.ts"],
+      name: "import-x/custom-test-files",
       rules: {
         "import-x/no-nodejs-modules": "off",
       },

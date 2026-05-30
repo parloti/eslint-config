@@ -28,17 +28,17 @@ interface BoundariesConfig {
 
 /** Default repository element descriptors used by the boundaries plugin. */
 const defaultElements: ElementDescriptors = [
-  { mode: "full", pattern: "src/index.ts", type: "entrypoint" },
-  { basePattern: "src", pattern: "bootstrap", type: "bootstrap" },
-  { basePattern: "src", pattern: "presentation", type: "presentation" },
+  { mode: "full", pattern: "**/src/index.ts", type: "entrypoint" },
+  { basePattern: "**/src", pattern: "bootstrap", type: "bootstrap" },
+  { basePattern: "**/src", pattern: "presentation", type: "presentation" },
   {
-    basePattern: "src",
+    basePattern: "**/src",
     pattern: "infrastructure",
     type: "infrastructure",
   },
-  { basePattern: "src", pattern: "application", type: "application" },
-  { basePattern: "src", pattern: "domain", type: "domain" },
-  { basePattern: "src", pattern: "shared", type: "shared" },
+  { basePattern: "**/src", pattern: "application", type: "application" },
+  { basePattern: "**/src", pattern: "domain", type: "domain" },
+  { basePattern: "**/src", pattern: "shared", type: "shared" },
 ];
 
 /** Default repository dependency rules used by the boundaries plugin. */
@@ -90,10 +90,10 @@ const defaultElementTypes: BoundariesElementTypesRuleEntry = [
 ];
 
 /** Default source file globs included in repository boundaries checks. */
-const defaultFiles = ["src/**/*.ts"];
+const defaultFiles = ["**/src/**/*.ts"];
 
 /** Default source file globs excluded from repository boundaries checks. */
-const defaultIgnores = ["src/**/*.spec.ts"];
+const defaultIgnores = ["**/*.{spec,test,e2e}.ts", "**/__tests__/**"];
 
 /** Repository default boundaries topology aligned with Clean Architecture. */
 const defaultBoundariesConfig: BoundariesConfig = {

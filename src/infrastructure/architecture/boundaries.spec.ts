@@ -110,8 +110,11 @@ describe("boundaries config", () => {
     );
 
     // Assert
-    expect(defaultBoundariesConfig.files).toStrictEqual(["src/**/*.ts"]);
-    expect(defaultBoundariesConfig.ignores).toStrictEqual(["src/**/*.spec.ts"]);
+    expect(defaultBoundariesConfig.files).toStrictEqual(["**/src/**/*.ts"]);
+    expect(defaultBoundariesConfig.ignores).toStrictEqual([
+      "**/*.{spec,test,e2e}.ts",
+      "**/__tests__/**",
+    ]);
     expect(actualTypes).toStrictEqual(expectedTypes);
   });
 
