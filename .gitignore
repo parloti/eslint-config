@@ -68,10 +68,12 @@ coverage/
 *.swo
 .DS_Store
 Thumbs.db
+.github/context-mode
 
 # ---------------------------------------------------------
 # Angular
 # ---------------------------------------------------------
+
 # Angular generated files
 .angular/cache/
 .angular/cache-loader/

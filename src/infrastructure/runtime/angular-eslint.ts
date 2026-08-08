@@ -2,6 +2,12 @@ import type { Linter } from "eslint";
 
 import { defineConfig } from "eslint/config";
 
+/** Angular ESLint plugin surface consumed by the config loader. */
+interface AngularEslintPluginSurface {
+  /** Upstream flat presets keyed by preset name. */
+  configs: Record<string, Linter.Config>;
+}
+
 /**
  * Load Angular ESLint plugin configuration when available.
  * Enables both ts-recommended and template-recommended presets.
@@ -16,13 +22,17 @@ export async function angularEslint(): Promise<Linter.Config[]> {
   const templatePluginModule =
     await import("@angular-eslint/eslint-plugin-template");
 
-  const tsPlugin = tsPluginModule.default;
-  const templatePlugin = templatePluginModule.default;
+  const tsPlugin =
+    tsPluginModule.default as unknown as AngularEslintPluginSurface;
+  const templatePlugin =
+    templatePluginModule.default as unknown as AngularEslintPluginSurface;
 
-  const tsRecommended = tsPlugin.configs
-    .recommended as unknown as Linter.Config;
-  const templateRecommended = templatePlugin.configs
-    .recommended as unknown as Linter.Config;
+  const tsRecommended = tsPlugin.configs[
+    "recommended"
+  ] as unknown as Linter.Config;
+  const templateRecommended = templatePlugin.configs[
+    "recommended"
+  ] as unknown as Linter.Config;
 
   return defineConfig(
     {

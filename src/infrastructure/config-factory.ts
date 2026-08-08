@@ -7,7 +7,7 @@ import type { ConfigOptions } from "../domain";
 import { moduleTaxonomy } from "../domain";
 import { reportDeprecatedBoundariesOption } from "./diagnostics";
 import { pluginLoaders } from "./plugin-loaders";
-import { resolvePluginState } from "./plugin-state";
+import { isPluginEnabled } from "./plugin-state";
 import { loadPluginConfig } from "./utilities";
 
 /**
@@ -27,7 +27,7 @@ function buildPluginConfigLoaders(
   for (const { pluginName } of moduleTaxonomy) {
     const loaderEntry = pluginLoaders[pluginName];
     const loadConfig = loaderEntry.loader(options);
-    const isEnabled = resolvePluginState(pluginName, options.plugins);
+    const isEnabled = isPluginEnabled(pluginName, options.plugins);
 
     if (isEnabled) {
       loaders.push(loadPluginConfig(pluginName, loadConfig, loaderEntry.mode));

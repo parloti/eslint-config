@@ -37,11 +37,12 @@ async function loadPlaywrightConfigs(): Promise<Linter.Config[]> {
  * ```
  */
 function mockPlaywrightModule(plugin: IPlaywrightPluginMock): void {
-  vi.doMock(import("eslint-plugin-playwright"), () => {
-    return {
+  vi.doMock(
+    import("eslint-plugin-playwright"),
+    createMockProxy<typeof playwrightPluginModuleType>({
       default: plugin,
-    } as unknown as Partial<typeof playwrightPluginModuleType>;
-  });
+    } as typeof playwrightPluginModuleType),
+  );
 }
 
 describe("playwright config", () => {
@@ -64,11 +65,15 @@ describe("playwright config", () => {
     });
 
     // Act
-    const { customConfig } = await loadPlaywrightConfigs().then((configs) => ({
-      customConfig: configs.find(
-        (config) => config.name === "playwright/custom-error",
-      ),
-    }));
+    const { customConfig } = await (async () => {
+      const configs = await loadPlaywrightConfigs();
+
+      return {
+        customConfig: configs.find(
+          (config) => config.name === "playwright/custom-error",
+        ),
+      };
+    })();
 
     // Assert
     expect(customConfig).toMatchObject({
@@ -97,11 +102,15 @@ describe("playwright config", () => {
     });
 
     // Act
-    const { customConfig } = await loadPlaywrightConfigs().then((configs) => ({
-      customConfig: configs.find(
-        (config) => config.name === "playwright/custom-error",
-      ),
-    }));
+    const { customConfig } = await (async () => {
+      const configs = await loadPlaywrightConfigs();
+
+      return {
+        customConfig: configs.find(
+          (config) => config.name === "playwright/custom-error",
+        ),
+      };
+    })();
 
     // Assert
     expect(customConfig?.rules).toMatchObject({

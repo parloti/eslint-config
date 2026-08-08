@@ -8,10 +8,10 @@ import { describe, expect, it, vi } from "vitest";
  * @returns The produced ESLint config array.
  * @example
  * ```typescript
- * await loadVitestE2eConfigs();
+ * await loadVitestE2EConfigs();
  * ```
  */
-async function loadVitestE2eConfigs(): Promise<Linter.Config[]> {
+async function loadVitestE2EConfigs(): Promise<Linter.Config[]> {
   const { vitestE2e } = await import("./vitest-e2e");
 
   return vitestE2e();
@@ -20,23 +20,26 @@ async function loadVitestE2eConfigs(): Promise<Linter.Config[]> {
 describe("vitest-e2e plugin branches", () => {
   it("returns repo-owned configs when the all preset is available", async () => {
     // Arrange
-    const allConfig: Linter.Config = {
+    const allConfig = {
       name: "vitest/all",
-    };
+    } as (typeof VitestPluginModule)["default"]["configs"]["all"];
 
-    vi.doMock(import("@vitest/eslint-plugin"), () => {
-      return {
+    vi.doMock(
+      import("@vitest/eslint-plugin"),
+      createMockProxy<typeof VitestPluginModule>({
         default: {
           configs: {
             all: allConfig,
           },
         },
-      } as typeof VitestPluginModule;
-    });
+      }),
+    );
 
     // Act
-    const { customConfig, presetConfig, settingsConfig } =
-      await loadVitestE2eConfigs().then((configs) => ({
+    const { customConfig, presetConfig, settingsConfig } = await (async () => {
+      const configs = await loadVitestE2EConfigs();
+
+      return {
         customConfig: configs.find(
           (config) => config.name === "vitest-e2e/custom",
         ),
@@ -44,7 +47,8 @@ describe("vitest-e2e plugin branches", () => {
           (config) => config.name?.includes("vitest/all") === true,
         ),
         settingsConfig: configs.find((config) => config.settings !== void 0),
-      }));
+      };
+    })();
 
     // Assert
     expect(settingsConfig).toMatchObject({
@@ -54,7 +58,7 @@ describe("vitest-e2e plugin branches", () => {
         },
       },
     });
-    expect(presetConfig?.name).toContain(String(allConfig.name));
+    expect(presetConfig?.name).toContain(allConfig.name);
     expect(customConfig).toMatchObject({
       files: ["tests/e2e/**/*.ts"],
       name: "vitest-e2e/custom",

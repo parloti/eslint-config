@@ -38,7 +38,7 @@ const typeScriptPresetNames = [
  * @returns The named preset config map.
  * @example
  * ```typescript
- *  console.log(createNamedTypeScriptPresetConfigs());
+ * console.log(createNamedTypeScriptPresetConfigs());
  * ```
  */
 function createNamedTypeScriptPresetConfigs(): Record<string, Linter.Config> {
@@ -54,7 +54,7 @@ function createNamedTypeScriptPresetConfigs(): Record<string, Linter.Config> {
  * @returns The matching config if found.
  * @example
  * ```typescript
- *  console.log(findConfig([], "jsdoc/custom"));
+ * console.log(findConfig([], "jsdoc/custom"));
  * ```
  */
 function findConfig(
@@ -71,7 +71,7 @@ function findConfig(
  * @returns The configured selector list.
  * @example
  * ```typescript
- *  console.log(readRuleContexts(undefined, "jsdoc/require-jsdoc"));
+ * console.log(readRuleContexts(undefined, "jsdoc/require-jsdoc"));
  * ```
  */
 function readRuleContexts(
@@ -105,7 +105,7 @@ function readRuleContexts(
  * @returns The config summary used by the tests.
  * @example
  * ```typescript
- *  console.log(summarizeJsdocConfigs([]).configNames);
+ * console.log(summarizeJsdocConfigs([]).configNames);
  * ```
  */
 function summarizeJsdocConfigs(configs: Linter.Config[]): IJsdocConfigSummary {

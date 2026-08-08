@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { resolvePluginState } from "./plugin-state";
+import { isPluginEnabled } from "./plugin-state";
 
 /**
  * Captured plugin-state result paired with the first stderr message.
@@ -21,7 +21,7 @@ interface ISutOutcome<T> {
  * @returns The SUT result paired with the first stderr message.
  * @example
  * ```typescript
- * await captureSutWithStderr(() => resolvePluginState("jest"));
+ * await captureSutWithStderr(() => isPluginEnabled("jest"));
  * ```
  */
 async function captureSutWithStderr<T>(
@@ -41,16 +41,16 @@ async function captureSutWithStderr<T>(
 }
 
 describe("plugin-state", () => {
-  describe(resolvePluginState, () => {
+  describe(isPluginEnabled, () => {
     it("returns the default state when no override is supplied", () => {
       // Arrange
       const pluginName = "vitest";
 
       // Act
-      const actualState = resolvePluginState(pluginName);
+      const actualState = { isEnabled: isPluginEnabled(pluginName) };
 
       // Assert
-      expect(actualState).toBe(true);
+      expect(actualState.isEnabled).toBe(true);
     });
 
     it("enables a default-disabled plugin through explicit overrides", () => {
@@ -58,10 +58,12 @@ describe("plugin-state", () => {
       const pluginName = "jest";
 
       // Act
-      const actualState = resolvePluginState(pluginName, { jest: true });
+      const actualState = {
+        isEnabled: isPluginEnabled(pluginName, { jest: true }),
+      };
 
       // Assert
-      expect(actualState).toBe(true);
+      expect(actualState.isEnabled).toBe(true);
     });
 
     it("warns when a default-enabled plugin is redundantly enabled", async () => {
@@ -69,11 +71,11 @@ describe("plugin-state", () => {
       const pluginName = "vitest";
       const untypedOverrides = {
         vitest: true,
-      } as unknown as Parameters<typeof resolvePluginState>[1];
+      } as unknown as Parameters<typeof isPluginEnabled>[1];
 
       // Act
       const { firstMessage, result } = await captureSutWithStderr(() =>
-        resolvePluginState(pluginName, untypedOverrides),
+        isPluginEnabled(pluginName, untypedOverrides),
       );
 
       // Assert
@@ -88,11 +90,11 @@ describe("plugin-state", () => {
       const pluginName = "jest";
       const untypedOverrides = {
         jest: false,
-      } as unknown as Parameters<typeof resolvePluginState>[1];
+      } as unknown as Parameters<typeof isPluginEnabled>[1];
 
       // Act
       const { firstMessage, result } = await captureSutWithStderr(() =>
-        resolvePluginState(pluginName, untypedOverrides),
+        isPluginEnabled(pluginName, untypedOverrides),
       );
 
       // Assert

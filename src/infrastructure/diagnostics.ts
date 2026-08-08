@@ -3,11 +3,11 @@ import type { LoadMode } from "./utilities";
 
 /** ANSI escape sequences for colored console output. */
 const ansi = {
-  bold: "\u001B[1m",
-  cyan: "\u001B[36m",
-  red: "\u001B[31m",
-  reset: "\u001B[0m",
-  yellow: "\u001B[33m",
+  bold: "\u{1B}[1m",
+  cyan: "\u{1B}[36m",
+  red: "\u{1B}[31m",
+  reset: "\u{1B}[0m",
+  yellow: "\u{1B}[33m",
 } as const;
 
 /** Matches common missing-module error text across package managers and runtimes. */
@@ -73,7 +73,7 @@ function reportPluginLoadIssue(
 /**
  * Reports that a plugin-state override is redundant with the default state.
  * @param pluginName Input pluginName value.
- * @param enabled Input enabled value.
+ * @param isEnabled Input enabled value.
  * @example
  * ```typescript
  * reportRedundantPluginState("jest", false);
@@ -81,12 +81,12 @@ function reportPluginLoadIssue(
  */
 function reportRedundantPluginState(
   pluginName: PluginName,
-  enabled: boolean,
+  isEnabled: boolean,
 ): void {
-  const stateLabel = enabled ? "enabled" : "disabled";
+  const stateLabel = isEnabled ? "enabled" : "disabled";
   const header = `${ansi.bold}${ansi.yellow}Redundant plugin state override: ${pluginName}${ansi.reset}`;
   const detail = `${ansi.yellow}Plugin "${pluginName}" is already ${stateLabel} by default.${ansi.reset}`;
-  const hint = `${ansi.cyan}Hint:${ansi.reset} Remove the redundant override from config({ plugins: { "${pluginName}": ${String(enabled)} } }).`;
+  const hint = `${ansi.cyan}Hint:${ansi.reset} Remove the redundant override from config({ plugins: { "${pluginName}": ${String(isEnabled)} } }).`;
   process.stderr.write(`${[header, detail, hint].join("\n")}\n`);
 }
 

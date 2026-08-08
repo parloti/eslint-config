@@ -28,10 +28,40 @@ function isPluginDisabledByDefault(pluginName: PluginName): boolean {
 }
 
 /**
+ * Resolves whether a plugin should be enabled in the final config.
+ * @param pluginName Input pluginName value.
+ * @param pluginStates Explicit plugin state overrides.
+ * @returns Return value output.
+ * @example
+ * ```typescript
+ * isPluginEnabled("jest", { jest: true });
+ * ```
+ */
+function isPluginEnabled(
+  pluginName: PluginName,
+  pluginStates?: PluginStateOverrides,
+): boolean {
+  const isDefaultEnabled = !isPluginDisabledByDefault(pluginName);
+  const explicitState = pluginStates?.[pluginName];
+
+  if (explicitState !== void 0) {
+    reportRedundantPluginStateIfNeeded(
+      pluginName,
+      explicitState,
+      isDefaultEnabled,
+    );
+
+    return explicitState;
+  }
+
+  return isDefaultEnabled;
+}
+
+/**
  * Reports redundant plugin-state overrides that match the default state.
  * @param pluginName Input pluginName value.
- * @param pluginState Input pluginState value.
- * @param defaultEnabled Input defaultEnabled value.
+ * @param isPluginStateEnabled Input plugin state enabled value.
+ * @param isDefaultEnabled Input default enabled value.
  * @example
  * ```typescript
  * reportRedundantPluginStateIfNeeded("jest", false, false);
@@ -39,42 +69,12 @@ function isPluginDisabledByDefault(pluginName: PluginName): boolean {
  */
 function reportRedundantPluginStateIfNeeded(
   pluginName: PluginName,
-  pluginState: boolean,
-  defaultEnabled: boolean,
+  isPluginStateEnabled: boolean,
+  isDefaultEnabled: boolean,
 ): void {
-  if (pluginState === defaultEnabled) {
-    reportRedundantPluginState(pluginName, pluginState);
+  if (isPluginStateEnabled === isDefaultEnabled) {
+    reportRedundantPluginState(pluginName, isPluginStateEnabled);
   }
 }
 
-/**
- * Resolves whether a plugin should be enabled in the final config.
- * @param pluginName Input pluginName value.
- * @param pluginStates Explicit plugin state overrides.
- * @returns Return value output.
- * @example
- * ```typescript
- * resolvePluginState("jest", { jest: true });
- * ```
- */
-function resolvePluginState(
-  pluginName: PluginName,
-  pluginStates?: PluginStateOverrides,
-): boolean {
-  const defaultEnabled = !isPluginDisabledByDefault(pluginName);
-  const explicitState = pluginStates?.[pluginName];
-
-  if (explicitState !== void 0) {
-    reportRedundantPluginStateIfNeeded(
-      pluginName,
-      explicitState,
-      defaultEnabled,
-    );
-
-    return explicitState;
-  }
-
-  return defaultEnabled;
-}
-
-export { resolvePluginState };
+export { isPluginEnabled };

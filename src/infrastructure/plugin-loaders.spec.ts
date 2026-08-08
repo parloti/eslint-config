@@ -6,7 +6,7 @@ import { pluginLoaders } from "./plugin-loaders";
 /** Documented plugin names derived from the taxonomy source. */
 const documentedPluginNames = moduleTaxonomy
   .map((entry) => entry.pluginName)
-  .toSorted();
+  .toSorted((left, right) => left.localeCompare(right));
 
 describe("pluginLoaders", () => {
   it("covers every documented module in the taxonomy", () => {
@@ -14,7 +14,9 @@ describe("pluginLoaders", () => {
     const expectedPluginNames = documentedPluginNames;
 
     // Act
-    const actualPluginNames = Object.keys(pluginLoaders).toSorted();
+    const actualPluginNames = Object.keys(pluginLoaders).toSorted(
+      (left, right) => left.localeCompare(right),
+    );
 
     // Assert
     expect(actualPluginNames).toStrictEqual(expectedPluginNames);

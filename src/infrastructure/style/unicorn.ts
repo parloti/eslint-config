@@ -18,7 +18,8 @@ export async function unicorn(): Promise<Linter.Config[]> {
     {
       extends: [configs.all],
       rules: {
-        "unicorn/prevent-abbreviations": ["error", { ignore: [/e2e|dev/iu] }],
+        "unicorn/name-replacements": ["error", { ignore: [/dev/iu, /e2e/iu] }],
+        "unicorn/no-asterisk-prefix-in-documentation-comments": "off",
       },
     },
     {

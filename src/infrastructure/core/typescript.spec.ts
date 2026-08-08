@@ -1,24 +1,25 @@
+import type * as TypescriptEslintModule from "typescript-eslint";
+
 import { describe, expect, it, vi } from "vitest";
 
 import { typescript } from "./typescript";
 
 vi.mock(
   import("typescript-eslint"),
-  () =>
-    ({
-      configs: {
-        strictTypeChecked: [
-          {
-            name: "@typescript-eslint/strict-type-checked",
-          },
-        ],
-        stylisticTypeChecked: [
-          {
-            name: "@typescript-eslint/stylistic-type-checked",
-          },
-        ],
-      },
-    }) as Partial<typeof import("typescript-eslint")>,
+  createMockProxy<typeof TypescriptEslintModule>({
+    configs: {
+      strictTypeChecked: [
+        {
+          name: "@typescript-eslint/strict-type-checked",
+        },
+      ],
+      stylisticTypeChecked: [
+        {
+          name: "@typescript-eslint/stylistic-type-checked",
+        },
+      ],
+    },
+  }),
 );
 
 describe("typescript config", () => {

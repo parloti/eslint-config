@@ -1,18 +1,15 @@
 import type * as codeperfectPluginModuleType from "@codeperfect/eslint-plugin";
+import type { CodeperfectPreset } from "@codeperfect/eslint-plugin";
 
 import { describe, expect, it, vi } from "vitest";
 
 import { codeperfect } from "./codeperfect";
 
-/** Module namespace type for `@codeperfect/eslint-plugin` mocks. */
-type CodeperfectPluginModule = typeof codeperfectPluginModuleType;
-
 vi.mock(
   import("@codeperfect/eslint-plugin"),
-  () =>
-    ({
-      all: [{ name: "codeperfect/all" }],
-    }) as unknown as Partial<CodeperfectPluginModule>,
+  createMockProxy<typeof codeperfectPluginModuleType>({
+    all: { name: "codeperfect/all" } as CodeperfectPreset,
+  }),
 );
 
 describe("codeperfect config", () => {
@@ -21,11 +18,17 @@ describe("codeperfect config", () => {
     const expectedConfigName = "codeperfect/all";
 
     // Act
-    const actualHasExpectedConfig = await codeperfect().then((configs) =>
-      configs.some((config) => config.name === expectedConfigName),
-    );
+    const { hasExpectedConfig } = await (async () => {
+      const configs = await codeperfect();
+
+      return {
+        hasExpectedConfig: configs.some(
+          (config) => config.name === expectedConfigName,
+        ),
+      };
+    })();
 
     // Assert
-    expect(actualHasExpectedConfig).toBe(true);
+    expect(hasExpectedConfig).toBe(true);
   });
 });

@@ -22,11 +22,16 @@ describe("jest config", () => {
     const expectedConfigName = "jest/custom";
 
     // Act
-    const actualHasExpectedConfig = await jest().then((configs) =>
-      configs.find((config) => config.name === expectedConfigName),
-    );
+    const { configName } = await (async () => {
+      const configs = await jest();
+
+      return {
+        configName: configs.find((config) => config.name === expectedConfigName)
+          ?.name,
+      };
+    })();
 
     // Assert
-    expect(actualHasExpectedConfig?.name).toBe(expectedConfigName);
+    expect(configName).toBe(expectedConfigName);
   });
 });

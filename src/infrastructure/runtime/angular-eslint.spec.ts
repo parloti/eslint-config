@@ -28,37 +28,41 @@ describe("angular-eslint plugin branches", () => {
       name: "angular-eslint/template-recommended",
     };
 
-    vi.doMock(import("@angular-eslint/eslint-plugin"), () => {
-      return {
+    vi.doMock(
+      import("@angular-eslint/eslint-plugin"),
+      createMockProxy<typeof AngularTsPluginModule>({
         default: {
           configs: {
             recommended: tsRecommendedConfig,
           },
         },
-      } as unknown as typeof AngularTsPluginModule;
-    });
+      } as unknown as typeof AngularTsPluginModule),
+    );
 
-    vi.doMock(import("@angular-eslint/eslint-plugin-template"), () => {
-      return {
+    vi.doMock(
+      import("@angular-eslint/eslint-plugin-template"),
+      createMockProxy<typeof AngularTemplatePluginModule>({
         default: {
           configs: {
             recommended: templateRecommendedConfig,
           },
         },
-      } as unknown as typeof AngularTemplatePluginModule;
-    });
+      } as unknown as typeof AngularTemplatePluginModule),
+    );
 
     // Act
-    const { templateConfig, tsConfig } = await loadAngularEslintConfigs().then(
-      (configs) => ({
+    const { templateConfig, tsConfig } = await (async () => {
+      const configs = await loadAngularEslintConfigs();
+
+      return {
         templateConfig: configs.find(
           (config) => config.name === "angular-eslint/template-recommended",
         ),
         tsConfig: configs.find(
           (config) => config.name === "angular-eslint/ts-recommended",
         ),
-      }),
-    );
+      };
+    })();
 
     // Assert
     expect(tsConfig).toMatchObject({

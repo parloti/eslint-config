@@ -8,11 +8,17 @@ describe("jasmine config", () => {
     const expectedConfigName = "jasmine/custom";
 
     // Act
-    const actualHasExpectedConfig = await jasmine().then((configs) =>
-      configs.some((config) => config.name === expectedConfigName),
-    );
+    const { hasExpectedConfig } = await (async () => {
+      const configs = await jasmine();
+
+      return {
+        hasExpectedConfig: configs.some(
+          (config) => config.name === expectedConfigName,
+        ),
+      };
+    })();
 
     // Assert
-    expect(actualHasExpectedConfig).toBe(true);
+    expect(hasExpectedConfig).toBe(true);
   });
 });

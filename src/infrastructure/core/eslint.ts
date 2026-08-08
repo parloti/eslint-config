@@ -20,6 +20,7 @@ export function eslint(): Linter.Config[] {
         "**/dist",
         "**/temp",
         "**/tmp",
+        "**/logs",
         "docs/",
         "packages/*/docs/",
         "apps/*/docs/",
@@ -33,6 +34,12 @@ export function eslint(): Linter.Config[] {
       linterOptions: {
         reportUnusedDisableDirectives: "error",
         reportUnusedInlineConfigs: "error",
+      },
+    },
+    {
+      name: "custom-eslint",
+      rules: {
+        "max-lines": ["error", { max: 300 }],
       },
     },
   );

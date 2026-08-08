@@ -1,15 +1,16 @@
+import type * as EslintPluginRxjsXModule from "eslint-plugin-rxjs-x";
+
 import { describe, expect, it, vi } from "vitest";
 
 import { rxjsX } from "./rxjs-x";
 
 vi.mock(
   import("eslint-plugin-rxjs-x"),
-  () =>
-    ({
-      default: {
-        configs: { strict: {} },
-      },
-    }) as never,
+  createMockProxy<typeof EslintPluginRxjsXModule>({
+    default: {
+      configs: { strict: {} },
+    },
+  }),
 );
 
 describe("rxjs-x config", () => {
@@ -18,11 +19,17 @@ describe("rxjs-x config", () => {
     const expectedConfigName = "rxjs-x/custom";
 
     // Act
-    const actualHasExpectedConfig = await rxjsX().then((configs) =>
-      configs.some((config) => config.name === expectedConfigName),
-    );
+    const { hasExpectedConfig } = await (async () => {
+      const configs = await rxjsX();
+
+      return {
+        hasExpectedConfig: configs.some(
+          (config) => config.name === expectedConfigName,
+        ),
+      };
+    })();
 
     // Assert
-    expect(actualHasExpectedConfig).toBe(true);
+    expect(hasExpectedConfig).toBe(true);
   });
 });

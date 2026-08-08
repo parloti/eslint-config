@@ -8,6 +8,6 @@ describe("eslint config", () => {
     const actual = eslint();
 
     // Assert
-    expect(actual).toHaveLength(3);
+    expect(actual).toHaveLength(4);
   });
 });

@@ -3,19 +3,14 @@ import type { Linter } from "eslint";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type * as domainModuleType from "../domain";
-import type { ConfigOptions } from "../domain";
+import type { ConfigOptions, moduleTaxonomy } from "../domain";
 import type * as pluginLoadersModuleType from "./plugin-loaders";
-
-/** Domain module namespace type used for typed module mocks. */
-type DomainModule = typeof domainModuleType;
-/** Plugin-loaders module namespace type used for typed module mocks. */
-type PluginLoadersModule = typeof pluginLoadersModuleType;
 
 /** Plugin taxonomy fixture used by config-factory branch tests. */
 const mockedModuleTaxonomy = [
   { pluginName: "eslint" },
   { pluginName: "typescript" },
-] as const;
+] as unknown as typeof moduleTaxonomy;
 
 /**
  * Creates a deterministic core config entry for a mocked plugin.
@@ -33,16 +28,12 @@ function loadCoreConfig(pluginName: "eslint" | "typescript"): Linter.Config[] {
 /** Plugin loader registry fixture consumed by config-factory. */
 const mockedPluginLoaders = {
   eslint: {
-    loader() {
-      return loadCoreConfig.bind(void 0, "eslint");
-    },
+    loader: () => loadCoreConfig.bind(void 0, "eslint"),
     mode: "required",
     pluginName: "eslint",
   },
   typescript: {
-    loader() {
-      return loadCoreConfig.bind(void 0, "typescript");
-    },
+    loader: () => loadCoreConfig.bind(void 0, "typescript"),
     mode: "required",
     pluginName: "typescript",
   },
@@ -71,22 +62,20 @@ describe("config-factory", () => {
     // Arrange
     vi.doMock(
       import("../domain"),
-      () =>
-        ({
-          moduleTaxonomy: mockedModuleTaxonomy,
-        }) as unknown as Partial<DomainModule>,
+      createMockProxy<typeof domainModuleType>({
+        moduleTaxonomy: mockedModuleTaxonomy,
+      }),
     );
 
     vi.doMock(
       import("./plugin-loaders"),
-      () =>
-        ({
-          pluginLoaders: mockedPluginLoaders,
-        }) as unknown as Partial<PluginLoadersModule>,
+      createMockProxy<typeof pluginLoadersModuleType>({
+        pluginLoaders: mockedPluginLoaders,
+      }),
     );
 
     vi.doMock(import("./plugin-state"), () => ({
-      resolvePluginState: () => false,
+      isPluginEnabled: () => false,
     }));
 
     const loadPluginConfigMock = vi.fn();
@@ -100,9 +89,11 @@ describe("config-factory", () => {
     }));
 
     // Act
-    const actualConfigs = await import("./config-factory").then(({ config }) =>
-      config(),
-    );
+    const actualConfigs = await (async () => {
+      const { config } = await import("./config-factory");
+
+      return config();
+    })();
 
     // Assert
     expect(actualConfigs).toStrictEqual([]);
@@ -115,22 +106,20 @@ describe("config-factory", () => {
 
     vi.doMock(
       import("../domain"),
-      () =>
-        ({
-          moduleTaxonomy: mockedModuleTaxonomy,
-        }) as unknown as Partial<DomainModule>,
+      createMockProxy<typeof domainModuleType>({
+        moduleTaxonomy: mockedModuleTaxonomy,
+      }),
     );
 
     vi.doMock(
       import("./plugin-loaders"),
-      () =>
-        ({
-          pluginLoaders: mockedPluginLoaders,
-        }) as unknown as Partial<PluginLoadersModule>,
+      createMockProxy<typeof pluginLoadersModuleType>({
+        pluginLoaders: mockedPluginLoaders,
+      }),
     );
 
     vi.doMock(import("./plugin-state"), () => ({
-      resolvePluginState: (pluginName: string) => pluginName === "eslint",
+      isPluginEnabled: (pluginName: string) => pluginName === "eslint",
     }));
 
     vi.doMock(import("./utilities"), () => ({
@@ -142,11 +131,13 @@ describe("config-factory", () => {
     }));
 
     // Act
-    const actualConfigs = await import("./config-factory").then(({ config }) =>
-      config({
+    const actualConfigs = await (async () => {
+      const { config } = await import("./config-factory");
+
+      return config({
         boundaries: {},
-      } as unknown as ConfigOptions),
-    );
+      } as unknown as ConfigOptions);
+    })();
 
     // Assert
     expect(reportDeprecatedBoundariesOptionMock).toHaveBeenCalledTimes(1);

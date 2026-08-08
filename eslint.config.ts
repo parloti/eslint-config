@@ -13,4 +13,5 @@ const codePerfect = await config({
 
 /** Combined ESLint configuration for the workspace manager project. */
 const eslintConfig = defineConfig(codePerfect);
+
 export default eslintConfig;
