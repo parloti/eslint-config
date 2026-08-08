@@ -8,7 +8,7 @@
 
 > **config**(`options?`): `Promise`\<`Config`\<`RulesConfig`\>[]\>
 
-Defined in: [infrastructure/config-factory.ts:49](https://github.com/parloti/eslint-config/blob/922daf0c57cdeadb8358d6b7344f82ac6e2aa0f8/src/infrastructure/config-factory.ts#L49)
+Defined in: [infrastructure/config-factory.ts:49](https://github.com/parloti/eslint-config/blob/d3b85d63ec9aea1b6cb16d917e4a1be93ed66feb/src/infrastructure/config-factory.ts#L49)
 
 Creates the ESLint configuration with optional plugin customization.
 
