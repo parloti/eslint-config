@@ -43,14 +43,13 @@ const unicornConfigs: UnicornConfigs = {
   unopinionated: {},
 };
 
-vi.mock(
-  import("eslint-plugin-unicorn"),
-  (): UnicornModule => ({
+vi.mock(import("eslint-plugin-unicorn"), (): UnicornModule => {
+  return {
     default: {
       configs: unicornConfigs,
     },
-  }),
-);
+  };
+});
 
 describe("unicorn config", () => {
   it("returns configs", async () => {

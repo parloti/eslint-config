@@ -86,11 +86,7 @@ function readRuleContexts(
 
   const [, options] = rule;
 
-  if (
-    options === void 0 ||
-    typeof options !== "object" ||
-    Array.isArray(options)
-  ) {
+  if (typeof options !== "object" || Array.isArray(options)) {
     return [];
   }
 

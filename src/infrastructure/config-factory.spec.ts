@@ -74,19 +74,25 @@ describe("config-factory", () => {
       }),
     );
 
-    vi.doMock(import("./plugin-state"), () => ({
-      isPluginEnabled: () => false,
-    }));
+    vi.doMock(import("./plugin-state"), () => {
+      return {
+        isPluginEnabled: () => false,
+      };
+    });
 
     const loadPluginConfigMock = vi.fn();
 
-    vi.doMock(import("./utilities"), () => ({
-      loadPluginConfig: loadPluginConfigMock,
-    }));
+    vi.doMock(import("./utilities"), () => {
+      return {
+        loadPluginConfig: loadPluginConfigMock,
+      };
+    });
 
-    vi.doMock(import("./diagnostics"), () => ({
-      reportDeprecatedBoundariesOption: vi.fn(),
-    }));
+    vi.doMock(import("./diagnostics"), () => {
+      return {
+        reportDeprecatedBoundariesOption: vi.fn(),
+      };
+    });
 
     // Act
     const actualConfigs = await (async () => {
@@ -118,17 +124,23 @@ describe("config-factory", () => {
       }),
     );
 
-    vi.doMock(import("./plugin-state"), () => ({
-      isPluginEnabled: (pluginName: string) => pluginName === "eslint",
-    }));
+    vi.doMock(import("./plugin-state"), () => {
+      return {
+        isPluginEnabled: (pluginName: string) => pluginName === "eslint",
+      };
+    });
 
-    vi.doMock(import("./utilities"), () => ({
-      loadPluginConfig: vi.fn(loadEnabledPluginConfig),
-    }));
+    vi.doMock(import("./utilities"), () => {
+      return {
+        loadPluginConfig: vi.fn(loadEnabledPluginConfig),
+      };
+    });
 
-    vi.doMock(import("./diagnostics"), () => ({
-      reportDeprecatedBoundariesOption: reportDeprecatedBoundariesOptionMock,
-    }));
+    vi.doMock(import("./diagnostics"), () => {
+      return {
+        reportDeprecatedBoundariesOption: reportDeprecatedBoundariesOptionMock,
+      };
+    });
 
     // Act
     const actualConfigs = await (async () => {

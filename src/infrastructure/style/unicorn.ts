@@ -20,6 +20,10 @@ export async function unicorn(): Promise<Linter.Config[]> {
       rules: {
         "unicorn/name-replacements": ["error", { ignore: [/dev/iu, /e2e/iu] }],
         "unicorn/no-asterisk-prefix-in-documentation-comments": "off",
+        // Barrel policy is owned by codeperfect/consistent-barrel-files.
+        "unicorn/no-barrel-files": "off",
+        // Matches the repo's single-line JSDoc standard (codeperfect/single-line-jsdoc).
+        "unicorn/single-line-block-comment-style": ["error", "single-line"],
       },
     },
     {

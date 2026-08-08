@@ -58,11 +58,11 @@ describe("config factory end-to-end", () => {
   it("swallows optional plugin load failures with guidance", async () => {
     // Act
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
-      await runWithStderrCapture(() =>
-        config({
+      await runWithStderrCapture(() => {
+        return config({
           plugins: { "angular-eslint": true },
-        }),
-      );
+        });
+      });
 
     // Assert
     expect(actualFlatConfigs.length).toBeGreaterThan(0);
@@ -131,11 +131,11 @@ describe("config factory end-to-end", () => {
   it("reports the deprecated boundaries option on stderr", async () => {
     // Act
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
-      await runWithStderrCapture(() =>
-        config({
+      await runWithStderrCapture(() => {
+        return config({
           boundaries: {},
-        } as unknown as ConfigOptions),
-      );
+        } as unknown as ConfigOptions);
+      });
 
     // Assert
     expect(actualFlatConfigs.length).toBeGreaterThan(0);
@@ -148,14 +148,14 @@ describe("config factory end-to-end", () => {
   it("reports redundant plugin-state overrides on stderr", async () => {
     // Act
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
-      await runWithStderrCapture(() =>
-        config({
+      await runWithStderrCapture(() => {
+        return config({
           plugins: {
             jest: false,
             vitest: true,
           } as unknown as NonNullable<ConfigOptions["plugins"]>,
-        }),
-      );
+        });
+      });
 
     // Assert
     expect(actualFlatConfigs.length).toBeGreaterThan(0);

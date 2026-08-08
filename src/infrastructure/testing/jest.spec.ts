@@ -12,9 +12,11 @@ const mockedJestConfigs = {
   "flat/all": {},
 } as JestPluginModule["configs"];
 
-vi.mock(import("eslint-plugin-jest"), () => ({
-  configs: mockedJestConfigs,
-}));
+vi.mock(import("eslint-plugin-jest"), () => {
+  return {
+    configs: mockedJestConfigs,
+  };
+});
 
 describe("jest config", () => {
   it("returns configs", async () => {

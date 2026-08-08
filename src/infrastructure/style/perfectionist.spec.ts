@@ -52,12 +52,11 @@ const perfectionistConfigs: PerfectionistConfigs = {
   "recommended-natural-legacy": {},
 };
 
-vi.mock(
-  import("eslint-plugin-perfectionist"),
-  (): PerfectionistModule => ({
+vi.mock(import("eslint-plugin-perfectionist"), (): PerfectionistModule => {
+  return {
     configs: perfectionistConfigs,
-  }),
-);
+  };
+});
 
 describe("perfectionist config", () => {
   beforeEach(() => {

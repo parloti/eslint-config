@@ -70,11 +70,7 @@ function buildPresetConfigs(configs: Record<string, unknown>): Linter.Config[] {
   return jsdocPresetNames.flatMap((configName) => {
     const config = configs[configName];
 
-    if (
-      config === void 0 ||
-      Array.isArray(config) ||
-      typeof config !== "object"
-    ) {
+    if (typeof config !== "object" || Array.isArray(config)) {
       return [];
     }
 

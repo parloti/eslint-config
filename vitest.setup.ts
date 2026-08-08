@@ -54,12 +54,11 @@ type DeepPartial<T> = T extends (...arguments_: unknown[]) => unknown
  * );
  * ```
  */
-const mockProxyFactory =
-  <TModule extends object>(
-    overrides: DeepMockPartial<TModule>,
-  ): (() => TModule) =>
-  () =>
-    new Proxy(overrides as TModule, {
+const mockProxyFactory = <TModule extends object>(
+  overrides: DeepMockPartial<TModule>,
+): (() => TModule) => {
+  return () => {
+    return new Proxy(overrides as TModule, {
       get: (object, property): TModule[keyof TModule] | undefined => {
         if (property === "then") {
           return void 0;
@@ -74,6 +73,8 @@ const mockProxyFactory =
         );
       },
     });
+  };
+};
 
 /**
  * A helper function to create a mock class instance with specified method overrides.
@@ -89,8 +90,8 @@ const mockProxyFactory =
  */
 const mockClassInstanceFactory = <T extends object>(
   overrides: DeepPartial<T>,
-): T =>
-  new Proxy(overrides as T, {
+): T => {
+  return new Proxy(overrides as T, {
     get(target, property): T[keyof T] | undefined {
       if (Object.hasOwn(target, property)) {
         return target[property as keyof T];
@@ -101,6 +102,7 @@ const mockClassInstanceFactory = <T extends object>(
       );
     },
   });
+};
 
 /**
  * A helper function to create a mock class with specified method overrides.

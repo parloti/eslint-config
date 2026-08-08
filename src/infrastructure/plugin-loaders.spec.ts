@@ -48,10 +48,7 @@ describe("pluginLoaders", () => {
 
     // Act
     const actualModes = Object.fromEntries(
-      Object.entries(pluginLoaders).map(([pluginName, entry]) => [
-        pluginName,
-        entry.mode,
-      ]),
+      Object.entries(pluginLoaders).map(([plugin, { mode }]) => [plugin, mode]),
     );
 
     // Assert
