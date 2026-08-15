@@ -28,7 +28,7 @@ interface BoundariesConfig {
 
 /** Default repository element descriptors used by the boundaries plugin. */
 const defaultElements: ElementDescriptors = [
-  { mode: "full", pattern: "**/src/index.ts", type: "entrypoint" },
+  { partialMatch: false, pattern: "**/src", type: "entrypoint" },
   { basePattern: "**/src", pattern: "bootstrap", type: "bootstrap" },
   { basePattern: "**/src", pattern: "presentation", type: "presentation" },
   {
@@ -46,44 +46,50 @@ const defaultElementTypes: BoundariesElementTypesRuleEntry = [
   "error",
   {
     default: "disallow",
-    rules: [
+    policies: [
       {
-        allow: { to: { type: ["bootstrap"] } },
-        from: { type: "entrypoint" },
+        allow: { to: { element: { type: ["bootstrap"] } } },
+        from: { element: { type: "entrypoint" } },
       },
       {
         allow: {
           to: {
-            type: [
-              "presentation",
-              "infrastructure",
-              "application",
-              "domain",
-              "shared",
-            ],
+            element: {
+              type: [
+                "presentation",
+                "infrastructure",
+                "application",
+                "domain",
+                "shared",
+              ],
+            },
           },
         },
-        from: { type: "bootstrap" },
+        from: { element: { type: "bootstrap" } },
       },
       {
-        allow: { to: { type: ["application", "domain", "shared"] } },
-        from: { type: "presentation" },
+        allow: {
+          to: { element: { type: ["application", "domain", "shared"] } },
+        },
+        from: { element: { type: "presentation" } },
       },
       {
-        allow: { to: { type: ["application", "domain", "shared"] } },
-        from: { type: "infrastructure" },
+        allow: {
+          to: { element: { type: ["application", "domain", "shared"] } },
+        },
+        from: { element: { type: "infrastructure" } },
       },
       {
-        allow: { to: { type: ["domain", "shared"] } },
-        from: { type: "application" },
+        allow: { to: { element: { type: ["domain", "shared"] } } },
+        from: { element: { type: "application" } },
       },
       {
-        allow: { to: { type: ["shared"] } },
-        from: { type: "domain" },
+        allow: { to: { element: { type: ["shared"] } } },
+        from: { element: { type: "domain" } },
       },
       {
-        allow: { to: { type: ["shared"] } },
-        from: { type: "shared" },
+        allow: { to: { element: { type: ["shared"] } } },
+        from: { element: { type: "shared" } },
       },
     ],
   },
