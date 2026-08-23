@@ -16,14 +16,27 @@ export async function unicorn(): Promise<Linter.Config[]> {
 
   return defineConfig(
     {
-      extends: [configs.all],
+      extends: [configs.recommended],
       rules: {
+        "unicorn/consistent-boolean-name": [
+          "error",
+          { prefixes: { does: true } },
+        ],
+        "unicorn/consistent-class-member-order": "off",
+        "unicorn/filename-case": [
+          "error",
+          { case: "kebabCase", ignore: ["^__tests__$"] },
+        ],
         "unicorn/name-replacements": ["error", { ignore: [/dev/iu, /e2e/iu] }],
-        "unicorn/no-asterisk-prefix-in-documentation-comments": "off",
-        // Barrel policy is owned by codeperfect/consistent-barrel-files.
-        "unicorn/no-barrel-files": "off",
-        // Matches the repo's single-line JSDoc standard (codeperfect/single-line-jsdoc).
+        "unicorn/no-non-function-verb-prefix": "off",
         "unicorn/single-line-block-comment-style": ["error", "single-line"],
+      },
+    },
+    {
+      files: ["**/*.spec.ts"],
+      name: "codeperfect/assert-actual-expected-names precedence",
+      rules: {
+        "unicorn/consistent-boolean-name": ["error", { ignore: ["^actual"] }],
       },
     },
     {
