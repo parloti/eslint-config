@@ -17,6 +17,7 @@ export async function unicorn(): Promise<Linter.Config[]> {
   return defineConfig(
     {
       extends: [configs.recommended],
+      files: ["**/*.ts"],
       rules: {
         "unicorn/consistent-boolean-name": [
           "error",

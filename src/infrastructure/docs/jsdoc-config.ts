@@ -2,6 +2,9 @@ import type { Linter } from "eslint";
 
 import { defineConfig } from "eslint/config";
 
+/** File globs that JSDoc linting applies to. */
+const jsdocFileGlobs = ["**/*.ts"];
+
 /** Upstream JSDoc flat preset names consumed by this config. */
 const jsdocPresetNames = [
   "flat/recommended-typescript-error",
@@ -74,7 +77,7 @@ function buildPresetConfigs(configs: Record<string, unknown>): Linter.Config[] {
       return [];
     }
 
-    return [config as Linter.Config];
+    return [{ ...config, files: jsdocFileGlobs }];
   });
 }
 
@@ -92,6 +95,7 @@ function buildRepoJsdocConfigs(
 ): Linter.Config[] {
   return defineConfig(
     {
+      files: jsdocFileGlobs,
       name: "jsdoc/custom",
       rules: {
         ...customError,
@@ -103,6 +107,7 @@ function buildRepoJsdocConfigs(
       },
     },
     {
+      files: jsdocFileGlobs,
       name: "jsdoc/require-jsdoc-alias",
       rules: {
         "jsdoc/require-description": [

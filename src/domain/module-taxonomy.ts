@@ -39,6 +39,7 @@ const moduleTaxonomy = [
   { category: "runtime", pluginName: "angular-eslint" },
   { category: "style", pluginName: "stylistic" },
   { category: "style", pluginName: "perfectionist" },
+  { category: "style", pluginName: "package-json" },
   { category: "style", pluginName: "unicorn" },
   { category: "style", pluginName: "prettier" },
   { category: "repository-architecture", pluginName: "boundaries" },

@@ -1,3 +1,4 @@
+export { packageJson } from "./package-json";
 export { perfectionist } from "./perfectionist";
 export { prettier } from "./prettier";
 export { stylistic } from "./stylistic";

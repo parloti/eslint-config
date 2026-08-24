@@ -2,6 +2,9 @@ import type { Linter } from "eslint";
 
 import { defineConfig } from "eslint/config";
 
+/** File globs that Prettier linting applies to. */
+const prettierFileGlobs = ["**/*.ts"];
+
 /**
  * Return Prettier integration configuration for ESLint when the plugin is available.
  * @returns Return value output.
@@ -14,5 +17,5 @@ export async function prettier(): Promise<Linter.Config[]> {
   const recommendedModule = await import("eslint-plugin-prettier/recommended");
   const { default: recommended } = recommendedModule;
 
-  return defineConfig(recommended);
+  return defineConfig({ ...recommended, files: prettierFileGlobs });
 }

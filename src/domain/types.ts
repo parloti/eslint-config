@@ -57,7 +57,12 @@ type PluginStateOverrides = Partial<
 /** Type definition for rule data. */
 type RuntimePluginName = "angular-eslint";
 /** Type definition for rule data. */
-type StylePluginName = "perfectionist" | "prettier" | "stylistic" | "unicorn";
+type StylePluginName =
+  | "package-json"
+  | "perfectionist"
+  | "prettier"
+  | "stylistic"
+  | "unicorn";
 
 /** Type definition for rule data. */
 type TestingPluginName =

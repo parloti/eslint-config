@@ -22,6 +22,7 @@ describe("moduleTaxonomy", () => {
       "angular-eslint",
       "stylistic",
       "perfectionist",
+      "package-json",
       "unicorn",
       "prettier",
       "boundaries",

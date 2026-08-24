@@ -2,6 +2,9 @@ import type { Linter } from "eslint";
 
 import { defineConfig } from "eslint/config";
 
+/** File globs that TypeScript-specific linting applies to. */
+const typescriptFileGlobs = ["**/*.ts"];
+
 /**
  * Build and return TypeScript-specific ESLint configs and rule adjustments.
  * @returns The TypeScript ESLint config array.
@@ -15,9 +18,11 @@ export async function typescript(): Promise<Linter.Config[]> {
   const { strictTypeChecked, stylisticTypeChecked } = configs;
 
   return defineConfig(
-    strictTypeChecked,
-    stylisticTypeChecked,
+    ...[strictTypeChecked, stylisticTypeChecked]
+      .flat()
+      .map((config) => ({ ...config, files: typescriptFileGlobs })),
     {
+      files: typescriptFileGlobs,
       languageOptions: {
         parserOptions: {
           projectService: true,

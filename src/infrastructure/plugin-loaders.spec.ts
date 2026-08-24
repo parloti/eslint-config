@@ -34,6 +34,7 @@ describe("pluginLoaders", () => {
       jasmine: "optional",
       jest: "optional",
       jsdoc: "optional",
+      "package-json": "optional",
       perfectionist: "optional",
       playwright: "optional",
       prettier: "optional",

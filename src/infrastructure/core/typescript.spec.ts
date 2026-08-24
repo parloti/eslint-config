@@ -25,13 +25,17 @@ vi.mock(
 describe("typescript config", () => {
   it("returns custom configs", async () => {
     // Arrange
+    const typescriptFileGlobs = ["**/*.ts"];
     const strictConfig = {
+      files: typescriptFileGlobs,
       name: "@typescript-eslint/strict-type-checked",
     };
     const stylisticConfig = {
+      files: typescriptFileGlobs,
       name: "@typescript-eslint/stylistic-type-checked",
     };
     const parserOptionsConfig = {
+      files: typescriptFileGlobs,
       languageOptions: {
         parserOptions: {
           projectService: true,

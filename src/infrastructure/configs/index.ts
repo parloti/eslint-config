@@ -3,5 +3,11 @@ export { codeperfect, eslint, resolver, typescript } from "../core";
 export { comments, jsdoc } from "../docs";
 export { angularEslint } from "../runtime";
 export { rxjsX } from "../rxjs-x";
-export { perfectionist, prettier, stylistic, unicorn } from "../style";
+export {
+  packageJson,
+  perfectionist,
+  prettier,
+  stylistic,
+  unicorn,
+} from "../style";
 export { jasmine, jest, playwright, vitest, vitestE2e } from "../testing";

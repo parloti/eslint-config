@@ -13,6 +13,7 @@ import {
   jasmine,
   jest,
   jsdoc,
+  packageJson,
   perfectionist,
   playwright,
   prettier,
@@ -116,6 +117,11 @@ const pluginLoaders = {
     loader: createStaticLoaderFactory(jsdoc),
     mode: "optional",
     pluginName: "jsdoc",
+  },
+  "package-json": {
+    loader: createStaticLoaderFactory(packageJson),
+    mode: "optional",
+    pluginName: "package-json",
   },
   perfectionist: {
     loader: createStaticLoaderFactory(perfectionist),

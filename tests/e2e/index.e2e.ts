@@ -110,6 +110,7 @@ describe("config factory end-to-end", () => {
       eslint: false,
       "import-x": false,
       jsdoc: false,
+      "package-json": false,
       perfectionist: false,
       playwright: false,
       prettier: false,

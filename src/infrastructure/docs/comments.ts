@@ -2,6 +2,9 @@ import type { Linter } from "eslint";
 
 import { defineConfig } from "eslint/config";
 
+/** File globs that eslint-comments linting applies to. */
+const commentsFileGlobs = ["**/*.ts"];
+
 /**
  * Resolve and return plugin configuration for eslint-comments when available.
  * @returns Return value output.
@@ -29,11 +32,15 @@ export async function comments(): Promise<Linter.Config[]> {
       .map((rule) => [rule, "error"] as const),
   );
 
-  return defineConfig(recommended, {
-    name: "@eslint-community/eslint-comments/custom",
-    rules: {
-      ...customError,
-      "@eslint-community/eslint-comments/disable-enable-pair": "off",
+  return defineConfig(
+    { ...recommended, files: commentsFileGlobs },
+    {
+      files: commentsFileGlobs,
+      name: "@eslint-community/eslint-comments/custom",
+      rules: {
+        ...customError,
+        "@eslint-community/eslint-comments/disable-enable-pair": "off",
+      },
     },
-  });
+  );
 }
