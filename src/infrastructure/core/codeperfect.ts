@@ -13,5 +13,8 @@ import { defineConfig } from "eslint/config";
 export async function codeperfect(): Promise<Linter.Config[]> {
   const pluginModule = await import("@codeperfect/eslint-plugin");
 
-  return defineConfig(pluginModule.all);
+  return defineConfig({
+    ...pluginModule.all,
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+  });
 }

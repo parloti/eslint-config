@@ -3,6 +3,9 @@ import type { Linter } from "eslint";
 import js from "@eslint/js";
 import { defineConfig, globalIgnores } from "eslint/config";
 
+/** File globs that core JavaScript linting applies to. */
+const javascriptFileGlobs = ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"];
+
 /**
  * Assemble base configuration combining the official eslint-js recommendations with
  * project-specific overrides and linter options.
@@ -14,7 +17,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
  */
 export function eslint(): Linter.Config[] {
   return defineConfig(
-    js.configs.recommended,
+    { ...js.configs.recommended, files: javascriptFileGlobs },
     globalIgnores(
       [
         "**/dist",
@@ -37,6 +40,7 @@ export function eslint(): Linter.Config[] {
       },
     },
     {
+      files: javascriptFileGlobs,
       name: "custom-eslint",
       rules: {
         "max-lines": ["error", { max: 300 }],
