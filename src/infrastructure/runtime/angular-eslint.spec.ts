@@ -1,5 +1,4 @@
-import type * as AngularTsPluginModule from "@angular-eslint/eslint-plugin";
-import type * as AngularTemplatePluginModule from "@angular-eslint/eslint-plugin-template";
+import type * as AngularTsPluginModule from "angular-eslint";
 import type { Linter } from "eslint";
 
 import { describe, expect, it, vi } from "vitest";
@@ -18,61 +17,77 @@ async function loadAngularEslintConfigs(): Promise<Linter.Config[]> {
   return angularEslint();
 }
 
-describe("angular-eslint plugin branches", () => {
-  it("returns repo-owned configs when both presets are available", async () => {
+describe("angular-eslint configuration", () => {
+  it("applies the TypeScript, template, and accessibility presets", async () => {
     // Arrange
-    const tsRecommendedConfig: Linter.Config = {
-      name: "angular-eslint/ts-recommended",
-    };
-    const templateRecommendedConfig: Linter.Config = {
-      name: "angular-eslint/template-recommended",
+    const tsRecommended = [{ rules: { "angular/ts-rule": "error" } }];
+    const templateRecommended = [
+      { rules: { "angular/template-rule": "error" } },
+    ];
+    const templateAccessibility = [
+      { rules: { "angular/accessibility-rule": "error" } },
+    ];
+    const processInlineTemplates = {
+      postprocess: (messages: unknown[][]) => messages.flat(),
+      preprocess: (text: string) => [text],
     };
 
     vi.doMock(
-      import("@angular-eslint/eslint-plugin"),
+      import("angular-eslint"),
       createMockProxy<typeof AngularTsPluginModule>({
-        default: {
-          configs: {
-            recommended: tsRecommendedConfig,
-          },
+        configs: {
+          templateAccessibility,
+          templateRecommended,
+          tsRecommended,
         },
+        processInlineTemplates,
       } as unknown as typeof AngularTsPluginModule),
     );
 
+    // Act
+    const actual = await loadAngularEslintConfigs();
+
+    // Assert
+    expect(actual[1]).toMatchObject({
+      files: ["**/*.ts"],
+      name: "angular-eslint/ts-recommended",
+      processor: processInlineTemplates,
+    });
+    expect(actual[4]).toMatchObject({
+      files: ["**/*.html"],
+      name: "angular-eslint/template-recommended",
+    });
+    expect(actual).toStrictEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ rules: { "angular/ts-rule": "error" } }),
+        expect.objectContaining({
+          rules: { "angular/template-rule": "error" },
+        }),
+        expect.objectContaining({
+          rules: { "angular/accessibility-rule": "error" },
+        }),
+      ]),
+    );
+  });
+
+  it("uses an empty processor when inline template processing is unavailable", async () => {
+    // Arrange
     vi.doMock(
-      import("@angular-eslint/eslint-plugin-template"),
-      createMockProxy<typeof AngularTemplatePluginModule>({
-        default: {
-          configs: {
-            recommended: templateRecommendedConfig,
-          },
+      import("angular-eslint"),
+      createMockProxy<typeof AngularTsPluginModule>({
+        configs: {
+          templateAccessibility: [],
+          templateRecommended: [],
+          tsRecommended: [],
         },
-      } as unknown as typeof AngularTemplatePluginModule),
+        processInlineTemplates: undefined,
+      }),
     );
 
     // Act
-    const { templateConfig, tsConfig } = await (async () => {
-      const configs = await loadAngularEslintConfigs();
-
-      return {
-        templateConfig: configs.find(
-          (config) => config.name === "angular-eslint/template-recommended",
-        ),
-        tsConfig: configs.find(
-          (config) => config.name === "angular-eslint/ts-recommended",
-        ),
-      };
-    })();
+    const actual = await loadAngularEslintConfigs();
 
     // Assert
-    expect(tsConfig).toMatchObject({
-      files: ["**/*.ts"],
-      ignores: ["**/*.spec.ts"],
-      name: "angular-eslint/ts-recommended",
-    });
-    expect(templateConfig).toMatchObject({
-      files: ["**/*.component.html"],
-      name: "angular-eslint/template-recommended",
-    });
+    expect(actual[0]?.processor).toMatchObject({});
   });
 });

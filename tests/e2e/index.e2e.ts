@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import type { ConfigOptions } from "../../src";
 
@@ -56,6 +56,11 @@ describe("config factory end-to-end", () => {
   });
 
   it("swallows optional plugin load failures with guidance", async () => {
+    // Arrange
+    vi.doMock(import("angular-eslint"), () => {
+      throw new Error("Simulated optional plugin load failure");
+    });
+
     // Act
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
       await runWithStderrCapture(() => {
