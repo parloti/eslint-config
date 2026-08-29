@@ -19,10 +19,9 @@ export async function unicorn(): Promise<Linter.Config[]> {
       extends: [configs.recommended],
       files: ["**/*.ts"],
       rules: {
-        "unicorn/consistent-boolean-name": [
-          "error",
-          { prefixes: { does: true } },
-        ],
+        "unicorn/comment-content": "off",
+        "unicorn/consistent-arrow-return-style": "off",
+        "unicorn/consistent-boolean-name": "off",
         "unicorn/consistent-class-member-order": "off",
         "unicorn/filename-case": [
           "error",
@@ -30,6 +29,7 @@ export async function unicorn(): Promise<Linter.Config[]> {
         ],
         "unicorn/name-replacements": ["error", { ignore: [/dev/iu, /e2e/iu] }],
         "unicorn/no-non-function-verb-prefix": "off",
+        "unicorn/prefer-iterator-concat": "off",
         "unicorn/single-line-block-comment-style": ["error", "single-line"],
       },
     },

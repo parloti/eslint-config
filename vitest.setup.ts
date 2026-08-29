@@ -8,8 +8,14 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+/** A utility type that allows bivariance in function types for deep mocking. */
+type DeepMockFunction = {
+  /** A hack to allow bivariance in function types for deep mocking. */
+  bivarianceHack(...arguments_: unknown[]): unknown;
+}["bivarianceHack"];
+
 /**
- * A utility type that makes all properties of a type optional, including nested properties, and preserves function types.
+ * A utility type that makes all properties of a type optional, including nested properties, and allows any callable mock to replace functions.
  * @template T - The type to make partial.
  * @example
  * ```typescript
@@ -18,7 +24,7 @@ afterEach(() => {
  */
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type -- TypeScript will struggle to infer the correct function type.
 type DeepMockPartial<T> = T extends Function
-  ? T
+  ? DeepMockFunction
   : T extends object
     ? { [K in keyof T]?: DeepMockPartial<T[K]> }
     : T;
@@ -54,11 +60,12 @@ type DeepPartial<T> = T extends (...arguments_: unknown[]) => unknown
  * );
  * ```
  */
-const mockProxyFactory = <TModule extends object>(
-  overrides: DeepMockPartial<TModule>,
-): (() => TModule) => {
-  return () => {
-    return new Proxy(overrides as TModule, {
+const mockProxyFactory =
+  <TModule extends object>(
+    overrides: DeepMockPartial<TModule>,
+  ): (() => TModule) =>
+  () =>
+    new Proxy(overrides as TModule, {
       get: (object, property): TModule[keyof TModule] | undefined => {
         if (property === "then") {
           return void 0;
@@ -73,8 +80,6 @@ const mockProxyFactory = <TModule extends object>(
         );
       },
     });
-  };
-};
 
 /**
  * A helper function to create a mock class instance with specified method overrides.
@@ -90,8 +95,8 @@ const mockProxyFactory = <TModule extends object>(
  */
 const mockClassInstanceFactory = <T extends object>(
   overrides: DeepPartial<T>,
-): T => {
-  return new Proxy(overrides as T, {
+): T =>
+  new Proxy(overrides as T, {
     get(target, property): T[keyof T] | undefined {
       if (Object.hasOwn(target, property)) {
         return target[property as keyof T];
@@ -102,7 +107,6 @@ const mockClassInstanceFactory = <T extends object>(
       );
     },
   });
-};
 
 /**
  * A helper function to create a mock class with specified method overrides.
@@ -120,10 +124,10 @@ const mockClassInstanceFactory = <T extends object>(
 const mockClassFactory = <TInstance extends object>(
   overrides: DeepPartial<TInstance>,
 ): new (...arguments_: unknown[]) => TInstance => {
-  // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- We need a bare constructor returning the mock instance so `new MockedClass()` works.
+  // eslint-disable-next-line @typescript-eslint/no-extraneous-class -- Intentionally creating a class to return a constructor function.
   return class {
     constructor() {
-      return mockClassInstance(overrides);
+      return mockClassInstanceFactory(overrides);
     }
   } as new (...arguments_: unknown[]) => TInstance;
 };
@@ -134,12 +138,13 @@ Object.defineProperties(globalThis, {
     value: mockProxyFactory,
     writable: false,
   },
-  mockClass: {
+  mockClass: { configurable: false, value: mockClassFactory, writable: false },
+  mockClassInstance: {
     configurable: false,
-    value: mockClassFactory,
+    value: mockClassInstanceFactory,
     writable: false,
   },
-  mockClassInstance: {
+  safeMock: {
     configurable: false,
     value: mockClassInstanceFactory,
     writable: false,
@@ -149,5 +154,6 @@ Object.defineProperties(globalThis, {
 declare global {
   var createMockProxy: typeof mockProxyFactory;
   var mockClassInstance: typeof mockClassInstanceFactory;
+  var safeMock: typeof mockClassInstanceFactory;
   var mockClass: typeof mockClassFactory;
 }

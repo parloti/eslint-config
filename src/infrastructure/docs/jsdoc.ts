@@ -1,6 +1,6 @@
 import type { Linter } from "eslint";
 
-import { createJsdocConfigs } from "./jsdoc-config";
+import { defineConfig } from "eslint/config";
 
 /**
  * Build the jsdoc plugin configuration and any overrides needed by this project.
@@ -13,7 +13,16 @@ import { createJsdocConfigs } from "./jsdoc-config";
 async function jsdoc(): Promise<Linter.Config[]> {
   const { default: jsdocPlugin } = await import("eslint-plugin-jsdoc");
 
-  return createJsdocConfigs(jsdocPlugin.configs, jsdocPlugin.rules);
+  return defineConfig({
+    extends: [
+      jsdocPlugin.configs["flat/contents-typescript-error"],
+      jsdocPlugin.configs["flat/logical-typescript-error"],
+      jsdocPlugin.configs["flat/requirements-typescript-error"],
+      jsdocPlugin.configs["flat/stylistic-typescript-error"],
+    ],
+    files: ["**/*.ts"],
+    name: "jsdoc/custom",
+  });
 }
 
 export { jsdoc };

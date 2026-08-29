@@ -23,6 +23,7 @@ const defaultDisabledPlugins = [
  * isPluginDisabledByDefault("jest");
  * ```
  */
+// eslint-disable-next-line codeperfect/no-useless-delegation -- BUG: False positive
 function isPluginDisabledByDefault(pluginName: PluginName): boolean {
   return (defaultDisabledPlugins as readonly PluginName[]).includes(pluginName);
 }

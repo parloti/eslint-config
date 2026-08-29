@@ -1,4 +1,3 @@
-import type { RuleDefinition } from "@eslint/core";
 import type { Linter } from "eslint";
 import type * as jsdocModuleType from "eslint-plugin-jsdoc";
 
@@ -21,57 +20,71 @@ async function loadJsdocConfigs(): Promise<Linter.Config[]> {
 /**
  * Mock the JSDoc plugin module for one loader test.
  * @param configs The mocked configs for the JSDoc plugin.
- * @param rules The mocked rules for the JSDoc plugin.
  * @example
  * ```typescript
- * mockJsdocModule({ configs: {}, rules: {} });
+ * mockJsdocModule({});
  * ```
  */
-function mockJsdocModule(
-  configs: (typeof jsdocModuleType)["default"]["configs"],
-
-  rules: Record<string, RuleDefinition>,
-): void {
+function mockJsdocModule(configs: Record<string, Linter.Config>): void {
   vi.doMock(
     import("eslint-plugin-jsdoc"),
-    createMockProxy<typeof jsdocModuleType>({ default: { configs, rules } }),
+    createMockProxy<typeof jsdocModuleType>({
+      default: { configs },
+    }),
   );
 }
 
 describe("jsdoc loader", () => {
-  it("loads repo-owned configs from the upstream plugin shape", async () => {
+  it("loads the upstream flat preset configs", async () => {
     // Arrange
-    mockJsdocModule(
-      {
-        "flat/recommended-typescript-error": {
-          name: "flat/recommended-typescript-error",
+    mockJsdocModule({
+      "flat/contents-typescript-error": {
+        name: "jsdoc/contents-typescript-error",
+        rules: {
+          "jsdoc/check-indentation": "error",
         },
-      } as (typeof jsdocModuleType)["default"]["configs"],
-      {
-        "require-throws": {} as RuleDefinition,
-        "sort-tags": {} as RuleDefinition,
       },
-    );
+      "flat/logical-typescript-error": {
+        name: "jsdoc/logical-typescript-error",
+        rules: {
+          "jsdoc/require-returns": "error",
+        },
+      },
+      "flat/requirements-typescript-error": {
+        name: "jsdoc/requirements-typescript-error",
+        rules: {
+          "jsdoc/require-param": "error",
+        },
+      },
+      "flat/stylistic-typescript-error": {
+        name: "jsdoc/stylistic-typescript-error",
+        rules: {
+          "jsdoc/check-alignment": "error",
+        },
+      },
+    });
 
     // Act
-    const { customRulesConfig, hasRecommendedPreset } = await (async () => {
+    const { customConfig, presetNames } = await (async () => {
       const configs = await loadJsdocConfigs();
 
       return {
-        customRulesConfig: configs.find(
-          (config) => config.name === "jsdoc/custom",
-        ),
-        hasRecommendedPreset: configs.some(
-          (config) => config.name === "flat/recommended-typescript-error",
-        ),
+        customConfig: configs.find((config) => config.name === "jsdoc/custom"),
+        presetNames: configs.map((config) => config.name),
       };
     })();
 
     // Assert
-    expect(hasRecommendedPreset).toBe(true);
-    expect(customRulesConfig?.rules).toMatchObject({
-      "jsdoc/require-throws": "error",
-      "jsdoc/sort-tags": "error",
+    expect(presetNames).toStrictEqual([
+      "jsdoc/custom > jsdoc/contents-typescript-error",
+      "jsdoc/custom > jsdoc/logical-typescript-error",
+      "jsdoc/custom > jsdoc/requirements-typescript-error",
+      "jsdoc/custom > jsdoc/stylistic-typescript-error",
+      "jsdoc/custom",
+    ]);
+    expect(customConfig).toMatchObject({
+      files: ["**/*.ts"],
+      name: "jsdoc/custom",
     });
   });
 });
