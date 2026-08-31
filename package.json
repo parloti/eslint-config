@@ -73,9 +73,6 @@
     "flat-config",
     "shareable-config"
   ],
-  "dependencies": {
-    "minimatch": "^10.2.6"
-  },
   "devDependencies": {
     "@codeperfect/commitlint-config-emoji": "^1.0.0",
     "@codeperfect/eslint-plugin": "^2.6.0",
@@ -151,16 +148,7 @@
     "typescript-eslint": "^8.68.0"
   },
   "peerDependenciesMeta": {
-    "@eslint-community/eslint-plugin-eslint-comments": {
-      "optional": true
-    },
-    "@vitest/eslint-plugin": {
-      "optional": true
-    },
     "angular-eslint": {
-      "optional": true
-    },
-    "eslint-plugin-import-x": {
       "optional": true
     },
     "eslint-plugin-jasmine": {
