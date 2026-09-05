@@ -42,21 +42,6 @@ interface PluginLoaderEntry {
 }
 
 /**
- * Creates the boundaries loader factory for package-owned architecture input.
- * @param options Input options value.
- * @returns Return value output.
- * @example
- * ```typescript
- * const factory = createBoundariesLoaderFactory({});
- * ```
- */
-function createBoundariesLoaderFactory(options: ConfigOptions): ConfigLoader {
-  void options;
-
-  return boundaries;
-}
-
-/**
  * Creates a loader factory for modules that do not depend on config options.
  * @param loader Input loader value.
  * @returns Return value output.
@@ -79,7 +64,7 @@ const pluginLoaders = {
     pluginName: "angular-eslint",
   },
   boundaries: {
-    loader: createBoundariesLoaderFactory,
+    loader: () => boundaries,
     mode: "optional",
     pluginName: "boundaries",
   },

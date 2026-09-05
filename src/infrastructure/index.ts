@@ -4,7 +4,7 @@ export type {
   PluginName,
   PluginStateOverrides,
 } from "../domain";
-export { boundaries, defaultBoundariesConfig, importX } from "./architecture";
+export { boundaries, importX } from "./architecture";
 export { config } from "./config-factory";
 export {
   codeperfect,

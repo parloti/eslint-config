@@ -1,8 +1,46 @@
+import type { Settings } from "eslint-plugin-boundaries";
+
 import { describe, expect, it, vi } from "vitest";
 
 import type { BoundariesElementTypesRuleEntry } from "../../domain";
 
-import { boundaries, defaultBoundariesConfig } from "./boundaries";
+import { boundaries } from "./boundaries";
+
+/** Resolved boundary topology fields read from a generated config array. */
+interface BoundaryTopology {
+  /** Resolved element type names in descriptor order. */
+  elementTypes: string[];
+  /** Source globs included in boundaries checks. */
+  files: string[];
+  /** Source globs excluded from boundaries checks. */
+  ignores: string[];
+}
+
+/**
+ * Read the resolved boundary topology from a generated config array.
+ * @param configs Generated ESLint config array.
+ * @returns The default topology fields.
+ * @example
+ * ```typescript
+ * readBoundaryTopology(boundaries());
+ * ```
+ */
+function readBoundaryTopology(
+  configs: ReturnType<typeof boundaries>,
+): BoundaryTopology {
+  const boundaryConfig = configs.find((entry) => entry.settings !== void 0);
+  const settings = boundaryConfig?.settings as Settings | undefined;
+  const elements = settings?.["boundaries/elements"];
+
+  return {
+    elementTypes:
+      elements
+        ?.map((element) => element.type)
+        .filter((type): type is string => type !== void 0) ?? [],
+    files: toPatterns(boundaryConfig?.files),
+    ignores: toPatterns(boundaryConfig?.ignores),
+  };
+}
 
 /**
  * Read the resolved dependencies rule from a generated config array.
@@ -25,6 +63,19 @@ function readDependenciesRule(
   }
 
   return void 0;
+}
+
+/**
+ * Normalize a flat config glob field to a string array.
+ * @param raw Files or ignores patterns from a flat config entry.
+ * @returns The flattened pattern array.
+ * @example
+ * ```typescript
+ * toPatterns(["src/index.ts"]);
+ * ```
+ */
+function toPatterns(raw: (string | string[])[] | undefined): string[] {
+  return raw?.flat() ?? [];
 }
 
 /** Expected directional graph for repository boundaries. */
@@ -113,17 +164,15 @@ describe("boundaries config", () => {
     ];
 
     // Act
-    const actualTypes = defaultBoundariesConfig.elements.map(
-      (element) => element.type,
-    );
+    const actualBoundaryTopology = readBoundaryTopology(boundaries());
 
     // Assert
-    expect(defaultBoundariesConfig.files).toStrictEqual(["**/src/**/*.ts"]);
-    expect(defaultBoundariesConfig.ignores).toStrictEqual([
+    expect(actualBoundaryTopology.files).toStrictEqual(["**/src/**/*.ts"]);
+    expect(actualBoundaryTopology.ignores).toStrictEqual([
       "**/*.{spec,test,e2e}.ts",
       "**/__tests__/**",
     ]);
-    expect(actualTypes).toStrictEqual(expectedTypes);
+    expect(actualBoundaryTopology.elementTypes).toStrictEqual(expectedTypes);
   });
 
   it("enforces the package-owned dependency direction graph", () => {

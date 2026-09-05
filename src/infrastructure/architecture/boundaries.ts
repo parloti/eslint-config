@@ -11,23 +11,8 @@ import { defineConfig } from "eslint/config";
 
 import type { BoundariesElementTypesRuleEntry } from "../../domain";
 
-/** Fixed boundaries topology used by this package. */
-interface BoundariesConfig {
-  /** Layer descriptors consumed by eslint-plugin-boundaries. */
-  elements: ElementDescriptors;
-
-  /** Rule entry used by boundaries/dependencies. */
-  elementTypes: BoundariesElementTypesRuleEntry;
-
-  /** Source globs included in boundaries checks. */
-  files: readonly string[];
-
-  /** Source globs excluded from boundaries checks. */
-  ignores: readonly string[];
-}
-
 /** Default repository element descriptors used by the boundaries plugin. */
-const defaultElements: ElementDescriptors = [
+const elements: ElementDescriptors = [
   { partialMatch: false, pattern: "**/src", type: "entrypoint" },
   { basePattern: "**/src", pattern: "bootstrap", type: "bootstrap" },
   { basePattern: "**/src", pattern: "presentation", type: "presentation" },
@@ -42,7 +27,7 @@ const defaultElements: ElementDescriptors = [
 ];
 
 /** Default repository dependency rules used by the boundaries plugin. */
-const defaultElementTypes: BoundariesElementTypesRuleEntry = [
+const elementTypes: BoundariesElementTypesRuleEntry = [
   "error",
   {
     default: "disallow",
@@ -96,18 +81,10 @@ const defaultElementTypes: BoundariesElementTypesRuleEntry = [
 ];
 
 /** Default source file globs included in repository boundaries checks. */
-const defaultFiles = ["**/src/**/*.ts"];
+const files = ["**/src/**/*.ts"];
 
 /** Default source file globs excluded from repository boundaries checks. */
-const defaultIgnores = ["**/*.{spec,test,e2e}.ts", "**/__tests__/**"];
-
-/** Repository default boundaries topology aligned with Clean Architecture. */
-const defaultBoundariesConfig: BoundariesConfig = {
-  elements: defaultElements,
-  elementTypes: defaultElementTypes,
-  files: defaultFiles,
-  ignores: defaultIgnores,
-};
+const ignores = ["**/*.{spec,test,e2e}.ts", "**/__tests__/**"];
 
 /**
  * Load boundaries plugin configuration using the package-owned fixed topology.
@@ -120,17 +97,17 @@ const defaultBoundariesConfig: BoundariesConfig = {
 function boundaries(): Linter.Config[] {
   const settings: Settings = {
     ...strict.settings,
-    "boundaries/elements": defaultBoundariesConfig.elements,
+    "boundaries/elements": elements,
   };
 
   const rules: Rules = {
     ...strict.rules,
-    "boundaries/dependencies": defaultBoundariesConfig.elementTypes,
+    "boundaries/dependencies": elementTypes,
   };
 
   const configObject = createConfig({
-    files: [...defaultBoundariesConfig.files],
-    ignores: [...defaultBoundariesConfig.ignores],
+    files,
+    ignores,
     rules,
     settings,
   }) as ConfigObject;
@@ -138,4 +115,4 @@ function boundaries(): Linter.Config[] {
   return defineConfig(configObject);
 }
 
-export { boundaries, defaultBoundariesConfig };
+export { boundaries };
