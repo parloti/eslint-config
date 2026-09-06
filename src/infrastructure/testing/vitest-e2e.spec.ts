@@ -27,11 +27,7 @@ describe("vitest-e2e plugin branches", () => {
     vi.doMock(
       import("@vitest/eslint-plugin"),
       createMockProxy<typeof VitestPluginModule>({
-        default: {
-          configs: {
-            all: allConfig,
-          },
-        },
+        default: { configs: { all: allConfig } },
       }),
     );
 
@@ -52,11 +48,7 @@ describe("vitest-e2e plugin branches", () => {
 
     // Assert
     expect(settingsConfig).toMatchObject({
-      settings: {
-        vitest: {
-          typecheck: true,
-        },
-      },
+      settings: { vitest: { typecheck: true } },
     });
     expect(presetConfig?.name).toContain(allConfig.name);
     expect(customConfig).toMatchObject({

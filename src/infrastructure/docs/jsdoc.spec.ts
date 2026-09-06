@@ -28,9 +28,7 @@ async function loadJsdocConfigs(): Promise<Linter.Config[]> {
 function mockJsdocModule(configs: Record<string, Linter.Config>): void {
   vi.doMock(
     import("eslint-plugin-jsdoc"),
-    createMockProxy<typeof jsdocModuleType>({
-      default: { configs },
-    }),
+    createMockProxy<typeof jsdocModuleType>({ default: { configs } }),
   );
 }
 
@@ -40,27 +38,19 @@ describe("jsdoc loader", () => {
     mockJsdocModule({
       "flat/contents-typescript-error": {
         name: "jsdoc/contents-typescript-error",
-        rules: {
-          "jsdoc/check-indentation": "error",
-        },
+        rules: { "jsdoc/check-indentation": "error" },
       },
       "flat/logical-typescript-error": {
         name: "jsdoc/logical-typescript-error",
-        rules: {
-          "jsdoc/require-returns": "error",
-        },
+        rules: { "jsdoc/require-returns": "error" },
       },
       "flat/requirements-typescript-error": {
         name: "jsdoc/requirements-typescript-error",
-        rules: {
-          "jsdoc/require-param": "error",
-        },
+        rules: { "jsdoc/require-param": "error" },
       },
       "flat/stylistic-typescript-error": {
         name: "jsdoc/stylistic-typescript-error",
-        rules: {
-          "jsdoc/check-alignment": "error",
-        },
+        rules: { "jsdoc/check-alignment": "error" },
       },
     });
 

@@ -53,9 +53,7 @@ const perfectionistConfigs: PerfectionistConfigs = {
 };
 
 vi.mock(import("eslint-plugin-perfectionist"), (): PerfectionistModule => {
-  return {
-    configs: perfectionistConfigs,
-  };
+  return { configs: perfectionistConfigs };
 });
 
 describe("perfectionist config", () => {

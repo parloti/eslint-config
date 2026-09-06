@@ -37,12 +37,7 @@ Disable modules that do not apply to the repository:
 ```typescript
 import { config } from "@codeperfect/eslint-config";
 
-export default config({
-  plugins: {
-    boundaries: false,
-    prettier: false,
-  },
-});
+export default config({ plugins: { boundaries: false, prettier: false } });
 ```
 
 Enable modules that are opt-in by default:
@@ -51,11 +46,7 @@ Enable modules that are opt-in by default:
 import { config } from "@codeperfect/eslint-config";
 
 export default config({
-  plugins: {
-    jasmine: true,
-    jest: true,
-    "vitest-e2e": true,
-  },
+  plugins: { jasmine: true, jest: true, "vitest-e2e": true },
 });
 ```
 

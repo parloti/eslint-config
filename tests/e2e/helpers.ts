@@ -9,9 +9,7 @@ import type { ConfigOptions } from "../../src";
 import { config } from "../../src";
 
 /** Lint options shared by every end-to-end lint run. */
-const lintOptions = {
-  cwd: process.cwd(),
-} as const;
+const lintOptions = { cwd: process.cwd() } as const;
 
 /**
  * The outcome of an async action run under stderr capture.

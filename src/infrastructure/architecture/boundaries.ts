@@ -16,11 +16,7 @@ const elements: ElementDescriptors = [
   { partialMatch: false, pattern: "**/src", type: "entrypoint" },
   { basePattern: "**/src", pattern: "bootstrap", type: "bootstrap" },
   { basePattern: "**/src", pattern: "presentation", type: "presentation" },
-  {
-    basePattern: "**/src",
-    pattern: "infrastructure",
-    type: "infrastructure",
-  },
+  { basePattern: "**/src", pattern: "infrastructure", type: "infrastructure" },
   { basePattern: "**/src", pattern: "application", type: "application" },
   { basePattern: "**/src", pattern: "domain", type: "domain" },
   { basePattern: "**/src", pattern: "shared", type: "shared" },

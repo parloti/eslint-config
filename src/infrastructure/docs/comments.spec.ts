@@ -33,16 +33,12 @@ function mockCommentsModules(
 ): void {
   vi.doMock(
     import("@eslint-community/eslint-plugin-eslint-comments"),
-    createMockProxy<typeof eslintCommentsModuleType>({
-      rules,
-    }),
+    createMockProxy<typeof eslintCommentsModuleType>({ rules }),
   );
   vi.doMock(
     import("@eslint-community/eslint-plugin-eslint-comments/configs"),
     () => {
-      return {
-        recommended,
-      };
+      return { recommended };
     },
   );
 }
@@ -67,10 +63,7 @@ describe("comments config", () => {
     const { customConfig, recommendedConfig } = await (async () => {
       const configs = await loadCommentsConfigs();
 
-      return {
-        customConfig: configs.at(1),
-        recommendedConfig: configs.at(0),
-      };
+      return { customConfig: configs.at(1), recommendedConfig: configs.at(0) };
     })();
 
     // Assert
@@ -100,19 +93,14 @@ describe("comments config", () => {
     const { configsLength, customConfig } = await (async () => {
       const configs = await loadCommentsConfigs();
 
-      return {
-        configsLength: configs.length,
-        customConfig: configs.at(1),
-      };
+      return { configsLength: configs.length, customConfig: configs.at(1) };
     })();
 
     // Assert
     expect(configsLength).toBe(2);
     expect(customConfig).toMatchObject({
       name: "@eslint-community/eslint-comments/custom",
-      rules: {
-        "@eslint-community/eslint-comments/disable-enable-pair": "off",
-      },
+      rules: { "@eslint-community/eslint-comments/disable-enable-pair": "off" },
     });
   });
 });

@@ -8,15 +8,9 @@ vi.mock(
   import("typescript-eslint"),
   createMockProxy<typeof TypescriptEslintModule>({
     configs: {
-      strictTypeChecked: [
-        {
-          name: "@typescript-eslint/strict-type-checked",
-        },
-      ],
+      strictTypeChecked: [{ name: "@typescript-eslint/strict-type-checked" }],
       stylisticTypeChecked: [
-        {
-          name: "@typescript-eslint/stylistic-type-checked",
-        },
+        { name: "@typescript-eslint/stylistic-type-checked" },
       ],
     },
   }),
@@ -36,11 +30,7 @@ describe("typescript config", () => {
     };
     const parserOptionsConfig = {
       files: typescriptFileGlobs,
-      languageOptions: {
-        parserOptions: {
-          projectService: true,
-        },
-      },
+      languageOptions: { parserOptions: { projectService: true } },
     };
 
     // Act

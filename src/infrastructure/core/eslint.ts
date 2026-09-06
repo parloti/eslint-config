@@ -42,9 +42,7 @@ export function eslint(): Linter.Config[] {
     {
       files: javascriptFileGlobs,
       name: "custom-eslint",
-      rules: {
-        "max-lines": ["error", { max: 300 }],
-      },
+      rules: { "max-lines": ["error", { max: 300 }] },
     },
   );
 }

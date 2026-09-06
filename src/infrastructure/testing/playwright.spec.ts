@@ -49,19 +49,11 @@ describe("playwright config", () => {
   it("returns repo-owned errors that are not already in the recommended preset", async () => {
     // Arrange
     const recommendedConfig: Linter.Config = {
-      rules: {
-        "playwright/no-focused-test": "error",
-      },
+      rules: { "playwright/no-focused-test": "error" },
     };
     mockPlaywrightModule({
-      configs: {
-        "flat/recommended": recommendedConfig,
-      },
-      rules: {
-        "": {},
-        "expect-expect": {},
-        "no-focused-test": {},
-      },
+      configs: { "flat/recommended": recommendedConfig },
+      rules: { "": {}, "expect-expect": {}, "no-focused-test": {} },
     });
 
     // Act
@@ -79,9 +71,7 @@ describe("playwright config", () => {
     expect(customConfig).toMatchObject({
       files: ["tests/e2e/**/*.ts"],
       name: "playwright/custom-error",
-      rules: {
-        "playwright/expect-expect": "error",
-      },
+      rules: { "playwright/expect-expect": "error" },
     });
     expect(customConfig?.rules).not.toHaveProperty(
       "playwright/no-focused-test",
@@ -92,13 +82,8 @@ describe("playwright config", () => {
     // Arrange
     const recommendedConfig: Linter.Config = {};
     mockPlaywrightModule({
-      configs: {
-        "flat/recommended": recommendedConfig,
-      },
-      rules: {
-        "expect-expect": {},
-        "no-focused-test": {},
-      },
+      configs: { "flat/recommended": recommendedConfig },
+      rules: { "expect-expect": {}, "no-focused-test": {} },
     });
 
     // Act

@@ -28,10 +28,7 @@ describe("import-x branch coverage", () => {
           typescript: { rules: {} },
           warnings: { rules: {} },
         },
-        rules: {
-          "no-default-export": {},
-          "no-duplicates": {},
-        },
+        rules: { "no-default-export": {}, "no-duplicates": {} },
       }),
     );
 
@@ -50,9 +47,7 @@ describe("import-x branch coverage", () => {
     expect(actualCustomNodeModulesConfig).toMatchObject({
       files: ["**/*.{spec,test,e2e}.ts"],
       name: "import-x/custom-test-files",
-      rules: {
-        "import-x/no-nodejs-modules": "off",
-      },
+      rules: { "import-x/no-nodejs-modules": "off" },
     });
   });
 });

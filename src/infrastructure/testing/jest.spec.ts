@@ -8,14 +8,10 @@ import { jest } from "./jest";
 type JestPluginModule = typeof jestPluginModuleType;
 
 /** Mocked Jest config namespace used by the module mock. */
-const mockedJestConfigs = {
-  "flat/all": {},
-} as JestPluginModule["configs"];
+const mockedJestConfigs = { "flat/all": {} } as JestPluginModule["configs"];
 
 vi.mock(import("eslint-plugin-jest"), () => {
-  return {
-    configs: mockedJestConfigs,
-  };
+  return { configs: mockedJestConfigs };
 });
 
 describe("jest config", () => {

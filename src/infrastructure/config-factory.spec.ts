@@ -75,23 +75,17 @@ describe("config-factory", () => {
     );
 
     vi.doMock(import("./plugin-state"), () => {
-      return {
-        isPluginEnabled: () => false,
-      };
+      return { isPluginEnabled: () => false };
     });
 
     const loadPluginConfigMock = vi.fn();
 
     vi.doMock(import("./utilities"), () => {
-      return {
-        loadPluginConfig: loadPluginConfigMock,
-      };
+      return { loadPluginConfig: loadPluginConfigMock };
     });
 
     vi.doMock(import("./diagnostics"), () => {
-      return {
-        reportDeprecatedBoundariesOption: vi.fn(),
-      };
+      return { reportDeprecatedBoundariesOption: vi.fn() };
     });
 
     // Act
@@ -131,9 +125,7 @@ describe("config-factory", () => {
     });
 
     vi.doMock(import("./utilities"), () => {
-      return {
-        loadPluginConfig: vi.fn(loadEnabledPluginConfig),
-      };
+      return { loadPluginConfig: vi.fn(loadEnabledPluginConfig) };
     });
 
     vi.doMock(import("./diagnostics"), () => {
@@ -146,9 +138,7 @@ describe("config-factory", () => {
     const actualConfigs = await (async () => {
       const { config } = await import("./config-factory");
 
-      return config({
-        boundaries: {},
-      } as unknown as ConfigOptions);
+      return config({ boundaries: {} } as unknown as ConfigOptions);
     })();
 
     // Assert

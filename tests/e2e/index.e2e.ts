@@ -43,11 +43,7 @@ describe("config factory end-to-end", () => {
     // Act
     const actualNames = collectConfigNames(
       await config({
-        plugins: {
-          jasmine: true,
-          jest: true,
-          "vitest-e2e": true,
-        },
+        plugins: { jasmine: true, jest: true, "vitest-e2e": true },
       }),
     );
 
@@ -64,9 +60,7 @@ describe("config factory end-to-end", () => {
     // Act
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
       await runWithStderrCapture(() => {
-        return config({
-          plugins: { "angular-eslint": true },
-        });
+        return config({ plugins: { "angular-eslint": true } });
       });
 
     // Assert
@@ -91,12 +85,7 @@ describe("config factory end-to-end", () => {
     // Act
     const actualNames = collectConfigNames(
       await config({
-        plugins: {
-          eslint: false,
-          jsdoc: false,
-          unicorn: false,
-          vitest: false,
-        },
+        plugins: { eslint: false, jsdoc: false, unicorn: false, vitest: false },
       }),
     );
 
@@ -138,9 +127,7 @@ describe("config factory end-to-end", () => {
     // Act
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
       await runWithStderrCapture(() => {
-        return config({
-          boundaries: {},
-        } as unknown as ConfigOptions);
+        return config({ boundaries: {} } as unknown as ConfigOptions);
       });
 
     // Assert
@@ -156,10 +143,9 @@ describe("config factory end-to-end", () => {
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
       await runWithStderrCapture(() => {
         return config({
-          plugins: {
-            jest: false,
-            vitest: true,
-          } as unknown as NonNullable<ConfigOptions["plugins"]>,
+          plugins: { jest: false, vitest: true } as unknown as NonNullable<
+            ConfigOptions["plugins"]
+          >,
         });
       });
 

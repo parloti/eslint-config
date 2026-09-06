@@ -16,8 +16,6 @@ export async function jest(): Promise<Linter.Config[]> {
   return defineConfig({
     extends: [configs["flat/all"]],
     name: "jest/custom",
-    rules: {
-      "jest/prefer-expect-assertions": "off",
-    },
+    rules: { "jest/prefer-expect-assertions": "off" },
   });
 }

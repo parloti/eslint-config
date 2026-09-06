@@ -35,11 +35,7 @@ describe("angular-eslint configuration", () => {
     vi.doMock(
       import("angular-eslint"),
       createMockProxy<typeof AngularTsPluginModule>({
-        configs: {
-          templateAccessibility,
-          templateRecommended,
-          tsRecommended,
-        },
+        configs: { templateAccessibility, templateRecommended, tsRecommended },
         processInlineTemplates,
       } as unknown as typeof AngularTsPluginModule),
     );

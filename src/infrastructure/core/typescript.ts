@@ -23,11 +23,7 @@ export async function typescript(): Promise<Linter.Config[]> {
       .map((config) => ({ ...config, files: typescriptFileGlobs })),
     {
       files: typescriptFileGlobs,
-      languageOptions: {
-        parserOptions: {
-          projectService: true,
-        },
-      },
+      languageOptions: { parserOptions: { projectService: true } },
     },
     {
       files: ["**/*.{spec,test,e2e}.ts"],

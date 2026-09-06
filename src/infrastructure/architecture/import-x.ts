@@ -51,16 +51,12 @@ async function importX(): Promise<Linter.Config[]> {
     {
       files: ["*", "packages/*/*"],
       name: "import-x/custom-root-config-files",
-      rules: {
-        "import-x/no-default-export": "off",
-      },
+      rules: { "import-x/no-default-export": "off" },
     },
     {
       files: ["**/*.{spec,test,e2e}.ts"],
       name: "import-x/custom-test-files",
-      rules: {
-        "import-x/no-nodejs-modules": "off",
-      },
+      rules: { "import-x/no-nodejs-modules": "off" },
     },
   );
 }

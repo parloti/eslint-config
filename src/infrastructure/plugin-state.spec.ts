@@ -69,9 +69,9 @@ describe("plugin-state", () => {
     it("warns when a default-enabled plugin is redundantly enabled", async () => {
       // Arrange
       const pluginName = "vitest";
-      const untypedOverrides = {
-        vitest: true,
-      } as unknown as Parameters<typeof isPluginEnabled>[1];
+      const untypedOverrides = { vitest: true } as unknown as Parameters<
+        typeof isPluginEnabled
+      >[1];
 
       // Act
       const { firstMessage, result } = await captureSutWithStderr(() =>
@@ -88,9 +88,9 @@ describe("plugin-state", () => {
     it("warns when a default-disabled plugin is redundantly disabled", async () => {
       // Arrange
       const pluginName = "jest";
-      const untypedOverrides = {
-        jest: false,
-      } as unknown as Parameters<typeof isPluginEnabled>[1];
+      const untypedOverrides = { jest: false } as unknown as Parameters<
+        typeof isPluginEnabled
+      >[1];
 
       // Act
       const { firstMessage, result } = await captureSutWithStderr(() =>

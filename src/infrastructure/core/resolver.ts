@@ -17,15 +17,9 @@ export async function resolver(): Promise<Linter.Config[]> {
   return defineConfig({
     settings: {
       "import-x/resolver-next": [
-        createTypeScriptImportResolver({
-          alwaysTryTypes: true,
-        }),
+        createTypeScriptImportResolver({ alwaysTryTypes: true }),
       ],
-      "import/resolver": {
-        typescript: {
-          alwaysTryTypes: true,
-        },
-      },
+      "import/resolver": { typescript: { alwaysTryTypes: true } },
     },
   });
 }
