@@ -6,7 +6,7 @@
 
 # Interface: ConfigOptions
 
-Defined in: [domain/types.ts:17](https://github.com/parloti/eslint-config/blob/5bf800da83714111ca9f97161ab09ebede12b949/src/domain/types.ts#L17)
+Defined in: [domain/types.ts:17](https://github.com/parloti/eslint-config/blob/159c40b9e4e5fa11eac420bd6ee2a64d91ddaf42/src/domain/types.ts#L17)
 
 Type definition for rule data.
 
@@ -16,6 +16,6 @@ Type definition for rule data.
 
 > `optional` **plugins?**: `Partial`\<`Record`\<`DefaultDisabledPluginName`, `true`\> & `Record`\<`DefaultEnabledPluginName`, `false`\>\>
 
-Defined in: [domain/types.ts:19](https://github.com/parloti/eslint-config/blob/5bf800da83714111ca9f97161ab09ebede12b949/src/domain/types.ts#L19)
+Defined in: [domain/types.ts:19](https://github.com/parloti/eslint-config/blob/159c40b9e4e5fa11eac420bd6ee2a64d91ddaf42/src/domain/types.ts#L19)
 
 Explicit plugin state overrides keyed by public plugin name.

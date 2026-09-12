@@ -12,10 +12,6 @@
 
 - [PluginStateOverrides](type-aliases/PluginStateOverrides.md)
 
-## Variables
-
-- [defaultBoundariesConfig](variables/defaultBoundariesConfig.md)
-
 ## Functions
 
 - [config](functions/config.md)
