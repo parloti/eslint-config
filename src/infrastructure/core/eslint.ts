@@ -27,6 +27,7 @@ export function eslint(): Linter.Config[] {
         "docs/",
         "packages/*/docs/",
         "apps/*/docs/",
+        "**/.angular",
         "**/coverage",
         "**/.stryker-tmp",
         "**/playwright-reports",

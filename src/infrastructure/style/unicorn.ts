@@ -28,6 +28,7 @@ export async function unicorn(): Promise<Linter.Config[]> {
           { case: "kebabCase", ignore: ["^__tests__$"] },
         ],
         "unicorn/name-replacements": ["error", { ignore: [/dev/iu, /e2e/iu] }],
+        "unicorn/no-incorrect-template-string-interpolation": "off",
         "unicorn/no-non-function-verb-prefix": "off",
         "unicorn/prefer-iterator-concat": "off",
         "unicorn/single-line-block-comment-style": ["error", "single-line"],
