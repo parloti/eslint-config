@@ -133,7 +133,7 @@ describe("config-factory", () => {
     expect(actualConfigs).toStrictEqual([{ name: "eslint/loaded" }]);
   });
 
-  it("loads only explicitly selected plugins for a scoped package", async () => {
+  it("loads global and explicitly selected scoped plugins", async () => {
     // Arrange
     vi.doMock(
       import("../domain"),
@@ -150,7 +150,9 @@ describe("config-factory", () => {
     );
 
     vi.doMock(import("./plugin-state"), () => {
-      return { isPluginEnabled: () => true };
+      return {
+        isPluginEnabled: (pluginName: string) => pluginName === "eslint",
+      };
     });
 
     vi.doMock(import("./utilities"), () => {
@@ -168,6 +170,7 @@ describe("config-factory", () => {
 
     // Assert
     expect(actualConfigs).toStrictEqual([
+      { name: "eslint/loaded" },
       { basePath: "packages/api", name: "typescript/loaded" },
     ]);
   });

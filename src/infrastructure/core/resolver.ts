@@ -15,6 +15,7 @@ export async function resolver(): Promise<Linter.Config[]> {
     await import("eslint-import-resolver-typescript");
 
   return defineConfig({
+    name: "resolver",
     settings: {
       "import-x/resolver-next": [
         createTypeScriptImportResolver({ alwaysTryTypes: true }),

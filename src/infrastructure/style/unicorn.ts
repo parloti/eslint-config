@@ -15,9 +15,10 @@ export async function unicorn(): Promise<Linter.Config[]> {
   const { configs } = unicornModule.default;
 
   return defineConfig(
+    { ...configs.recommended, files: ["**/*.ts"] },
     {
-      extends: [configs.recommended],
       files: ["**/*.ts"],
+      name: "unicorn/custom",
       rules: {
         "unicorn/comment-content": "off",
         "unicorn/consistent-arrow-return-style": "off",

@@ -15,22 +15,20 @@ export async function vitestE2e(): Promise<Linter.Config[]> {
   const plugin = vitestModule.default;
   const allConfig = plugin.configs.all;
 
-  return defineConfig(
-    { settings: { vitest: { typecheck: true } } },
-    {
-      extends: [allConfig],
-      files: ["tests/e2e/**/*.ts"],
-      name: "vitest-e2e/custom",
-      rules: {
-        "vitest/consistent-test-filename": [
-          "error",
-          { pattern: String.raw`.*\.e2e\.ts$` },
-        ],
-        "vitest/no-hooks": "off",
-        "vitest/prefer-expect-assertions": "off",
-        "vitest/require-mock-type-parameters": "off",
-        "vitest/unbound-method": "off",
-      },
+  return defineConfig({
+    extends: [allConfig],
+    files: ["tests/e2e/**/*.ts"],
+    name: "vitest-e2e/custom",
+    rules: {
+      "vitest/consistent-test-filename": [
+        "error",
+        { pattern: String.raw`.*\.e2e\.ts$` },
+      ],
+      "vitest/no-hooks": "off",
+      "vitest/prefer-expect-assertions": "off",
+      "vitest/require-mock-type-parameters": "off",
+      "vitest/unbound-method": "off",
     },
-  );
+    settings: { vitest: { typecheck: true } },
+  });
 }

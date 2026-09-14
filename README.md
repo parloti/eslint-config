@@ -68,7 +68,7 @@ export default config({
 });
 ```
 
-When `scopedPlugins` is present, it replaces global composition for that call. Each profile loads only its listed modules and applies every resulting flat config entry beneath its `basePath`. Paths may be relative to the ESLint config file or absolute.
+Each profile loads only its listed modules and applies every resulting flat config entry beneath its `basePath`. Global configuration is composed first, followed by profiles in declaration order. Paths may be relative to the ESLint config file or absolute.
 
 Override final rule severities when the repository needs a narrower policy:
 

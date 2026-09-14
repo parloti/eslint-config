@@ -96,10 +96,7 @@ function buildScopedPluginConfigLoaders(
  * ```
  */
 async function config(options: ConfigOptions = {}): Promise<Linter.Config[]> {
-  const pluginConfigs =
-    options.scopedPlugins === void 0
-      ? await loadGlobalPluginConfigs(options)
-      : [];
+  const pluginConfigs = await loadGlobalPluginConfigs(options);
   const scopedPluginConfigs = await Promise.all(
     options.scopedPlugins?.map((scopedPluginConfig) =>
       loadScopedPluginConfigs(options, scopedPluginConfig),

@@ -16,9 +16,12 @@ export async function vitest(): Promise<Linter.Config[]> {
   const allConfig = plugin.configs.all;
 
   return defineConfig(
-    { settings: { vitest: { typecheck: true } } },
     {
-      extends: [allConfig],
+      ...allConfig,
+      files: ["**/*.{spec,test,e2e}.ts"],
+      ignores: ["tests/e2e/**/*.ts"],
+    },
+    {
       files: ["**/*.{spec,test,e2e}.ts"],
       ignores: ["tests/e2e/**/*.ts"],
       name: "vitest/custom",
@@ -32,6 +35,7 @@ export async function vitest(): Promise<Linter.Config[]> {
         "vitest/require-mock-type-parameters": "off",
         "vitest/unbound-method": "off",
       },
+      settings: { vitest: { typecheck: true } },
     },
   );
 }

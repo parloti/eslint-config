@@ -48,7 +48,10 @@ describe("vitest plugin branches", () => {
     expect(settingsConfig).toMatchObject({
       settings: { vitest: { typecheck: true } },
     });
-    expect(presetConfig?.name).toContain(allConfig.name);
+    expect(presetConfig).toMatchObject({
+      files: ["**/*.{spec,test,e2e}.ts"],
+      name: allConfig.name,
+    });
     expect(customConfig).toMatchObject({
       files: ["**/*.{spec,test,e2e}.ts"],
       name: "vitest/custom",

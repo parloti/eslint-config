@@ -8,27 +8,34 @@ import { codeperfect } from "./codeperfect";
 vi.mock(
   import("@codeperfect/eslint-plugin"),
   createMockProxy<typeof codeperfectPluginModuleType>({
-    all: { name: "codeperfect/all" } as CodeperfectPreset,
+    all: {
+      name: "codeperfect/all",
+      rules: { "codeperfect/example": "error" },
+    } as CodeperfectPreset,
   }),
 );
 
 describe("codeperfect config", () => {
-  it("returns the upstream all config", async () => {
+  it("returns the scoped upstream all config", async () => {
     // Arrange
-    const expectedConfigName = "codeperfect/all";
+    const expectedConfigNames = ["codeperfect/all"];
 
     // Act
-    const { hasExpectedConfig } = await (async () => {
+    const { configNames, upstreamConfig } = await (async () => {
       const configs = await codeperfect();
 
       return {
-        hasExpectedConfig: configs.some(
-          (config) => config.name === expectedConfigName,
+        configNames: configs.map((config) => config.name),
+        upstreamConfig: configs.find(
+          (config) => config.name === "codeperfect/all",
         ),
       };
     })();
 
     // Assert
-    expect(hasExpectedConfig).toBe(true);
+    expect(configNames).toStrictEqual(expectedConfigNames);
+    expect(upstreamConfig).toMatchObject({
+      rules: { "codeperfect/example": "error" },
+    });
   });
 });

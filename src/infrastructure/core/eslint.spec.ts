@@ -14,12 +14,14 @@ describe("eslint config", () => {
 
   it("scopes the recommended config to JavaScript and TypeScript files only", () => {
     // Act
-    const [recommended] = eslint();
+    const recommended = eslint().find(
+      (config) => config.rules === js.configs.recommended.rules,
+    );
 
     // Assert
     expect(recommended?.files).toStrictEqual([
       "**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
     ]);
-    expect(recommended?.rules).toStrictEqual(js.configs.recommended.rules);
+    expect(recommended?.rules).toBe(js.configs.recommended.rules);
   });
 });

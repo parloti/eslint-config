@@ -17,7 +17,11 @@ export async function perfectionist(): Promise<Linter.Config[]> {
   const { configs } = await import("eslint-plugin-perfectionist");
 
   return defineConfig(
-    { ...configs["recommended-natural"], files: perfectionistFileGlobs },
+    {
+      ...configs["recommended-natural"],
+      files: perfectionistFileGlobs,
+      name: "perfectionist/recommended-natural",
+    },
     {
       files: perfectionistFileGlobs,
       name: "perfectionist/avoid-conflict-with-eslint",

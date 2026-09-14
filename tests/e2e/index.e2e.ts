@@ -7,11 +7,17 @@ import { collectConfigNames, runWithStderrCapture } from "./helpers";
 
 /** Scoped plugin configuration result used by public contract tests. */
 interface ScopedConfigOutcome {
-  /** Config entries generated for the scoped package. */
-  flatConfigs: Awaited<ReturnType<typeof config>>;
+  /** Global configuration entries. */
+  globalConfigs: Awaited<ReturnType<typeof config>>;
 
-  /** Names read from the scoped config entries. */
-  names: string[];
+  /** Names of global configuration entries. */
+  globalNames: string[];
+
+  /** Configuration entries scoped to packages/api. */
+  scopedConfigs: Awaited<ReturnType<typeof config>>;
+
+  /** Names of configuration entries scoped to packages/api. */
+  scopedNames: string[];
 }
 
 /**
@@ -29,7 +35,19 @@ async function loadScopedConfig(): Promise<ScopedConfigOutcome> {
     ],
   });
 
-  return { flatConfigs, names: collectConfigNames(flatConfigs) };
+  const globalConfigs = flatConfigs.filter(
+    (entry) => entry.basePath === void 0,
+  );
+  const scopedConfigs = flatConfigs.filter(
+    (entry) => entry.basePath === "packages/api",
+  );
+
+  return {
+    globalConfigs,
+    globalNames: collectConfigNames(globalConfigs),
+    scopedConfigs,
+    scopedNames: collectConfigNames(scopedConfigs),
+  };
 }
 
 describe("config factory end-to-end", () => {
@@ -80,21 +98,21 @@ describe("config factory end-to-end", () => {
 
   it("builds package-scoped configs from explicitly selected plugins", async () => {
     // Arrange
-    const expectedNames = ["custom-eslint", "jest/custom"];
-    const excludedNames = ["jsdoc/custom", "vitest/custom"];
+    const expectedGlobalNames = ["jsdoc/custom", "vitest/custom"];
+    const expectedScopedNames = ["custom-eslint", "jest/custom"];
 
     // Act
-    const actualScopedConfig = await loadScopedConfig();
+    const actualConfig = await loadScopedConfig();
 
     // Assert
-    expect(actualScopedConfig.names).toStrictEqual(
-      expect.arrayContaining(expectedNames),
+    expect(actualConfig.globalNames).toStrictEqual(
+      expect.arrayContaining(expectedGlobalNames),
     );
-    expect(actualScopedConfig.names).not.toStrictEqual(
-      expect.arrayContaining(excludedNames),
+    expect(actualConfig.scopedNames).toStrictEqual(
+      expect.arrayContaining(expectedScopedNames),
     );
     expect(
-      actualScopedConfig.flatConfigs.every(
+      actualConfig.scopedConfigs.every(
         (entry) => entry.basePath === "packages/api",
       ),
     ).toBe(true);

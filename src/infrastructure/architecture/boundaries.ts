@@ -104,6 +104,7 @@ function boundaries(): Linter.Config[] {
   const configObject = createConfig({
     files,
     ignores,
+    name: "boundaries",
     rules,
     settings,
   }) as ConfigObject;

@@ -17,7 +17,19 @@ const javascriptFileGlobs = ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"];
  */
 export function eslint(): Linter.Config[] {
   return defineConfig(
+    {
+      linterOptions: {
+        reportUnusedDisableDirectives: "error",
+        reportUnusedInlineConfigs: "error",
+      },
+      name: "linter-options",
+    },
     { ...js.configs.recommended, files: javascriptFileGlobs },
+    {
+      files: javascriptFileGlobs,
+      name: "custom-eslint",
+      rules: { "max-lines": ["error", { max: 300 }] },
+    },
     globalIgnores(
       [
         "**/.angular",
@@ -35,16 +47,5 @@ export function eslint(): Linter.Config[] {
       ],
       "@eslint/js/custom-ignore-directory",
     ),
-    {
-      linterOptions: {
-        reportUnusedDisableDirectives: "error",
-        reportUnusedInlineConfigs: "error",
-      },
-    },
-    {
-      files: javascriptFileGlobs,
-      name: "custom-eslint",
-      rules: { "max-lines": ["error", { max: 300 }] },
-    },
   );
 }
