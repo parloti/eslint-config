@@ -5,4 +5,5 @@ export type {
   DefaultDisabledPluginName,
   PluginName,
   PluginStateOverrides,
+  ScopedPluginConfig,
 } from "./types";

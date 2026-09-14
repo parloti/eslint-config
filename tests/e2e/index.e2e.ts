@@ -5,6 +5,33 @@ import type { ConfigOptions } from "../../src";
 import { config } from "../../src";
 import { collectConfigNames, runWithStderrCapture } from "./helpers";
 
+/** Scoped plugin configuration result used by public contract tests. */
+interface ScopedConfigOutcome {
+  /** Config entries generated for the scoped package. */
+  flatConfigs: Awaited<ReturnType<typeof config>>;
+
+  /** Names read from the scoped config entries. */
+  names: string[];
+}
+
+/**
+ * Builds package-scoped configuration and its named-entry view.
+ * @returns Generated config entries and their names.
+ * @example
+ * ```typescript
+ * await loadScopedConfig();
+ * ```
+ */
+async function loadScopedConfig(): Promise<ScopedConfigOutcome> {
+  const flatConfigs = await config({
+    scopedPlugins: [
+      { basePath: "packages/api", plugins: ["eslint", "jest", "typescript"] },
+    ],
+  });
+
+  return { flatConfigs, names: collectConfigNames(flatConfigs) };
+}
+
 describe("config factory end-to-end", () => {
   it("builds a non-empty flat config with default-enabled modules", async () => {
     // Arrange
@@ -49,6 +76,28 @@ describe("config factory end-to-end", () => {
 
     // Assert
     expect(actualNames).toStrictEqual(expect.arrayContaining(expectedNames));
+  });
+
+  it("builds package-scoped configs from explicitly selected plugins", async () => {
+    // Arrange
+    const expectedNames = ["custom-eslint", "jest/custom"];
+    const excludedNames = ["jsdoc/custom", "vitest/custom"];
+
+    // Act
+    const actualScopedConfig = await loadScopedConfig();
+
+    // Assert
+    expect(actualScopedConfig.names).toStrictEqual(
+      expect.arrayContaining(expectedNames),
+    );
+    expect(actualScopedConfig.names).not.toStrictEqual(
+      expect.arrayContaining(excludedNames),
+    );
+    expect(
+      actualScopedConfig.flatConfigs.every(
+        (entry) => entry.basePath === "packages/api",
+      ),
+    ).toBe(true);
   });
 
   it("swallows optional plugin load failures with guidance", async () => {

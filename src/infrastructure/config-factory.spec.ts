@@ -145,4 +145,94 @@ describe("config-factory", () => {
     expect(reportDeprecatedBoundariesOptionMock).toHaveBeenCalledTimes(1);
     expect(actualConfigs).toStrictEqual([{ name: "eslint/loaded" }]);
   });
+
+  it("loads only explicitly selected plugins for a scoped package", async () => {
+    // Arrange
+    vi.doMock(
+      import("../domain"),
+      createMockProxy<typeof domainModuleType>({
+        moduleTaxonomy: mockedModuleTaxonomy,
+      }),
+    );
+
+    vi.doMock(
+      import("./plugin-loaders"),
+      createMockProxy<typeof pluginLoadersModuleType>({
+        pluginLoaders: mockedPluginLoaders,
+      }),
+    );
+
+    vi.doMock(import("./plugin-state"), () => {
+      return { isPluginEnabled: () => true };
+    });
+
+    vi.doMock(import("./utilities"), () => {
+      return { loadPluginConfig: vi.fn(loadEnabledPluginConfig) };
+    });
+
+    vi.doMock(import("./diagnostics"), () => {
+      return { reportDeprecatedBoundariesOption: vi.fn() };
+    });
+
+    // Act
+    const actualConfigs = await (async () => {
+      const { config } = await import("./config-factory");
+
+      return config({
+        scopedPlugins: [{ basePath: "packages/api", plugins: ["typescript"] }],
+      });
+    })();
+
+    // Assert
+    expect(actualConfigs).toStrictEqual([
+      { basePath: "packages/api", name: "typescript/loaded" },
+    ]);
+  });
+
+  it("preserves profile order while scoping each selected plugin", async () => {
+    // Arrange
+    vi.doMock(
+      import("../domain"),
+      createMockProxy<typeof domainModuleType>({
+        moduleTaxonomy: mockedModuleTaxonomy,
+      }),
+    );
+
+    vi.doMock(
+      import("./plugin-loaders"),
+      createMockProxy<typeof pluginLoadersModuleType>({
+        pluginLoaders: mockedPluginLoaders,
+      }),
+    );
+
+    vi.doMock(import("./plugin-state"), () => {
+      return { isPluginEnabled: () => false };
+    });
+
+    vi.doMock(import("./utilities"), () => {
+      return { loadPluginConfig: vi.fn(loadEnabledPluginConfig) };
+    });
+
+    vi.doMock(import("./diagnostics"), () => {
+      return { reportDeprecatedBoundariesOption: vi.fn() };
+    });
+
+    // Act
+    const actualConfigs = await (async () => {
+      const { config } = await import("./config-factory");
+
+      return config({
+        scopedPlugins: [
+          { basePath: "packages/api", plugins: ["typescript"] },
+          { basePath: "packages/web", plugins: ["eslint"] },
+        ],
+      });
+    })();
+
+    // Assert
+    expect(actualConfigs).toStrictEqual([
+      { basePath: "packages/api", name: "typescript/loaded" },
+      { basePath: "packages/web", name: "eslint/loaded" },
+    ]);
+  });
 });

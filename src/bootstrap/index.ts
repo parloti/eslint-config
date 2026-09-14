@@ -1,2 +1,6 @@
 export { config } from "../infrastructure";
-export type { ConfigOptions, PluginStateOverrides } from "../infrastructure";
+export type {
+  ConfigOptions,
+  PluginStateOverrides,
+  ScopedPluginConfig,
+} from "../infrastructure";

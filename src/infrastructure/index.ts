@@ -3,6 +3,7 @@ export type {
   ConfigOptions,
   PluginName,
   PluginStateOverrides,
+  ScopedPluginConfig,
 } from "../domain";
 export { boundaries, importX } from "./architecture";
 export { config } from "./config-factory";

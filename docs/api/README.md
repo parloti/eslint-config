@@ -4,7 +4,15 @@
 
 # @codeperfect/eslint-config
 
-## Modules
+## Interfaces
 
-- [configs](configs/README.md)
-- [index](index/README.md)
+- [ConfigOptions](interfaces/ConfigOptions.md)
+- [ScopedPluginConfig](interfaces/ScopedPluginConfig.md)
+
+## Type Aliases
+
+- [PluginStateOverrides](type-aliases/PluginStateOverrides.md)
+
+## Functions
+
+- [config](functions/config.md)

@@ -17,6 +17,9 @@ type BoundariesElementTypesRuleEntry = [
 interface ConfigOptions {
   /** Explicit plugin state overrides keyed by public plugin name. */
   plugins?: PluginStateOverrides;
+
+  /** Package-scoped plugin profiles for monorepo configuration. */
+  scopedPlugins?: readonly ScopedPluginConfig[];
 }
 
 /** Type definition for rule data. */
@@ -53,6 +56,14 @@ type PluginStateOverrides = Partial<
 
 /** Type definition for rule data. */
 type RuntimePluginName = "angular-eslint";
+/** Explicit plugin selection scoped to one package root. */
+interface ScopedPluginConfig {
+  /** Base directory to which the selected flat configs apply. */
+  basePath: string;
+
+  /** Plugins explicitly included for the package. */
+  plugins: readonly PluginName[];
+}
 /** Type definition for rule data. */
 type StylePluginName =
   "package-json" | "perfectionist" | "prettier" | "stylistic" | "unicorn";
@@ -67,4 +78,5 @@ export type {
   DefaultDisabledPluginName,
   PluginName,
   PluginStateOverrides,
+  ScopedPluginConfig,
 };

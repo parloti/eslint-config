@@ -52,6 +52,24 @@ export default config({
 
 `jasmine`, `jest`, and `vitest-e2e` are disabled by default. All other documented modules are enabled by default unless explicitly set to `false`.
 
+Configure monorepo packages with their own explicit module selections:
+
+```typescript
+import { config } from "@codeperfect/eslint-config";
+
+export default config({
+  scopedPlugins: [
+    { basePath: "packages/api", plugins: ["eslint", "typescript", "vitest"] },
+    {
+      basePath: "packages/web",
+      plugins: ["angular-eslint", "eslint", "typescript"],
+    },
+  ],
+});
+```
+
+When `scopedPlugins` is present, it replaces global composition for that call. Each profile loads only its listed modules and applies every resulting flat config entry beneath its `basePath`. Paths may be relative to the ESLint config file or absolute.
+
 Override final rule severities when the repository needs a narrower policy:
 
 ```typescript
