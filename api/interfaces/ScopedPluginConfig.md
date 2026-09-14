@@ -6,7 +6,7 @@
 
 # Interface: ScopedPluginConfig
 
-Defined in: [domain/types.ts:60](https://github.com/parloti/eslint-config/blob/d947facccee8b8ecd635e913e7b9dad1f98993a8/src/domain/types.ts#L60)
+Defined in: [domain/types.ts:60](https://github.com/parloti/eslint-config/blob/225d0137a492af7e6462ea8c075bfc2051c3c97e/src/domain/types.ts#L60)
 
 Explicit plugin selection scoped to one package root.
 
@@ -16,7 +16,7 @@ Explicit plugin selection scoped to one package root.
 
 > **basePath**: `string`
 
-Defined in: [domain/types.ts:62](https://github.com/parloti/eslint-config/blob/d947facccee8b8ecd635e913e7b9dad1f98993a8/src/domain/types.ts#L62)
+Defined in: [domain/types.ts:62](https://github.com/parloti/eslint-config/blob/225d0137a492af7e6462ea8c075bfc2051c3c97e/src/domain/types.ts#L62)
 
 Base directory to which the selected flat configs apply.
 
@@ -26,6 +26,6 @@ Base directory to which the selected flat configs apply.
 
 > **plugins**: readonly `PluginName`[]
 
-Defined in: [domain/types.ts:65](https://github.com/parloti/eslint-config/blob/d947facccee8b8ecd635e913e7b9dad1f98993a8/src/domain/types.ts#L65)
+Defined in: [domain/types.ts:65](https://github.com/parloti/eslint-config/blob/225d0137a492af7e6462ea8c075bfc2051c3c97e/src/domain/types.ts#L65)
 
 Plugins explicitly included for the package.
