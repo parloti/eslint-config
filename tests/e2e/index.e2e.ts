@@ -172,21 +172,6 @@ describe("config factory end-to-end", () => {
     expect(actualFlatConfigs).toStrictEqual([]);
   });
 
-  it("reports the deprecated boundaries option on stderr", async () => {
-    // Act
-    const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
-      await runWithStderrCapture(() => {
-        return config({ boundaries: {} } as unknown as ConfigOptions);
-      });
-
-    // Assert
-    expect(actualFlatConfigs.length).toBeGreaterThan(0);
-    expect(actualStderrOutput).toContain(
-      "Deprecated config option ignored: boundaries",
-    );
-    expect(actualStderrOutput).toContain('plugins: { "boundaries": false }');
-  });
-
   it("reports redundant plugin-state overrides on stderr", async () => {
     // Act
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =

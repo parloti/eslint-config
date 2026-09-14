@@ -28,20 +28,6 @@ function isMissingModuleError(error: unknown): boolean {
 }
 
 /**
- * Reports use of the removed `config({ boundaries: ... })` input.
- * @example
- * ```typescript
- * reportDeprecatedBoundariesOption();
- * ```
- */
-function reportDeprecatedBoundariesOption(): void {
-  const header = `${ansi.bold}${ansi.yellow}Deprecated config option ignored: boundaries${ansi.reset}`;
-  const detail = `${ansi.yellow}The boundaries topology is package-owned and no longer configurable through config options.${ansi.reset}`;
-  const hint = `${ansi.cyan}Hint:${ansi.reset} Remove \`boundaries\` from config({...}) and rely on the built-in src entrypoint/bootstrap/presentation/infrastructure/application/domain/shared model, or disable the module with plugins: { "boundaries": false }.`;
-  process.stderr.write(`${[header, detail, hint].join("\n")}\n`);
-}
-
-/**
  * Reports a plugin loading issue using runtime-aware messaging.
  * @param pluginName Input pluginName value.
  * @param error Input error value.
@@ -90,8 +76,4 @@ function reportRedundantPluginState(
   process.stderr.write(`${[header, detail, hint].join("\n")}\n`);
 }
 
-export {
-  reportDeprecatedBoundariesOption,
-  reportPluginLoadIssue,
-  reportRedundantPluginState,
-};
+export { reportPluginLoadIssue, reportRedundantPluginState };

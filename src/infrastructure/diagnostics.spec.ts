@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  reportDeprecatedBoundariesOption,
   reportPluginLoadIssue,
   reportRedundantPluginState,
 } from "./diagnostics";
@@ -131,23 +130,6 @@ describe("diagnostics", () => {
       // Assert
       expect(outcome.writeCallCount).toBe(1);
       expect(outcome.message).toContain(expectedMessage);
-    });
-  });
-
-  describe(reportDeprecatedBoundariesOption, () => {
-    it("reports removed boundaries config input guidance", () => {
-      // Arrange
-      const expectedMessage = "Deprecated config option ignored: boundaries";
-
-      // Act
-      const outcome = captureStderrOutcome(() => {
-        reportDeprecatedBoundariesOption();
-      });
-
-      // Assert
-      expect(outcome.writeCallCount).toBe(1);
-      expect(outcome.message).toContain(expectedMessage);
-      expect(outcome.message).toContain('plugins: { "boundaries": false }');
     });
   });
 });

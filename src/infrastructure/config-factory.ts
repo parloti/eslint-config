@@ -5,7 +5,6 @@ import { defineConfig } from "eslint/config";
 import type { ConfigOptions, ScopedPluginConfig } from "../domain";
 
 import { moduleTaxonomy } from "../domain";
-import { reportDeprecatedBoundariesOption } from "./diagnostics";
 import { pluginLoaders } from "./plugin-loaders";
 import { isPluginEnabled } from "./plugin-state";
 import { loadPluginConfig } from "./utilities";
@@ -97,10 +96,6 @@ function buildScopedPluginConfigLoaders(
  * ```
  */
 async function config(options: ConfigOptions = {}): Promise<Linter.Config[]> {
-  if (Object.hasOwn(options, "boundaries")) {
-    reportDeprecatedBoundariesOption();
-  }
-
   const pluginConfigs =
     options.scopedPlugins === void 0
       ? await loadGlobalPluginConfigs(options)

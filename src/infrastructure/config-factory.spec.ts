@@ -84,10 +84,6 @@ describe("config-factory", () => {
       return { loadPluginConfig: loadPluginConfigMock };
     });
 
-    vi.doMock(import("./diagnostics"), () => {
-      return { reportDeprecatedBoundariesOption: vi.fn() };
-    });
-
     // Act
     const actualConfigs = await (async () => {
       const { config } = await import("./config-factory");
@@ -102,8 +98,6 @@ describe("config-factory", () => {
 
   it("builds configs for enabled plugins and reports deprecated boundaries", async () => {
     // Arrange
-    const reportDeprecatedBoundariesOptionMock = vi.fn();
-
     vi.doMock(
       import("../domain"),
       createMockProxy<typeof domainModuleType>({
@@ -128,12 +122,6 @@ describe("config-factory", () => {
       return { loadPluginConfig: vi.fn(loadEnabledPluginConfig) };
     });
 
-    vi.doMock(import("./diagnostics"), () => {
-      return {
-        reportDeprecatedBoundariesOption: reportDeprecatedBoundariesOptionMock,
-      };
-    });
-
     // Act
     const actualConfigs = await (async () => {
       const { config } = await import("./config-factory");
@@ -142,7 +130,6 @@ describe("config-factory", () => {
     })();
 
     // Assert
-    expect(reportDeprecatedBoundariesOptionMock).toHaveBeenCalledTimes(1);
     expect(actualConfigs).toStrictEqual([{ name: "eslint/loaded" }]);
   });
 
@@ -168,10 +155,6 @@ describe("config-factory", () => {
 
     vi.doMock(import("./utilities"), () => {
       return { loadPluginConfig: vi.fn(loadEnabledPluginConfig) };
-    });
-
-    vi.doMock(import("./diagnostics"), () => {
-      return { reportDeprecatedBoundariesOption: vi.fn() };
     });
 
     // Act
@@ -211,10 +194,6 @@ describe("config-factory", () => {
 
     vi.doMock(import("./utilities"), () => {
       return { loadPluginConfig: vi.fn(loadEnabledPluginConfig) };
-    });
-
-    vi.doMock(import("./diagnostics"), () => {
-      return { reportDeprecatedBoundariesOption: vi.fn() };
     });
 
     // Act
