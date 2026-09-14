@@ -60,27 +60,21 @@ describe("comments config", () => {
     );
 
     // Act
-    const { customConfig, recommendedConfig } = await (async () => {
+    const actualCommentsConfig = await (async () => {
       const configs = await loadCommentsConfigs();
 
-      return { customConfig: configs.at(1), recommendedConfig: configs.at(0) };
+      return configs.at(0);
     })();
 
     // Assert
-    expect(recommendedConfig?.rules).toMatchObject({
-      "@eslint-community/eslint-comments/no-unused-disable": "error",
+    expect(actualCommentsConfig).toMatchObject({
+      files: ["**/*.ts"],
+      rules: { "@eslint-community/eslint-comments/no-unused-disable": "error" },
     });
-    expect(customConfig).toMatchObject({
-      name: "@eslint-community/eslint-comments/custom",
-      rules: {
-        "@eslint-community/eslint-comments/disable-enable-pair": "off",
-        "@eslint-community/eslint-comments/no-inline-disable": "error",
-      },
-    });
-    expect(customConfig?.rules).not.toHaveProperty(
-      "@eslint-community/eslint-comments/no-unused-disable",
+    expect(actualCommentsConfig?.rules).not.toHaveProperty(
+      "@eslint-community/eslint-comments/no-inline-disable",
     );
-    expect(customConfig?.rules).not.toHaveProperty(
+    expect(actualCommentsConfig?.rules).not.toHaveProperty(
       "@eslint-community/eslint-comments/no-use",
     );
   });
@@ -90,17 +84,14 @@ describe("comments config", () => {
     mockCommentsModules({}, {});
 
     // Act
-    const { configsLength, customConfig } = await (async () => {
+    const actualCommentsConfig = await (async () => {
       const configs = await loadCommentsConfigs();
 
-      return { configsLength: configs.length, customConfig: configs.at(1) };
+      return configs.at(0);
     })();
 
     // Assert
-    expect(configsLength).toBe(2);
-    expect(customConfig).toMatchObject({
-      name: "@eslint-community/eslint-comments/custom",
-      rules: { "@eslint-community/eslint-comments/disable-enable-pair": "off" },
-    });
+    expect(actualCommentsConfig).toMatchObject({ files: ["**/*.ts"] });
+    expect(actualCommentsConfig).not.toHaveProperty("rules");
   });
 });
