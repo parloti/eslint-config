@@ -19,11 +19,11 @@ export async function vitest(): Promise<Linter.Config[]> {
     {
       ...allConfig,
       files: ["**/*.{spec,test,e2e}.ts"],
-      ignores: ["tests/e2e/**/*.ts"],
+      ignores: ["**/tests/e2e/**/*.ts"],
     },
     {
       files: ["**/*.{spec,test,e2e}.ts"],
-      ignores: ["tests/e2e/**/*.ts"],
+      ignores: ["**/tests/e2e/**/*.ts"],
       name: "vitest/custom",
       rules: {
         "vitest/consistent-test-filename": [
