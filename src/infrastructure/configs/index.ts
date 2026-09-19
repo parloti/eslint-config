@@ -1,6 +1,6 @@
 export { boundaries, importX } from "../architecture";
-export { codeperfect, eslint, resolver, typescript } from "../core";
-export { comments, jsdoc } from "../docs";
+export { codeperfect, eslint, json, resolver, typescript } from "../core";
+export { comments, jsdoc, markdown } from "../docs";
 export { angularEslint } from "../runtime";
 export { rxjsX } from "../rxjs-x";
 export {

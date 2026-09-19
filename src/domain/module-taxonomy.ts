@@ -25,11 +25,13 @@ interface ModuleTaxonomyEntry {
 const moduleTaxonomy = [
   { category: "core", pluginName: "codeperfect" },
   { category: "core", pluginName: "eslint" },
+  { category: "core", pluginName: "json" },
   { category: "core", pluginName: "resolver" },
   { category: "core", pluginName: "typescript" },
   { category: "architecture", pluginName: "import-x" },
   { category: "documentation", pluginName: "comments" },
   { category: "documentation", pluginName: "jsdoc" },
+  { category: "documentation", pluginName: "markdown" },
   { category: "testing", pluginName: "jasmine" },
   { category: "testing", pluginName: "jest" },
   { category: "testing", pluginName: "playwright" },

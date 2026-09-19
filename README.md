@@ -132,11 +132,13 @@ This order is intentional and validated in tests.
 | Module          | Package                                           | Notes                                                  |
 | --------------- | ------------------------------------------------- | ------------------------------------------------------ |
 | `eslint`        | `@eslint/js`                                      | Required baseline rules.                               |
+| `json`          | `@eslint/json`                                    | Required JSON rules.                                   |
 | `resolver`      | `eslint-import-resolver-typescript`               | Optional resolver integration used by import tooling.  |
 | `typescript`    | `typescript-eslint`                               | Required TypeScript rules and parser support.          |
 | `import-x`      | `eslint-plugin-import-x`                          | Optional import analysis module.                       |
 | `comments`      | `@eslint-community/eslint-plugin-eslint-comments` | Optional ESLint directive-comment rules.               |
 | `jsdoc`         | `eslint-plugin-jsdoc`                             | Optional JSDoc rules and package-level JSDoc defaults. |
+| `markdown`      | `@eslint/markdown`                                | Required Markdown rules.                               |
 | `jasmine`       | `eslint-plugin-jasmine`                           | Optional Jasmine rules. Disabled by default.           |
 | `jest`          | `eslint-plugin-jest`                              | Optional Jest rules. Disabled by default.              |
 | `playwright`    | `eslint-plugin-playwright`                        | Optional Playwright rules.                             |

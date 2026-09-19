@@ -3,7 +3,11 @@ import { describe, expect, it, vi } from "vitest";
 import type { ConfigOptions } from "../../src";
 
 import { config } from "../../src";
-import { collectConfigNames, runWithStderrCapture } from "./helpers";
+import {
+  collectConfigNames,
+  hasJsonRecommendedRules,
+  runWithStderrCapture,
+} from "./helpers";
 
 /** Scoped plugin configuration result used by public contract tests. */
 interface ScopedConfigOutcome {
@@ -56,6 +60,7 @@ describe("config factory end-to-end", () => {
     const expectedNames = [
       "custom-eslint",
       "jsdoc/custom",
+      "markdown/recommended",
       "import-x/custom-typescript",
       "vitest/custom",
       "perfectionist/avoid-conflict-with-eslint",
@@ -68,13 +73,20 @@ describe("config factory end-to-end", () => {
     ];
 
     // Act
-    const actualNames = collectConfigNames(await config());
+    const [actualFlatConfigs, actualNames] = await (async () => {
+      const flatConfigs = await config();
+
+      return [flatConfigs, collectConfigNames(flatConfigs)] as const;
+    })();
 
     // Assert
     expect(actualNames).toStrictEqual(expect.arrayContaining(expectedNames));
     expect(actualNames).not.toStrictEqual(
       expect.arrayContaining(excludedNames),
     );
+    expect(
+      actualFlatConfigs.some((entry) => hasJsonRecommendedRules(entry)),
+    ).toBe(true);
   });
 
   it("enables opt-in plugins when explicitly requested", async () => {
@@ -171,6 +183,8 @@ describe("config factory end-to-end", () => {
       eslint: false,
       "import-x": false,
       jsdoc: false,
+      json: false,
+      markdown: false,
       "package-json": false,
       perfectionist: false,
       playwright: false,

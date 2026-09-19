@@ -23,7 +23,8 @@ interface ConfigOptions {
 }
 
 /** Type definition for rule data. */
-type CorePluginName = "codeperfect" | "eslint" | "resolver" | "typescript";
+type CorePluginName =
+  "codeperfect" | "eslint" | "json" | "resolver" | "typescript";
 
 /** Plugins that are disabled by default and can only be explicitly enabled. */
 type DefaultDisabledPluginName =
@@ -33,7 +34,7 @@ type DefaultDisabledPluginName =
 type DefaultEnabledPluginName = Exclude<PluginName, DefaultDisabledPluginName>;
 
 /** Type definition for rule data. */
-type DocumentationPluginName = "comments" | "jsdoc";
+type DocumentationPluginName = "comments" | "jsdoc" | "markdown";
 
 /** Type definition for rule data. */
 type DomainPluginName = "rxjs-x";

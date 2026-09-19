@@ -55,6 +55,23 @@ async function createLinter(options: ConfigOptions = {}): Promise<ESLint> {
 }
 
 /**
+ * Detects a config entry carrying the \@eslint/json recommended rules.
+ * `defineConfig`-derived entries carry auto-generated names, so they are
+ * identified by rules content instead of by name.
+ * @param flatConfig The config entry to inspect.
+ * @returns Whether the entry carries the recommended JSON rules.
+ * @example
+ * ```typescript
+ * hasJsonRecommendedRules(flatConfigs[0]);
+ * ```
+ */
+function hasJsonRecommendedRules(flatConfig: Linter.Config): boolean {
+  const rules = flatConfig.rules ?? {};
+
+  return Object.keys(rules).some((ruleName) => ruleName.startsWith("json/"));
+}
+
+/**
  * Lints a fixture code string through the generated flat config.
  * @param fixtureCode The fixture code under test.
  * @param filePath The fixture file path used for project resolution.
@@ -128,6 +145,7 @@ async function runWithStderrCapture<T>(
 
 export {
   collectConfigNames,
+  hasJsonRecommendedRules,
   lintFixtureCode,
   lintFixtureFiles,
   runWithStderrCapture,

@@ -8,11 +8,13 @@ describe("moduleTaxonomy", () => {
     const expectedPluginNames = [
       "codeperfect",
       "eslint",
+      "json",
       "resolver",
       "typescript",
       "import-x",
       "comments",
       "jsdoc",
+      "markdown",
       "jasmine",
       "jest",
       "playwright",
