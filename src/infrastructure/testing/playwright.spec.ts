@@ -46,61 +46,50 @@ function mockPlaywrightModule(plugin: IPlaywrightPluginMock): void {
 }
 
 describe("playwright config", () => {
-  it("returns repo-owned errors that are not already in the recommended preset", async () => {
+  it("returns the recommended preset scoped to e2e files", async () => {
     // Arrange
     const recommendedConfig: Linter.Config = {
-      rules: { "playwright/no-focused-test": "error" },
+      name: "playwright/flat-recommended",
+      rules: { "playwright/expect-expect": "error" },
     };
     mockPlaywrightModule({
       configs: { "flat/recommended": recommendedConfig },
-      rules: { "": {}, "expect-expect": {}, "no-focused-test": {} },
+      rules: {},
     });
 
     // Act
-    const { customConfig } = await (async () => {
+    const { recommendedPreset } = await (async () => {
       const configs = await loadPlaywrightConfigs();
 
       return {
-        customConfig: configs.find(
-          (config) => config.name === "playwright/custom-error",
+        recommendedPreset: configs.find(
+          (config) => config.name === recommendedConfig.name,
         ),
       };
     })();
 
     // Assert
-    expect(customConfig).toMatchObject({
+    expect(recommendedPreset).toMatchObject({
       files: ["tests/e2e/**/*.ts"],
-      name: "playwright/custom-error",
+      name: recommendedConfig.name,
       rules: { "playwright/expect-expect": "error" },
     });
-    expect(customConfig?.rules).not.toHaveProperty(
-      "playwright/no-focused-test",
-    );
   });
 
-  it("treats missing recommended rules as an empty rule set", async () => {
+  it("does not emit extra custom-error configs", async () => {
     // Arrange
-    const recommendedConfig: Linter.Config = {};
     mockPlaywrightModule({
-      configs: { "flat/recommended": recommendedConfig },
-      rules: { "expect-expect": {}, "no-focused-test": {} },
+      configs: { "flat/recommended": { rules: {} } },
+      rules: {},
     });
 
     // Act
-    const { customConfig } = await (async () => {
-      const configs = await loadPlaywrightConfigs();
-
-      return {
-        customConfig: configs.find(
-          (config) => config.name === "playwright/custom-error",
-        ),
-      };
-    })();
+    const actualConfigs = await loadPlaywrightConfigs();
 
     // Assert
-    expect(customConfig?.rules).toMatchObject({
-      "playwright/expect-expect": "error",
-      "playwright/no-focused-test": "error",
-    });
+    expect(actualConfigs).toHaveLength(1);
+    expect(
+      actualConfigs.some((config) => config.name === "playwright/custom-error"),
+    ).toBe(false);
   });
 });

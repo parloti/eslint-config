@@ -12,29 +12,12 @@ import { defineConfig } from "eslint/config";
  */
 async function playwright(): Promise<Linter.Config[]> {
   const playwrightModule = await import("eslint-plugin-playwright");
-  const { configs, rules } = playwrightModule.default;
+  const { configs } = playwrightModule.default;
 
-  const customIgnore = new Set([""]);
-
-  const { rules: recommendedRules = {} } = configs["flat/recommended"];
-  const allConfigs = new Set(Object.keys({ ...recommendedRules }));
-
-  const customError = Object.fromEntries(
-    Object.keys(rules)
-      .filter((rule) => !customIgnore.has(rule))
-      .map((rule) => `playwright/${rule}`)
-      .filter((rule) => !allConfigs.has(rule))
-      .map((rule) => [rule, "error"] as const),
-  );
-
-  return defineConfig(
-    { ...configs["flat/recommended"], files: ["tests/e2e/**/*.ts"] },
-    {
-      files: ["tests/e2e/**/*.ts"],
-      name: "playwright/custom-error",
-      rules: customError,
-    },
-  );
+  return defineConfig({
+    ...configs["flat/recommended"],
+    files: ["tests/e2e/**/*.ts"],
+  });
 }
 
 export { playwright };

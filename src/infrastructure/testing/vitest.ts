@@ -13,11 +13,10 @@ import { defineConfig } from "eslint/config";
 export async function vitest(): Promise<Linter.Config[]> {
   const vitestModule = await import("@vitest/eslint-plugin");
   const plugin = vitestModule.default;
-  const allConfig = plugin.configs.all;
 
   return defineConfig(
     {
-      ...allConfig,
+      ...plugin.configs.recommended,
       files: ["**/*.{spec,test,e2e}.ts"],
       ignores: ["**/tests/e2e/**/*.ts"],
     },

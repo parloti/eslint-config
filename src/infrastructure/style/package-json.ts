@@ -13,5 +13,9 @@ import { defineConfig } from "eslint/config";
 export async function packageJson(): Promise<Linter.Config[]> {
   const { default: pluginModule } = await import("eslint-package-json");
 
-  return defineConfig(pluginModule.configs.recommended);
+  return defineConfig(pluginModule.configs.recommended, {
+    files: ["packages/*/package.json", "apps/*/package.json"],
+    name: "monorepo support",
+    rules: { "package-json/no-nested-exports": "off" },
+  });
 }

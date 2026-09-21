@@ -18,16 +18,16 @@ async function loadVitestConfigs(): Promise<Linter.Config[]> {
 }
 
 describe("vitest plugin branches", () => {
-  it("returns repo-owned configs when the all preset is available", async () => {
+  it("returns repo-owned configs when the recommended preset is available", async () => {
     // Arrange
-    const allConfig = {
-      name: "vitest/all",
-    } as (typeof VitestPluginModule)["default"]["configs"]["all"];
+    const recommendedConfig = {
+      name: "vitest/recommended",
+    } as (typeof VitestPluginModule)["default"]["configs"]["recommended"];
 
     vi.doMock(
       import("@vitest/eslint-plugin"),
       createMockProxy<typeof VitestPluginModule>({
-        default: { configs: { all: allConfig } },
+        default: { configs: { recommended: recommendedConfig } },
       }),
     );
 
@@ -38,7 +38,7 @@ describe("vitest plugin branches", () => {
       return {
         customConfig: configs.find((config) => config.name === "vitest/custom"),
         presetConfig: configs.find(
-          (config) => config.name?.includes("vitest/all") === true,
+          (config) => config.name?.includes("vitest/recommended") === true,
         ),
         settingsConfig: configs.find((config) => config.settings !== void 0),
       };
@@ -50,10 +50,12 @@ describe("vitest plugin branches", () => {
     });
     expect(presetConfig).toMatchObject({
       files: ["**/*.{spec,test,e2e}.ts"],
-      name: allConfig.name,
+      ignores: ["**/tests/e2e/**/*.ts"],
+      name: recommendedConfig.name,
     });
     expect(customConfig).toMatchObject({
       files: ["**/*.{spec,test,e2e}.ts"],
+      ignores: ["**/tests/e2e/**/*.ts"],
       name: "vitest/custom",
       rules: {
         "vitest/consistent-test-filename": [

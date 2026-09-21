@@ -18,7 +18,7 @@ export async function stylistic(): Promise<Linter.Config[]> {
   const { default: plugin } = stylisticModule;
 
   return defineConfig(
-    { ...plugin.configs.all, files: stylisticFileGlobs, name: "stylistic/all" },
+    { ...plugin.configs.recommended, files: stylisticFileGlobs },
     {
       files: stylisticFileGlobs,
       name: "stylistic/custom",
