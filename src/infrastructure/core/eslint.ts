@@ -38,6 +38,7 @@ export function eslint(): Linter.Config[] {
         "**/dist/",
         "**/logs/",
         "**/playwright-reports/",
+        "**/reports/",
         "**/temp/",
         "**/test-results/",
         "**/tmp/",
