@@ -6,9 +6,10 @@ import { rxjsX } from "./rxjs-x";
 
 vi.mock(
   import("eslint-plugin-rxjs-x"),
-  createMockProxy<typeof EslintPluginRxjsXModule>({
-    default: { configs: { strict: {} } },
-  }),
+  () =>
+    ({
+      default: { configs: { strict: {} } },
+    }) as unknown as typeof EslintPluginRxjsXModule,
 );
 
 describe("rxjs-x config", () => {

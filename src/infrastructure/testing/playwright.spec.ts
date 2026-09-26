@@ -39,9 +39,7 @@ async function loadPlaywrightConfigs(): Promise<Linter.Config[]> {
 function mockPlaywrightModule(plugin: IPlaywrightPluginMock): void {
   vi.doMock(
     import("eslint-plugin-playwright"),
-    createMockProxy<typeof playwrightPluginModuleType>({
-      default: plugin,
-    } as typeof playwrightPluginModuleType),
+    () => ({ default: plugin }) as unknown as typeof playwrightPluginModuleType,
   );
 }
 

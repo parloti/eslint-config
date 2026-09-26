@@ -1,4 +1,3 @@
-import type * as eslintCommentsModuleType from "@eslint-community/eslint-plugin-eslint-comments";
 import type { RuleDefinition } from "@eslint/core";
 import type { Linter } from "eslint";
 
@@ -31,10 +30,9 @@ function mockCommentsModules(
   recommended: Linter.Config,
   rules: Record<string, RuleDefinition>,
 ): void {
-  vi.doMock(
-    import("@eslint-community/eslint-plugin-eslint-comments"),
-    createMockProxy<typeof eslintCommentsModuleType>({ rules }),
-  );
+  vi.doMock(import("@eslint-community/eslint-plugin-eslint-comments"), () => ({
+    rules,
+  }));
   vi.doMock(
     import("@eslint-community/eslint-plugin-eslint-comments/configs"),
     () => {

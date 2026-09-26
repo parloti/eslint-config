@@ -2,7 +2,6 @@ import type { Linter } from "eslint";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as domainModuleType from "../domain";
 import type { ConfigOptions, moduleTaxonomy } from "../domain";
 import type * as pluginLoadersModuleType from "./plugin-loaders";
 
@@ -60,18 +59,16 @@ describe("config-factory", () => {
 
   it("returns an empty array when plugin state disables every module", async () => {
     // Arrange
-    vi.doMock(
-      import("../domain"),
-      createMockProxy<typeof domainModuleType>({
-        moduleTaxonomy: mockedModuleTaxonomy,
-      }),
-    );
+    vi.doMock(import("../domain"), () => ({
+      moduleTaxonomy: mockedModuleTaxonomy,
+    }));
 
     vi.doMock(
       import("./plugin-loaders"),
-      createMockProxy<typeof pluginLoadersModuleType>({
-        pluginLoaders: mockedPluginLoaders,
-      }),
+      () =>
+        ({
+          pluginLoaders: mockedPluginLoaders,
+        }) as unknown as typeof pluginLoadersModuleType,
     );
 
     vi.doMock(import("./plugin-state"), () => {
@@ -98,18 +95,16 @@ describe("config-factory", () => {
 
   it("builds configs for enabled plugins and reports deprecated boundaries", async () => {
     // Arrange
-    vi.doMock(
-      import("../domain"),
-      createMockProxy<typeof domainModuleType>({
-        moduleTaxonomy: mockedModuleTaxonomy,
-      }),
-    );
+    vi.doMock(import("../domain"), () => ({
+      moduleTaxonomy: mockedModuleTaxonomy,
+    }));
 
     vi.doMock(
       import("./plugin-loaders"),
-      createMockProxy<typeof pluginLoadersModuleType>({
-        pluginLoaders: mockedPluginLoaders,
-      }),
+      () =>
+        ({
+          pluginLoaders: mockedPluginLoaders,
+        }) as unknown as typeof pluginLoadersModuleType,
     );
 
     vi.doMock(import("./plugin-state"), () => {
@@ -135,18 +130,16 @@ describe("config-factory", () => {
 
   it("loads global and explicitly selected scoped plugins", async () => {
     // Arrange
-    vi.doMock(
-      import("../domain"),
-      createMockProxy<typeof domainModuleType>({
-        moduleTaxonomy: mockedModuleTaxonomy,
-      }),
-    );
+    vi.doMock(import("../domain"), () => ({
+      moduleTaxonomy: mockedModuleTaxonomy,
+    }));
 
     vi.doMock(
       import("./plugin-loaders"),
-      createMockProxy<typeof pluginLoadersModuleType>({
-        pluginLoaders: mockedPluginLoaders,
-      }),
+      () =>
+        ({
+          pluginLoaders: mockedPluginLoaders,
+        }) as unknown as typeof pluginLoadersModuleType,
     );
 
     vi.doMock(import("./plugin-state"), () => {
@@ -177,18 +170,16 @@ describe("config-factory", () => {
 
   it("preserves profile order while scoping each selected plugin", async () => {
     // Arrange
-    vi.doMock(
-      import("../domain"),
-      createMockProxy<typeof domainModuleType>({
-        moduleTaxonomy: mockedModuleTaxonomy,
-      }),
-    );
+    vi.doMock(import("../domain"), () => ({
+      moduleTaxonomy: mockedModuleTaxonomy,
+    }));
 
     vi.doMock(
       import("./plugin-loaders"),
-      createMockProxy<typeof pluginLoadersModuleType>({
-        pluginLoaders: mockedPluginLoaders,
-      }),
+      () =>
+        ({
+          pluginLoaders: mockedPluginLoaders,
+        }) as unknown as typeof pluginLoadersModuleType,
     );
 
     vi.doMock(import("./plugin-state"), () => {

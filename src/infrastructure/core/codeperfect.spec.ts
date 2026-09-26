@@ -1,5 +1,4 @@
 import type * as codeperfectPluginModuleType from "@codeperfect/eslint-plugin";
-import type { CodeperfectPreset } from "@codeperfect/eslint-plugin";
 
 import { describe, expect, it, vi } from "vitest";
 
@@ -7,12 +6,13 @@ import { codeperfect } from "./codeperfect";
 
 vi.mock(
   import("@codeperfect/eslint-plugin"),
-  createMockProxy<typeof codeperfectPluginModuleType>({
-    all: {
-      name: "codeperfect/all",
-      rules: { "codeperfect/example": "error" },
-    } as CodeperfectPreset,
-  }),
+  () =>
+    ({
+      all: {
+        name: "codeperfect/all",
+        rules: { "codeperfect/example": "error" },
+      },
+    }) as unknown as typeof codeperfectPluginModuleType,
 );
 
 describe("codeperfect config", () => {

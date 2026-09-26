@@ -26,9 +26,10 @@ describe("vitest plugin branches", () => {
 
     vi.doMock(
       import("@vitest/eslint-plugin"),
-      createMockProxy<typeof VitestPluginModule>({
-        default: { configs: { recommended: recommendedConfig } },
-      }),
+      () =>
+        ({
+          default: { configs: { recommended: recommendedConfig } },
+        }) as unknown as typeof VitestPluginModule,
     );
 
     // Act

@@ -6,14 +6,15 @@ import { typescript } from "./typescript";
 
 vi.mock(
   import("typescript-eslint"),
-  createMockProxy<typeof TypescriptEslintModule>({
-    configs: {
-      strictTypeChecked: [{ name: "@typescript-eslint/strict-type-checked" }],
-      stylisticTypeChecked: [
-        { name: "@typescript-eslint/stylistic-type-checked" },
-      ],
-    },
-  }),
+  () =>
+    ({
+      configs: {
+        strictTypeChecked: [{ name: "@typescript-eslint/strict-type-checked" }],
+        stylisticTypeChecked: [
+          { name: "@typescript-eslint/stylistic-type-checked" },
+        ],
+      },
+    }) as unknown as typeof TypescriptEslintModule,
 );
 
 describe("typescript config", () => {

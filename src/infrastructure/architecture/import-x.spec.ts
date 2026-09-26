@@ -22,14 +22,15 @@ describe("import-x branch coverage", () => {
     // Arrange
     vi.doMock(
       import("eslint-plugin-import-x"),
-      createMockProxy<typeof importXModuleType>({
-        flatConfigs: {
-          recommended: { rules: { "import-x/no-duplicates": "warn" } },
-          typescript: { rules: {} },
-          warnings: { rules: {} },
-        },
-        rules: { "no-default-export": {}, "no-duplicates": {} },
-      }),
+      () =>
+        ({
+          flatConfigs: {
+            recommended: { rules: { "import-x/no-duplicates": "warn" } },
+            typescript: { rules: {} },
+            warnings: { rules: {} },
+          },
+          rules: { "no-default-export": {}, "no-duplicates": {} },
+        }) as unknown as typeof importXModuleType,
     );
 
     // Act

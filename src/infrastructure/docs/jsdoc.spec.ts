@@ -28,7 +28,7 @@ async function loadJsdocConfigs(): Promise<Linter.Config[]> {
 function mockJsdocModule(configs: Record<string, Linter.Config>): void {
   vi.doMock(
     import("eslint-plugin-jsdoc"),
-    createMockProxy<typeof jsdocModuleType>({ default: { configs } }),
+    () => ({ default: { configs } }) as unknown as typeof jsdocModuleType,
   );
 }
 
