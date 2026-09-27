@@ -20,6 +20,10 @@ async function buildCustomErrorRules(): Promise<Linter.Config[]> {
     recommended,
     typescript,
     {
+      name: "import-x/custom-typescript",
+      rules: { "import-x/namespace": "off" },
+    },
+    {
       name: "import-x/custom-error-rules",
       rules: {
         "import-x/no-internal-modules": [
