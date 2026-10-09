@@ -4,6 +4,7 @@
 **/coverage/
 **/dist/
 **/docs/api/
+**/logs/
 **/reports/
 **/temp/
 **/test-results/
