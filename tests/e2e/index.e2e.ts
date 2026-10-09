@@ -35,7 +35,10 @@ interface ScopedConfigOutcome {
 async function loadScopedConfig(): Promise<ScopedConfigOutcome> {
   const flatConfigs = await config({
     scopedPlugins: [
-      { basePath: "packages/api", plugins: ["eslint", "jest", "typescript"] },
+      {
+        basePath: "packages/api",
+        plugins: ["eslint", "vitest-e2e", "typescript"],
+      },
     ],
   });
 
@@ -66,8 +69,6 @@ describe("config factory end-to-end", () => {
       "perfectionist/avoid-conflict-with-eslint",
     ];
     const excludedNames = [
-      "jest/custom",
-      "jasmine/custom",
       "vitest-e2e/custom",
       "angular-eslint/ts-recommended",
     ];
@@ -91,17 +92,11 @@ describe("config factory end-to-end", () => {
 
   it("enables opt-in plugins when explicitly requested", async () => {
     // Arrange
-    const expectedNames = [
-      "jest/custom",
-      "jasmine/custom",
-      "vitest-e2e/custom",
-    ];
+    const expectedNames = ["vitest-e2e/custom"];
 
     // Act
     const actualNames = collectConfigNames(
-      await config({
-        plugins: { jasmine: true, jest: true, "vitest-e2e": true },
-      }),
+      await config({ plugins: { "vitest-e2e": true } }),
     );
 
     // Assert
@@ -111,7 +106,7 @@ describe("config factory end-to-end", () => {
   it("builds package-scoped configs from explicitly selected plugins", async () => {
     // Arrange
     const expectedGlobalNames = ["jsdoc/custom", "vitest/custom"];
-    const expectedScopedNames = ["custom-eslint", "jest/custom"];
+    const expectedScopedNames = ["custom-eslint", "vitest-e2e/custom"];
 
     // Act
     const actualConfig = await loadScopedConfig();
@@ -209,16 +204,17 @@ describe("config factory end-to-end", () => {
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
       await runWithStderrCapture(() => {
         return config({
-          plugins: { jest: false, vitest: true } as unknown as NonNullable<
-            ConfigOptions["plugins"]
-          >,
+          plugins: {
+            vitest: true,
+            "vitest-e2e": false,
+          } as unknown as NonNullable<ConfigOptions["plugins"]>,
         });
       });
 
     // Assert
     expect(actualFlatConfigs.length).toBeGreaterThan(0);
     expect(actualStderrOutput).toContain(
-      'Plugin "jest" is already disabled by default.',
+      'Plugin "vitest-e2e" is already disabled by default.',
     );
     expect(actualStderrOutput).toContain(
       'Plugin "vitest" is already enabled by default.',

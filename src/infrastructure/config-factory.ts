@@ -113,7 +113,7 @@ async function config(options: ConfigOptions = {}): Promise<Linter.Config[]> {
  * @returns Config entries selected for global composition.
  * @example
  * ```typescript
- * await loadGlobalPluginConfigs({ plugins: { jest: true } });
+ * await loadGlobalPluginConfigs({ plugins: { "vitest-e2e": true } });
  * ```
  */
 async function loadGlobalPluginConfigs(

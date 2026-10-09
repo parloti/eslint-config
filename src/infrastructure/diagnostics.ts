@@ -62,7 +62,7 @@ function reportPluginLoadIssue(
  * @param isEnabled Input enabled value.
  * @example
  * ```typescript
- * reportRedundantPluginState("jest", false);
+ * reportRedundantPluginState("vitest-e2e", false);
  * ```
  */
 function reportRedundantPluginState(

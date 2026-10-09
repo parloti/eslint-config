@@ -21,7 +21,7 @@ interface ISutOutcome<T> {
  * @returns The SUT result paired with the first stderr message.
  * @example
  * ```typescript
- * await captureSutWithStderr(() => isPluginEnabled("jest"));
+ * await captureSutWithStderr(() => isPluginEnabled("vitest-e2e"));
  * ```
  */
 async function captureSutWithStderr<T>(
@@ -55,11 +55,11 @@ describe("plugin-state", () => {
 
     it("enables a default-disabled plugin through explicit overrides", () => {
       // Arrange
-      const pluginName = "jest";
+      const pluginName = "vitest-e2e";
 
       // Act
       const actualState = {
-        isEnabled: isPluginEnabled(pluginName, { jest: true }),
+        isEnabled: isPluginEnabled(pluginName, { "vitest-e2e": true }),
       };
 
       // Assert
@@ -87,8 +87,8 @@ describe("plugin-state", () => {
 
     it("warns when a default-disabled plugin is redundantly disabled", async () => {
       // Arrange
-      const pluginName = "jest";
-      const untypedOverrides = { jest: false } as unknown as Parameters<
+      const pluginName = "vitest-e2e";
+      const untypedOverrides = { "vitest-e2e": false } as unknown as Parameters<
         typeof isPluginEnabled
       >[1];
 
@@ -100,7 +100,7 @@ describe("plugin-state", () => {
       // Assert
       expect(result).toBe(false);
       expect(firstMessage).toContain(
-        'Plugin "jest" is already disabled by default.',
+        'Plugin "vitest-e2e" is already disabled by default.',
       );
     });
   });

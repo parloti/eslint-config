@@ -45,12 +45,10 @@ Enable modules that are opt-in by default:
 ```typescript
 import { config } from "@codeperfect/eslint-config";
 
-export default config({
-  plugins: { jasmine: true, jest: true, "vitest-e2e": true },
-});
+export default config({ plugins: { "vitest-e2e": true } });
 ```
 
-`jasmine`, `jest`, and `vitest-e2e` are disabled by default. All other documented modules are enabled by default unless explicitly set to `false`.
+`vitest-e2e` is disabled by default. All other documented modules are enabled by default unless explicitly set to `false`.
 
 Configure monorepo packages with their own explicit module selections:
 
@@ -110,7 +108,7 @@ Directional dependency rules are fixed:
 1. core: `eslint`, `resolver`, `typescript`
 2. architecture: `import-x`
 3. documentation: `comments`, `jsdoc`
-4. testing: `jasmine`, `jest`, `playwright`, `vitest`, `vitest-e2e`
+4. testing: `playwright`, `vitest`, `vitest-e2e`
 5. domain: `rxjs-x`
 6. style: `stylistic`, `perfectionist`, `unicorn`, `prettier`
 7. repository architecture overlay: `boundaries`
@@ -139,8 +137,6 @@ This order is intentional and validated in tests.
 | `comments`      | `@eslint-community/eslint-plugin-eslint-comments` | Optional ESLint directive-comment rules.               |
 | `jsdoc`         | `eslint-plugin-jsdoc`                             | Optional JSDoc rules and package-level JSDoc defaults. |
 | `markdown`      | `@eslint/markdown`                                | Required Markdown rules.                               |
-| `jasmine`       | `eslint-plugin-jasmine`                           | Optional Jasmine rules. Disabled by default.           |
-| `jest`          | `eslint-plugin-jest`                              | Optional Jest rules. Disabled by default.              |
 | `playwright`    | `eslint-plugin-playwright`                        | Optional Playwright rules.                             |
 | `vitest`        | `@vitest/eslint-plugin`                           | Optional Vitest rules.                                 |
 | `vitest-e2e`    | `@vitest/eslint-plugin`                           | Optional Vitest e2e rules. Disabled by default.        |

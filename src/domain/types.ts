@@ -27,8 +27,7 @@ type CorePluginName =
   "codeperfect" | "eslint" | "json" | "resolver" | "typescript";
 
 /** Plugins that are disabled by default and can only be explicitly enabled. */
-type DefaultDisabledPluginName =
-  "angular-eslint" | "jasmine" | "jest" | "vitest-e2e";
+type DefaultDisabledPluginName = "angular-eslint" | "vitest-e2e";
 
 /** Plugins that are enabled by default and can only be explicitly disabled. */
 type DefaultEnabledPluginName = Exclude<PluginName, DefaultDisabledPluginName>;
@@ -70,8 +69,7 @@ type StylePluginName =
   "package-json" | "perfectionist" | "prettier" | "stylistic" | "unicorn";
 
 /** Type definition for rule data. */
-type TestingPluginName =
-  "jasmine" | "jest" | "playwright" | "vitest" | "vitest-e2e";
+type TestingPluginName = "playwright" | "vitest" | "vitest-e2e";
 
 export type {
   BoundariesElementTypesRuleEntry,

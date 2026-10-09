@@ -9,8 +9,6 @@ import { reportRedundantPluginState } from "./diagnostics";
 /** Plugins that are opt-in rather than enabled by default. */
 const defaultDisabledPlugins = [
   "angular-eslint",
-  "jasmine",
-  "jest",
   "vitest-e2e",
 ] as const satisfies readonly DefaultDisabledPluginName[];
 
@@ -20,7 +18,7 @@ const defaultDisabledPlugins = [
  * @returns Return value output.
  * @example
  * ```typescript
- * isPluginDisabledByDefault("jest");
+ * isPluginDisabledByDefault("vitest-e2e");
  * ```
  */
 function isPluginDisabledByDefault(pluginName: PluginName): boolean {
@@ -34,7 +32,7 @@ function isPluginDisabledByDefault(pluginName: PluginName): boolean {
  * @returns Return value output.
  * @example
  * ```typescript
- * isPluginEnabled("jest", { jest: true });
+ * isPluginEnabled("vitest-e2e", { "vitest-e2e": true });
  * ```
  */
 function isPluginEnabled(
@@ -64,7 +62,7 @@ function isPluginEnabled(
  * @param isDefaultEnabled Input default enabled value.
  * @example
  * ```typescript
- * reportRedundantPluginStateIfNeeded("jest", false, false);
+ * reportRedundantPluginStateIfNeeded("vitest-e2e", false, false);
  * ```
  */
 function reportRedundantPluginStateIfNeeded(

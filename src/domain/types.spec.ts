@@ -8,7 +8,7 @@ import type { ConfigOptions } from "./types";
  * @returns The plugin state overrides.
  * @example
  * ```typescript
- * readPluginStates({ plugins: { jest: true } });
+ * readPluginStates({ plugins: { "vitest-e2e": true } });
  * ```
  */
 function readPluginStates(
@@ -38,21 +38,27 @@ describe("types", () => {
   it("exports the public config option types", () => {
     // Arrange
     const configOptions: ConfigOptions = {
-      plugins: { jest: true, vitest: false },
+      plugins: { vitest: false, "vitest-e2e": true },
     };
 
     // Act
     const actualPluginStates = readPluginStates(configOptions);
 
     // Assert
-    expect(actualPluginStates).toStrictEqual({ jest: true, vitest: false });
+    expect(actualPluginStates).toStrictEqual({
+      vitest: false,
+      "vitest-e2e": true,
+    });
   });
 
   it("exports package-scoped plugin profile types", () => {
     // Arrange
     const configOptions: ConfigOptions = {
       scopedPlugins: [
-        { basePath: "packages/api", plugins: ["eslint", "jest", "typescript"] },
+        {
+          basePath: "packages/api",
+          plugins: ["eslint", "vitest-e2e", "typescript"],
+        },
       ],
     };
 
@@ -61,7 +67,10 @@ describe("types", () => {
 
     // Assert
     expect(actualScopedPlugins).toStrictEqual([
-      { basePath: "packages/api", plugins: ["eslint", "jest", "typescript"] },
+      {
+        basePath: "packages/api",
+        plugins: ["eslint", "vitest-e2e", "typescript"],
+      },
     ]);
   });
 });

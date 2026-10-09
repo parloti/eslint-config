@@ -15,7 +15,7 @@ import {
   stylistic,
   unicorn,
 } from "./style";
-import { jasmine, jest, playwright, vitest, vitestE2e } from "./testing";
+import { playwright, vitest, vitestE2e } from "./testing";
 
 /** Loader function for a single config module. */
 type ConfigLoader = () => Linter.Config[] | Promise<Linter.Config[]>;
@@ -78,16 +78,6 @@ const pluginLoaders = {
     loader: createStaticLoaderFactory(importX),
     mode: "optional",
     pluginName: "import-x",
-  },
-  jasmine: {
-    loader: createStaticLoaderFactory(jasmine),
-    mode: "optional",
-    pluginName: "jasmine",
-  },
-  jest: {
-    loader: createStaticLoaderFactory(jest),
-    mode: "optional",
-    pluginName: "jest",
   },
   jsdoc: {
     loader: createStaticLoaderFactory(jsdoc),

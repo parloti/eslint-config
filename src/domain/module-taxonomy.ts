@@ -32,8 +32,6 @@ const moduleTaxonomy = [
   { category: "documentation", pluginName: "comments" },
   { category: "documentation", pluginName: "jsdoc" },
   { category: "documentation", pluginName: "markdown" },
-  { category: "testing", pluginName: "jasmine" },
-  { category: "testing", pluginName: "jest" },
   { category: "testing", pluginName: "playwright" },
   { category: "testing", pluginName: "vitest" },
   { category: "testing", pluginName: "vitest-e2e" },

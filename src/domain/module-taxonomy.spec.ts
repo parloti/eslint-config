@@ -15,8 +15,6 @@ describe("moduleTaxonomy", () => {
       "comments",
       "jsdoc",
       "markdown",
-      "jasmine",
-      "jest",
       "playwright",
       "vitest",
       "vitest-e2e",

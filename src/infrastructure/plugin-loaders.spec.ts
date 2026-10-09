@@ -31,8 +31,6 @@ describe("pluginLoaders", () => {
       comments: "optional",
       eslint: "required",
       "import-x": "optional",
-      jasmine: "optional",
-      jest: "optional",
       jsdoc: "optional",
       json: "required",
       markdown: "required",

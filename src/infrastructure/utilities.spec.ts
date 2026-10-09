@@ -22,7 +22,9 @@ interface ISutOutcome<T> {
  * @returns The SUT result paired with the first stderr message.
  * @example
  * ```typescript
- * await captureSutWithStderr(() => loadPluginConfig("jest", async () => []));
+ * await captureSutWithStderr(() =>
+ *   loadPluginConfig("playwright", async () => []),
+ * );
  * ```
  */
 async function captureSutWithStderr<T>(
@@ -45,21 +47,23 @@ async function captureSutWithStderr<T>(
 const missingPluginError = new Error("Missing plugin");
 /** Missing required peer error fixture. */
 const requiredPeerError = new Error("Missing required peer");
-/** Missing optional Jest plugin error fixture. */
-const missingJestPluginError = new Error(
-  "Cannot find module 'eslint-plugin-jest'",
+/** Missing optional integration error fixture. */
+const missingOptionalIntegrationError = new Error(
+  "Cannot find module 'eslint-plugin-playwright'",
 );
 /** Mocked loader that rejects for an optional missing plugin. */
 const loadMissingPluginConfig = vi.fn<() => Promise<Linter.Config[]>>();
+/** Mocked loader that rejects when an optional integration is absent. */
+const loadMissingOptionalIntegrationConfig =
+  vi.fn<() => Promise<Linter.Config[]>>();
 /** Mocked loader that rejects for a required missing peer. */
 const loadRequiredPeerConfig = vi.fn<() => Promise<Linter.Config[]>>();
-/** Mocked loader that rejects when the optional Jest plugin is absent. */
-const loadMissingJestPluginConfig = vi.fn<() => Promise<Linter.Config[]>>();
-
 describe("utilities", () => {
   beforeEach(() => {
-    loadMissingJestPluginConfig.mockRejectedValue(missingJestPluginError);
     loadMissingPluginConfig.mockRejectedValue(missingPluginError);
+    loadMissingOptionalIntegrationConfig.mockRejectedValue(
+      missingOptionalIntegrationError,
+    );
     loadRequiredPeerConfig.mockRejectedValue(requiredPeerError);
   });
 
@@ -71,7 +75,7 @@ describe("utilities", () => {
         .mockResolvedValue([{ name: "test" }]);
 
       // Act
-      const actualConfigs = await loadPluginConfig("jest", loader);
+      const actualConfigs = await loadPluginConfig("playwright", loader);
 
       // Assert
       expect(actualConfigs).toStrictEqual([{ name: "test" }]);
@@ -80,17 +84,17 @@ describe("utilities", () => {
 
     it("returns empty configs and reports optional failures", async () => {
       // Arrange
-      const expectedMessage = "Failed to load ESLint plugin config: jest";
+      const expectedMessage = "Failed to load ESLint plugin config: playwright";
 
       // Act
       const { firstMessage, result } = await captureSutWithStderr(async () =>
-        loadPluginConfig("jest", loadMissingPluginConfig),
+        loadPluginConfig("playwright", loadMissingPluginConfig),
       );
 
       // Assert
       expect(result).toStrictEqual([]);
       expect(firstMessage).toContain(expectedMessage);
-      expect(firstMessage).toContain('plugins: { "jest": false }');
+      expect(firstMessage).toContain('plugins: { "playwright": false }');
     });
 
     it("rethrows required loader failures after reporting them", async () => {
@@ -122,11 +126,12 @@ describe("utilities", () => {
 
     it("classifies missing optional integrations as skips", async () => {
       // Arrange
-      const expectedMessage = "Skipped optional ESLint plugin config: jest";
+      const expectedMessage =
+        "Skipped optional ESLint plugin config: playwright";
 
       // Act
       const { firstMessage, result } = await captureSutWithStderr(async () =>
-        loadPluginConfig("jest", loadMissingJestPluginConfig),
+        loadPluginConfig("playwright", loadMissingOptionalIntegrationConfig),
       );
 
       // Assert

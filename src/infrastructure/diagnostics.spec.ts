@@ -106,11 +106,12 @@ describe("diagnostics", () => {
   describe(reportRedundantPluginState, () => {
     it("reports redundant disable requests distinctly", () => {
       // Arrange
-      const expectedMessage = 'Plugin "jest" is already disabled by default.';
+      const expectedMessage =
+        'Plugin "vitest-e2e" is already disabled by default.';
 
       // Act
       const outcome = captureStderrOutcome(() => {
-        reportRedundantPluginState("jest", false);
+        reportRedundantPluginState("vitest-e2e", false);
       });
 
       // Assert
