@@ -1,6 +1,6 @@
 import { defineConfig } from "vitest/config";
 
-export default defineConfig({
+const config = defineConfig({
   test: {
     clearMocks: true,
     coverage: {
@@ -21,3 +21,5 @@ export default defineConfig({
     unstubGlobals: true,
   },
 });
+
+export default config;

@@ -14,8 +14,8 @@ const prettierFileGlobs = ["**/*.ts"];
  * ```
  */
 export async function prettier(): Promise<Linter.Config[]> {
-  const recommendedModule = await import("eslint-plugin-prettier/recommended");
-  const { default: recommended } = recommendedModule;
+  const { default: recommended } =
+    await import("eslint-plugin-prettier/recommended");
 
   return defineConfig({ ...recommended, files: prettierFileGlobs });
 }

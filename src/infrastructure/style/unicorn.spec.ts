@@ -1,26 +1,9 @@
-import type { Linter } from "eslint";
-
 import { describe, expect, it, vi } from "vitest";
 
 import { unicorn } from "./unicorn";
 
-/** Type definition for rule data. */
-interface UnicornConfigs extends Record<string, Linter.Config> {
-  /** All rules config entry. */
-  all: Linter.Config;
-
-  /** Flat all config entry. */
-  "flat/all": Linter.Config;
-
-  /** Flat recommended config entry. */
-  "flat/recommended": Linter.Config;
-
-  /** Recommended config entry. */
-  recommended: Linter.Config;
-
-  /** Unopinionated config entry. */
-  unopinionated: Linter.Config;
-}
+type UnicornConfigs =
+  (typeof import("eslint-plugin-unicorn"))["default"]["configs"];
 
 /** Type definition for rule data. */
 interface UnicornDefaultExport {
@@ -40,6 +23,12 @@ const unicornConfigs: UnicornConfigs = {
   "flat/all": {},
   "flat/recommended": {},
   recommended: {},
+  "recommended-css": {},
+  "recommended-html": {},
+  "recommended-json": {},
+  "recommended-markdown": {},
+  "recommended-toml": {},
+  "recommended-yaml": {},
   unopinionated: {},
 };
 

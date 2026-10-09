@@ -14,8 +14,7 @@ const stylisticFileGlobs = ["**/*.ts"];
  * ```
  */
 export async function stylistic(): Promise<Linter.Config[]> {
-  const stylisticModule = await import("@stylistic/eslint-plugin");
-  const { default: plugin } = stylisticModule;
+  const { default: plugin } = await import("@stylistic/eslint-plugin");
 
   return defineConfig(
     { ...plugin.configs.recommended, files: stylisticFileGlobs },

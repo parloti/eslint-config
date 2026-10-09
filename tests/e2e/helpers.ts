@@ -4,8 +4,6 @@ import type { MockInstance } from "vitest";
 import { ESLint } from "eslint";
 import { vi } from "vitest";
 
-import type { ConfigOptions } from "../../src";
-
 import { config } from "../../src";
 
 /** Lint options shared by every end-to-end lint run. */
@@ -37,15 +35,14 @@ function collectConfigNames(flatConfigs: Linter.Config[]): string[] {
 
 /**
  * Builds an ESLint instance backed by the generated flat config.
- * @param options Config options forwarded to the config factory.
  * @returns A ready-to-use ESLint instance.
  * @example
  * ```typescript
- * const linter = await createLinter({ plugins: { jest: true } });
+ * const linter = await createLinter();
  * ```
  */
-async function createLinter(options: ConfigOptions = {}): Promise<ESLint> {
-  const flatConfigs = await config(options);
+async function createLinter(): Promise<ESLint> {
+  const flatConfigs = await config();
 
   return new ESLint({
     ...lintOptions,
