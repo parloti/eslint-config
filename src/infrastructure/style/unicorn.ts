@@ -36,13 +36,6 @@ export async function unicorn(): Promise<Linter.Config[]> {
       },
     },
     {
-      files: ["**/*.spec.ts"],
-      name: "codeperfect/assert-actual-expected-names precedence",
-      rules: {
-        "unicorn/consistent-boolean-name": ["error", { ignore: ["^actual"] }],
-      },
-    },
-    {
       files: ["**/explicit-null.ts"],
       name: "Allow explicit null",
       rules: { "unicorn/no-null": "off" },
