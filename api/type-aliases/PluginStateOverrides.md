@@ -8,6 +8,6 @@
 
 > **PluginStateOverrides** = `Partial`\<`Record`\<`DefaultDisabledPluginName`, `true`\> & `Record`\<`DefaultEnabledPluginName`, `false`\>\>
 
-Defined in: [domain/types.ts:53](https://github.com/parloti/eslint-config/blob/c5c3225c8be8379a363ad953ad5210d05a613fa7/src/domain/types.ts#L53)
+Defined in: [domain/types.ts:52](https://github.com/parloti/eslint-config/blob/1f5a1a81e64102495825ed2ba9dd40726415fff1/src/domain/types.ts#L52)
 
 Type definition for explicit plugin state overrides.
