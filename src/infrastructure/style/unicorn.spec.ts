@@ -27,6 +27,7 @@ const unicornConfigs: UnicornConfigs = {
   "recommended-html": {},
   "recommended-json": {},
   "recommended-markdown": {},
+  "recommended-soml": {},
   "recommended-toml": {},
   "recommended-yaml": {},
   unopinionated: {},
