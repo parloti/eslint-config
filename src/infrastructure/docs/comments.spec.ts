@@ -67,7 +67,10 @@ describe("comments config", () => {
     // Assert
     expect(actualCommentsConfig).toMatchObject({
       files: ["**/*.ts"],
-      rules: { "@eslint-community/eslint-comments/no-unused-disable": "error" },
+      rules: {
+        "@eslint-community/eslint-comments/disable-enable-pair": "off",
+        "@eslint-community/eslint-comments/no-unused-disable": "error",
+      },
     });
     expect(actualCommentsConfig?.rules).not.toHaveProperty(
       "@eslint-community/eslint-comments/no-inline-disable",
@@ -89,7 +92,9 @@ describe("comments config", () => {
     })();
 
     // Assert
-    expect(actualCommentsConfig).toMatchObject({ files: ["**/*.ts"] });
-    expect(actualCommentsConfig).not.toHaveProperty("rules");
+    expect(actualCommentsConfig).toMatchObject({
+      files: ["**/*.ts"],
+      rules: { "@eslint-community/eslint-comments/disable-enable-pair": "off" },
+    });
   });
 });

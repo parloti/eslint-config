@@ -17,5 +17,12 @@ export async function comments(): Promise<Linter.Config[]> {
   const { recommended } =
     await import("@eslint-community/eslint-plugin-eslint-comments/configs");
 
-  return defineConfig({ ...recommended, files: commentsFileGlobs });
+  return defineConfig({
+    ...recommended,
+    files: commentsFileGlobs,
+    rules: {
+      ...recommended.rules,
+      "@eslint-community/eslint-comments/disable-enable-pair": "off",
+    },
+  });
 }
