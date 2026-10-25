@@ -1,7 +1,6 @@
 import type { Linter } from "eslint";
 
 import type { ConfigOptions, PluginName } from "../domain";
-import type { LoadMode } from "./utilities";
 
 import { boundaries, importX } from "./architecture";
 import { codeperfect, eslint, json, resolver, typescript } from "./core";
@@ -20,17 +19,8 @@ import { playwright, vitest, vitestE2e } from "./testing";
 /** Loader function for a single config module. */
 type ConfigLoader = () => Linter.Config[] | Promise<Linter.Config[]>;
 
-/** Entry describing a single config loader in the final composition order. */
-interface PluginLoaderEntry {
-  /** Loader factory for the module. */
-  loader: (options: ConfigOptions) => ConfigLoader;
-
-  /** Runtime loading mode for the module. */
-  mode: LoadMode;
-
-  /** Public module name used in config options and diagnostics. */
-  pluginName: PluginName;
-}
+/** Factory for a config loader that may depend on user options. */
+type PluginLoaderFactory = (options: ConfigOptions) => ConfigLoader;
 
 /**
  * Creates a loader factory for modules that do not depend on config options.
@@ -41,9 +31,7 @@ interface PluginLoaderEntry {
  * const factory = createStaticLoaderFactory(eslint);
  * ```
  */
-function createStaticLoaderFactory(
-  loader: ConfigLoader,
-): PluginLoaderEntry["loader"] {
+function createStaticLoaderFactory(loader: ConfigLoader): PluginLoaderFactory {
   return (): ConfigLoader => loader;
 }
 
@@ -52,103 +40,44 @@ const pluginLoaders = {
   "angular-eslint": {
     loader: createStaticLoaderFactory(angularEslint),
     mode: "optional",
-    pluginName: "angular-eslint",
   },
-  boundaries: {
-    loader: () => boundaries,
-    mode: "optional",
-    pluginName: "boundaries",
-  },
+  boundaries: { loader: () => boundaries, mode: "optional" },
   codeperfect: {
     loader: createStaticLoaderFactory(codeperfect),
     mode: "required",
-    pluginName: "codeperfect",
   },
-  comments: {
-    loader: createStaticLoaderFactory(comments),
-    mode: "optional",
-    pluginName: "comments",
-  },
-  eslint: {
-    loader: createStaticLoaderFactory(eslint),
-    mode: "required",
-    pluginName: "eslint",
-  },
-  "import-x": {
-    loader: createStaticLoaderFactory(importX),
-    mode: "optional",
-    pluginName: "import-x",
-  },
-  jsdoc: {
-    loader: createStaticLoaderFactory(jsdoc),
-    mode: "optional",
-    pluginName: "jsdoc",
-  },
-  json: {
-    loader: createStaticLoaderFactory(json),
-    mode: "required",
-    pluginName: "json",
-  },
-  markdown: {
-    loader: createStaticLoaderFactory(markdown),
-    mode: "required",
-    pluginName: "markdown",
-  },
+  comments: { loader: createStaticLoaderFactory(comments), mode: "optional" },
+  eslint: { loader: createStaticLoaderFactory(eslint), mode: "required" },
+  "import-x": { loader: createStaticLoaderFactory(importX), mode: "optional" },
+  jsdoc: { loader: createStaticLoaderFactory(jsdoc), mode: "optional" },
+  json: { loader: createStaticLoaderFactory(json), mode: "required" },
+  markdown: { loader: createStaticLoaderFactory(markdown), mode: "required" },
   "package-json": {
     loader: createStaticLoaderFactory(packageJson),
     mode: "optional",
-    pluginName: "package-json",
   },
   perfectionist: {
     loader: createStaticLoaderFactory(perfectionist),
     mode: "optional",
-    pluginName: "perfectionist",
   },
   playwright: {
     loader: createStaticLoaderFactory(playwright),
     mode: "optional",
-    pluginName: "playwright",
   },
-  prettier: {
-    loader: createStaticLoaderFactory(prettier),
-    mode: "optional",
-    pluginName: "prettier",
-  },
-  resolver: {
-    loader: createStaticLoaderFactory(resolver),
-    mode: "optional",
-    pluginName: "resolver",
-  },
-  "rxjs-x": {
-    loader: createStaticLoaderFactory(rxjsX),
-    mode: "optional",
-    pluginName: "rxjs-x",
-  },
-  stylistic: {
-    loader: createStaticLoaderFactory(stylistic),
-    mode: "optional",
-    pluginName: "stylistic",
-  },
+  prettier: { loader: createStaticLoaderFactory(prettier), mode: "optional" },
+  resolver: { loader: createStaticLoaderFactory(resolver), mode: "optional" },
+  "rxjs-x": { loader: createStaticLoaderFactory(rxjsX), mode: "optional" },
+  stylistic: { loader: createStaticLoaderFactory(stylistic), mode: "optional" },
   typescript: {
     loader: createStaticLoaderFactory(typescript),
     mode: "required",
-    pluginName: "typescript",
   },
-  unicorn: {
-    loader: createStaticLoaderFactory(unicorn),
-    mode: "optional",
-    pluginName: "unicorn",
-  },
-  vitest: {
-    loader: createStaticLoaderFactory(vitest),
-    mode: "optional",
-    pluginName: "vitest",
-  },
+  unicorn: { loader: createStaticLoaderFactory(unicorn), mode: "optional" },
+  vitest: { loader: createStaticLoaderFactory(vitest), mode: "optional" },
   "vitest-e2e": {
     loader: createStaticLoaderFactory(vitestE2e),
     mode: "optional",
-    pluginName: "vitest-e2e",
   },
-} satisfies Record<PluginName, PluginLoaderEntry>;
+} as const satisfies Record<PluginName, unknown>;
 
 export { pluginLoaders };

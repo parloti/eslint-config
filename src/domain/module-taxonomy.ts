@@ -1,48 +1,25 @@
-import type { PluginName } from "./types";
-
-/** Taxonomy categories for config modules. */
-type ModuleCategory =
-  | "architecture"
-  | "core"
-  | "documentation"
-  | "domain"
-  | "infrastructure"
-  | "repository-architecture"
-  | "runtime"
-  | "style"
-  | "testing";
-
-/** Entry describing a documented config module. */
-interface ModuleTaxonomyEntry {
-  /** Category owning the module. */
-  category: ModuleCategory;
-
-  /** Public module name used in config options and diagnostics. */
-  pluginName: PluginName;
-}
-
 /** Ordered module taxonomy matching RFC-0003. */
 const moduleTaxonomy = [
-  { category: "core", pluginName: "codeperfect" },
-  { category: "core", pluginName: "eslint" },
-  { category: "core", pluginName: "json" },
-  { category: "core", pluginName: "resolver" },
-  { category: "core", pluginName: "typescript" },
-  { category: "architecture", pluginName: "import-x" },
-  { category: "documentation", pluginName: "comments" },
-  { category: "documentation", pluginName: "jsdoc" },
-  { category: "documentation", pluginName: "markdown" },
-  { category: "testing", pluginName: "playwright" },
-  { category: "testing", pluginName: "vitest" },
-  { category: "testing", pluginName: "vitest-e2e" },
-  { category: "infrastructure", pluginName: "rxjs-x" },
-  { category: "runtime", pluginName: "angular-eslint" },
-  { category: "style", pluginName: "stylistic" },
-  { category: "style", pluginName: "perfectionist" },
-  { category: "style", pluginName: "package-json" },
-  { category: "style", pluginName: "unicorn" },
-  { category: "style", pluginName: "prettier" },
-  { category: "repository-architecture", pluginName: "boundaries" },
-] as const satisfies readonly ModuleTaxonomyEntry[];
+  { pluginName: "codeperfect" },
+  { pluginName: "eslint" },
+  { pluginName: "json" },
+  { pluginName: "resolver" },
+  { pluginName: "typescript" },
+  { pluginName: "import-x" },
+  { pluginName: "comments" },
+  { pluginName: "jsdoc" },
+  { pluginName: "markdown" },
+  { pluginName: "playwright" },
+  { pluginName: "vitest" },
+  { pluginName: "vitest-e2e" },
+  { pluginName: "rxjs-x" },
+  { pluginName: "angular-eslint" },
+  { pluginName: "stylistic" },
+  { pluginName: "perfectionist" },
+  { pluginName: "package-json" },
+  { pluginName: "unicorn" },
+  { pluginName: "prettier" },
+  { pluginName: "boundaries" },
+] as const;
 
 export { moduleTaxonomy };

@@ -127,14 +127,16 @@ describe("config factory end-to-end", () => {
 
   it("swallows optional plugin load failures with guidance", async () => {
     // Arrange
+    vi.resetModules();
     vi.doMock(import("angular-eslint"), () => {
       throw new Error("Simulated optional plugin load failure");
     });
+    const { config: actualConfig } = await import("../../src");
 
     // Act
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =
       await runWithStderrCapture(() => {
-        return config({ plugins: { "angular-eslint": true } });
+        return actualConfig({ plugins: { "angular-eslint": true } });
       });
 
     // Assert

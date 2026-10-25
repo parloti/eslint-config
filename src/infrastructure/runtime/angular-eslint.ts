@@ -12,7 +12,11 @@ import { defineConfig } from "eslint/config";
  * ```
  */
 export async function angularEslint(): Promise<Linter.Config[]> {
-  const { configs, processInlineTemplates } = await import("angular-eslint");
+  const [{ configs, processInlineTemplates }, { codeperfectAngularPlugin }] =
+    await Promise.all([
+      import("angular-eslint"),
+      import("@codeperfect/eslint-plugin/angular"),
+    ]);
 
   return defineConfig(
     {
@@ -25,6 +29,15 @@ export async function angularEslint(): Promise<Linter.Config[]> {
       extends: [configs.templateRecommended, configs.templateAccessibility],
       files: ["**/*.html"],
       name: "angular-eslint/template-recommended",
+    },
+    {
+      files: ["**/*.ts"],
+      name: "angular-eslint/no-unused-public-members",
+      plugins: { "codeperfect-angular": codeperfectAngularPlugin },
+      rules: {
+        "codeperfect-angular/no-unused-public-members": "error",
+        "codeperfect/no-unused-public-members": "off",
+      },
     },
   );
 }

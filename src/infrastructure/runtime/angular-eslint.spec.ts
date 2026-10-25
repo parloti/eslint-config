@@ -1,3 +1,4 @@
+import type * as AngularUsageAdapterModule from "@codeperfect/eslint-plugin/angular";
 import type * as AngularTsPluginModule from "angular-eslint";
 import type { Linter } from "eslint";
 
@@ -31,6 +32,10 @@ describe("angular-eslint configuration", () => {
       postprocess: (messages: unknown[][]) => messages.flat(),
       preprocess: (text: string) => [text],
     };
+    const codeperfectAngularPlugin = {
+      meta: { name: "@codeperfect/eslint-plugin/angular" },
+      rules: { "no-unused-public-members": {} },
+    };
 
     vi.doMock(
       import("angular-eslint"),
@@ -44,6 +49,13 @@ describe("angular-eslint configuration", () => {
           processInlineTemplates,
         }) as unknown as typeof AngularTsPluginModule,
     );
+    vi.doMock(
+      import("@codeperfect/eslint-plugin/angular"),
+      () =>
+        ({
+          codeperfectAngularPlugin,
+        }) as unknown as typeof AngularUsageAdapterModule,
+    );
 
     // Act
     const actual = await loadAngularEslintConfigs();
@@ -54,6 +66,23 @@ describe("angular-eslint configuration", () => {
       name: "angular-eslint/ts-recommended",
       processor: processInlineTemplates,
     });
+    expect(actual).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          files: ["**/*.html"],
+          name: "angular-eslint/template-recommended",
+        }),
+        expect.objectContaining({
+          files: ["**/*.ts"],
+          name: "angular-eslint/no-unused-public-members",
+          plugins: { "codeperfect-angular": codeperfectAngularPlugin },
+          rules: {
+            "codeperfect-angular/no-unused-public-members": "error",
+            "codeperfect/no-unused-public-members": "off",
+          },
+        }),
+      ]),
+    );
     expect(actual[4]).toMatchObject({
       files: ["**/*.html"],
       name: "angular-eslint/template-recommended",
@@ -84,6 +113,16 @@ describe("angular-eslint configuration", () => {
           },
           processInlineTemplates: undefined,
         }) as unknown as typeof AngularTsPluginModule,
+    );
+    vi.doMock(
+      import("@codeperfect/eslint-plugin/angular"),
+      () =>
+        ({
+          codeperfectAngularPlugin: {
+            meta: { name: "@codeperfect/eslint-plugin/angular" },
+            rules: { "no-unused-public-members": {} },
+          },
+        }) as unknown as typeof AngularUsageAdapterModule,
     );
 
     // Act
