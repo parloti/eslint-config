@@ -6,7 +6,7 @@
 
 # Interface: ConfigOptions
 
-Defined in: [domain/types.ts:17](https://github.com/parloti/eslint-config/blob/e8d6307472d1621fe8a4fb041b2b4636c4ef9aee/src/domain/types.ts#L17)
+Defined in: [domain/types.ts:17](https://github.com/parloti/eslint-config/blob/9f63e10e0ae340e996afb8a6032647aa8004798d/src/domain/types.ts#L17)
 
 Type definition for rule data.
 
@@ -16,7 +16,7 @@ Type definition for rule data.
 
 > `optional` **plugins?**: `Partial`\<`Record`\<`DefaultDisabledPluginName`, `true`\> & `Record`\<`DefaultEnabledPluginName`, `false`\>\>
 
-Defined in: [domain/types.ts:19](https://github.com/parloti/eslint-config/blob/e8d6307472d1621fe8a4fb041b2b4636c4ef9aee/src/domain/types.ts#L19)
+Defined in: [domain/types.ts:19](https://github.com/parloti/eslint-config/blob/9f63e10e0ae340e996afb8a6032647aa8004798d/src/domain/types.ts#L19)
 
 Explicit plugin state overrides keyed by public plugin name.
 
@@ -26,6 +26,6 @@ Explicit plugin state overrides keyed by public plugin name.
 
 > `optional` **scopedPlugins?**: readonly [`ScopedPluginConfig`](ScopedPluginConfig.md)[]
 
-Defined in: [domain/types.ts:22](https://github.com/parloti/eslint-config/blob/e8d6307472d1621fe8a4fb041b2b4636c4ef9aee/src/domain/types.ts#L22)
+Defined in: [domain/types.ts:22](https://github.com/parloti/eslint-config/blob/9f63e10e0ae340e996afb8a6032647aa8004798d/src/domain/types.ts#L22)
 
 Package-scoped plugin profiles for monorepo configuration.
