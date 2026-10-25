@@ -7,7 +7,7 @@ const codePerfect = await config({
   plugins: { playwright: false, "rxjs-x": false, "vitest-e2e": true },
 });
 
-/** Combined ESLint configuration for the workspace manager project. */
+/** Combined ESLint configuration for the solution. */
 const eslintConfig = defineConfig(codePerfect);
 
 export default eslintConfig;

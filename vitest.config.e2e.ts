@@ -11,6 +11,7 @@ const config = defineConfig({
       thresholds: { branches: 15, functions: 15, lines: 15, statements: 15 },
     },
     include: ["tests/e2e/**/*.e2e.ts"],
+    maxWorkers: "50%",
     mockReset: true,
     name: "eslint-config-e2e",
     pool: "threads",

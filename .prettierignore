@@ -1,4 +1,5 @@
 **/.angular/
+**/.playwright-mcp/
 **/.stryker-tmp/
 **/.user-data/
 **/coverage/

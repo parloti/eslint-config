@@ -10,6 +10,7 @@ const config = defineConfig({
       thresholds: { branches: 95, functions: 95, lines: 95, statements: 95 },
     },
     include: ["src/**/*.spec.ts", "tests/support/**/*.spec.ts"],
+    maxWorkers: "50%",
     mockReset: true,
     name: "eslint-config-unit",
     pool: "threads",
