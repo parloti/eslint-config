@@ -26,6 +26,7 @@ async function buildCustomErrorRules(): Promise<Linter.Config[]> {
     {
       name: "import-x/custom-error-rules",
       rules: {
+        "import-x/first": "error",
         "import-x/no-internal-modules": [
           "error",
           { allow: ["**/node_modules/**"] },
