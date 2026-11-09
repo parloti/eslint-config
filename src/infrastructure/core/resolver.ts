@@ -11,16 +11,22 @@ import { defineConfig } from "eslint/config";
  * ```
  */
 export async function resolver(): Promise<Linter.Config[]> {
-  const { createTypeScriptImportResolver } =
+  const { createTypeScriptImportResolver, defaultConditionNames } =
     await import("eslint-import-resolver-typescript");
+  const conditionNames = ["source", ...defaultConditionNames];
 
   return defineConfig({
     name: "resolver",
     settings: {
       "import-x/resolver-next": [
-        createTypeScriptImportResolver({ alwaysTryTypes: true }),
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true,
+          conditionNames,
+        }),
       ],
-      "import/resolver": { typescript: { alwaysTryTypes: true } },
+      "import/resolver": {
+        typescript: { alwaysTryTypes: true, conditionNames },
+      },
     },
   });
 }

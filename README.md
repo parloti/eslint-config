@@ -131,7 +131,7 @@ This order is intentional and validated in tests.
 | --------------- | ------------------------------------------------- | ------------------------------------------------------ |
 | `eslint`        | `@eslint/js`                                      | Required baseline rules.                               |
 | `json`          | `@eslint/json`                                    | Required JSON rules.                                   |
-| `resolver`      | `eslint-import-resolver-typescript`               | Optional resolver integration used by import tooling.  |
+| `resolver`      | `eslint-import-resolver-typescript`               | Optional resolver; `source` condition first.           |
 | `typescript`    | `typescript-eslint`                               | Required TypeScript rules and parser support.          |
 | `import-x`      | `eslint-plugin-import-x`                          | Optional import analysis module.                       |
 | `comments`      | `@eslint-community/eslint-plugin-eslint-comments` | Optional ESLint directive-comment rules.               |
