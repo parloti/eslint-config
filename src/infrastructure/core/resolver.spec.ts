@@ -17,7 +17,7 @@ describe("resolver config", () => {
   it("returns resolver settings", async () => {
     // Arrange
     const minimumConfigCount = 1;
-    const conditionNames = ["source", ...defaultConditionNames];
+    const sourceConditionNames = ["source", ...defaultConditionNames];
 
     // Act
     const configs = await resolver();
@@ -25,12 +25,20 @@ describe("resolver config", () => {
     // Assert
     expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
     expect(configs[0]?.settings).toBeDefined();
-    expect(createTypeScriptImportResolverMock).toHaveBeenCalledWith({
+    expect(createTypeScriptImportResolverMock).toHaveBeenNthCalledWith(1, {
       alwaysTryTypes: true,
-      conditionNames,
+      conditionNames: sourceConditionNames,
     });
+    expect(createTypeScriptImportResolverMock).toHaveBeenNthCalledWith(2, {
+      alwaysTryTypes: true,
+      conditionNames: defaultConditionNames,
+    });
+    expect(configs[0]?.settings?.["import-x/resolver-next"]).toHaveLength(2);
     expect(configs[0]?.settings?.["import/resolver"]).toStrictEqual({
-      typescript: { alwaysTryTypes: true, conditionNames },
+      typescript: {
+        alwaysTryTypes: true,
+        conditionNames: sourceConditionNames,
+      },
     });
   });
 });
