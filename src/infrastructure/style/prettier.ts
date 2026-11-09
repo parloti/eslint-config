@@ -6,7 +6,7 @@ import { defineConfig } from "eslint/config";
 const prettierFileGlobs = ["**/*.ts"];
 
 /**
- * Return Prettier integration configuration for ESLint when the plugin is available.
+ * Return Prettier compatibility rules for ESLint when the config is available.
  * @returns Return value output.
  * @example
  * ```typescript
@@ -14,8 +14,8 @@ const prettierFileGlobs = ["**/*.ts"];
  * ```
  */
 export async function prettier(): Promise<Linter.Config[]> {
-  const { default: recommended } =
-    await import("eslint-plugin-prettier/recommended");
+  const { default: eslintConfigPrettier } =
+    await import("eslint-config-prettier/flat");
 
-  return defineConfig({ ...recommended, files: prettierFileGlobs });
+  return defineConfig({ ...eslintConfigPrettier, files: prettierFileGlobs });
 }

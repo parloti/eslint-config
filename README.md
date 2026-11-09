@@ -144,7 +144,7 @@ This order is intentional and validated in tests.
 | `stylistic`     | `@stylistic/eslint-plugin`                        | Optional style rules.                                  |
 | `perfectionist` | `eslint-plugin-perfectionist`                     | Optional ordering rules.                               |
 | `unicorn`       | `eslint-plugin-unicorn`                           | Optional general best-practice rules.                  |
-| `prettier`      | `eslint-plugin-prettier`                          | Optional Prettier integration.                         |
+| `prettier`      | `eslint-config-prettier`                          | Optional rules that disable conflicts with Prettier.   |
 | `boundaries`    | `eslint-plugin-boundaries`                        | Optional, package-owned architecture overlay.          |
 
 ## Validation

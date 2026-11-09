@@ -3,14 +3,16 @@ import { describe, expect, it } from "vitest";
 import { prettier } from "./prettier";
 
 describe("prettier config", () => {
-  it("returns configs", async () => {
-    // Arrange
-    const minimumConfigCount = 1;
-
+  it("applies eslint-config-prettier rules to TypeScript files", async () => {
     // Act
     const configs = await prettier();
+    const config = configs[0];
 
     // Assert
-    expect(configs.length).toBeGreaterThanOrEqual(minimumConfigCount);
+    expect(configs).toHaveLength(1);
+    expect(config?.files).toStrictEqual(["**/*.ts"]);
+    expect(config?.name).toBe("config-prettier");
+    expect(config?.rules?.["@stylistic/indent"]).toBe("off");
+    expect(config?.rules).not.toHaveProperty("prettier/prettier");
   });
 });

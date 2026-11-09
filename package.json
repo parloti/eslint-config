@@ -111,7 +111,6 @@
     "eslint-plugin-package-json": "^1.12.0",
     "eslint-plugin-perfectionist": "^5.13.0",
     "eslint-plugin-playwright": "^2.12.1",
-    "eslint-plugin-prettier": "^5.5.7",
     "eslint-plugin-rxjs-x": "^1.0.6",
     "eslint-plugin-unicorn": "^79.0.0",
     "globals": "^17.14.0",
@@ -139,13 +138,13 @@
     "@vitest/eslint-plugin": "^1.6.28",
     "angular-eslint": "^22.6.0",
     "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-package-json": "^3.0.0",
     "eslint-plugin-boundaries": "^7.4.0",
     "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-jsdoc": "^65.4.2",
     "eslint-plugin-perfectionist": "^5.13.0",
-    "eslint-plugin-prettier": "^5.5.7",
     "eslint-plugin-rxjs-x": "^1.0.6",
     "eslint-plugin-unicorn": "^79.0.0",
     "globals": "^17.14.0",
@@ -155,6 +154,9 @@
   },
   "peerDependenciesMeta": {
     "angular-eslint": {
+      "optional": true
+    },
+    "eslint-config-prettier": {
       "optional": true
     },
     "eslint-plugin-rxjs-x": {
