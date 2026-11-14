@@ -117,8 +117,9 @@ This order is intentional and validated in tests.
 
 ## Internal layout
 
-- `src/configs/` is the internal entrypoint for config-module builders used during composition.
-- domain folders such as `src/architecture/`, `src/core/`, `src/docs/`, `src/testing/`, `src/domain/`, and `src/style/` own the concrete module implementations.
+- `src/bootstrap/` owns the public `config()` composition and module registry.
+- `src/infrastructure/` owns the concrete ESLint module configs and runtime loading helpers.
+- `src/domain/` owns the public options and module taxonomy.
 
 ## Documentation
 

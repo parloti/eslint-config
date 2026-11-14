@@ -13,7 +13,6 @@ import type { BoundariesElementTypesRuleEntry } from "../../domain";
 
 /** Default repository element descriptors used by the boundaries plugin. */
 const elements: ElementDescriptors = [
-  { partialMatch: false, pattern: "**/src", type: "entrypoint" },
   { basePattern: "**/src", pattern: "bootstrap", type: "bootstrap" },
   { basePattern: "**/src", pattern: "presentation", type: "presentation" },
   { basePattern: "**/src", pattern: "infrastructure", type: "infrastructure" },
@@ -29,8 +28,21 @@ const elementTypes: BoundariesElementTypesRuleEntry = [
     default: "disallow",
     policies: [
       {
-        allow: { to: { element: { type: ["bootstrap"] } } },
-        from: { element: { type: "entrypoint" } },
+        allow: {
+          to: {
+            element: {
+              type: [
+                "bootstrap",
+                "presentation",
+                "infrastructure",
+                "application",
+                "domain",
+                "shared",
+              ],
+            },
+          },
+        },
+        from: { file: { categories: "entrypoint" } },
       },
       {
         allow: {
@@ -94,6 +106,9 @@ function boundaries(): Linter.Config[] {
   const settings: Settings = {
     ...strict.settings,
     "boundaries/elements": elements,
+    "boundaries/files": [
+      { category: "entrypoint", pattern: "**/src/index.ts" },
+    ],
   };
 
   const rules: Rules = {

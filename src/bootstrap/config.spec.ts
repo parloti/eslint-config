@@ -2,10 +2,11 @@ import type { Linter } from "eslint";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { ConfigOptions, moduleTaxonomy } from "../domain";
+import type { moduleTaxonomy } from "../domain";
+import type { ConfigOptions } from "./config";
 import type * as pluginLoadersModuleType from "./plugin-loaders";
 
-/** Plugin taxonomy fixture used by config-factory branch tests. */
+/** Plugin taxonomy fixture used by config composition tests. */
 const mockedModuleTaxonomy = [
   { pluginName: "eslint" },
   { pluginName: "typescript" },
@@ -24,7 +25,7 @@ function loadCoreConfig(pluginName: "eslint" | "typescript"): Linter.Config[] {
   return [{ name: `${pluginName}/core` }];
 }
 
-/** Plugin loader registry fixture consumed by config-factory. */
+/** Plugin loader registry fixture consumed by config composition. */
 const mockedPluginLoaders = {
   eslint: {
     loader: () => loadCoreConfig.bind(void 0, "eslint"),
@@ -40,7 +41,7 @@ const mockedPluginLoaders = {
 
 /**
  * Deterministic plugin-config loader result used by tests.
- * @param pluginName Plugin name passed through config-factory orchestration.
+ * @param pluginName Plugin name passed through config orchestration.
  * @returns Loaded plugin config array.
  * @example
  * ```typescript
@@ -51,7 +52,7 @@ function loadEnabledPluginConfig(pluginName: string): Promise<Linter.Config[]> {
   return Promise.resolve([{ name: `${pluginName}/loaded` }]);
 }
 
-describe("config-factory", () => {
+describe("config", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.restoreAllMocks();
@@ -71,19 +72,19 @@ describe("config-factory", () => {
         }) as unknown as typeof pluginLoadersModuleType,
     );
 
-    vi.doMock(import("./plugin-state"), () => {
+    vi.doMock(import("../infrastructure/plugin-state"), () => {
       return { isPluginEnabled: () => false };
     });
 
     const loadPluginConfigMock = vi.fn();
 
-    vi.doMock(import("./utilities"), () => {
+    vi.doMock(import("../infrastructure/utilities"), () => {
       return { loadPluginConfig: loadPluginConfigMock };
     });
 
     // Act
     const actualConfigs = await (async () => {
-      const { config } = await import("./config-factory");
+      const { config } = await import("./config");
 
       return config();
     })();
@@ -107,19 +108,19 @@ describe("config-factory", () => {
         }) as unknown as typeof pluginLoadersModuleType,
     );
 
-    vi.doMock(import("./plugin-state"), () => {
+    vi.doMock(import("../infrastructure/plugin-state"), () => {
       return {
         isPluginEnabled: (pluginName: string) => pluginName === "eslint",
       };
     });
 
-    vi.doMock(import("./utilities"), () => {
+    vi.doMock(import("../infrastructure/utilities"), () => {
       return { loadPluginConfig: vi.fn(loadEnabledPluginConfig) };
     });
 
     // Act
     const actualConfigs = await (async () => {
-      const { config } = await import("./config-factory");
+      const { config } = await import("./config");
 
       return config({ boundaries: {} } as unknown as ConfigOptions);
     })();
@@ -142,19 +143,19 @@ describe("config-factory", () => {
         }) as unknown as typeof pluginLoadersModuleType,
     );
 
-    vi.doMock(import("./plugin-state"), () => {
+    vi.doMock(import("../infrastructure/plugin-state"), () => {
       return {
         isPluginEnabled: (pluginName: string) => pluginName === "eslint",
       };
     });
 
-    vi.doMock(import("./utilities"), () => {
+    vi.doMock(import("../infrastructure/utilities"), () => {
       return { loadPluginConfig: vi.fn(loadEnabledPluginConfig) };
     });
 
     // Act
     const actualConfigs = await (async () => {
-      const { config } = await import("./config-factory");
+      const { config } = await import("./config");
 
       return config({
         scopedPlugins: [{ basePath: "packages/api", plugins: ["typescript"] }],
@@ -182,17 +183,17 @@ describe("config-factory", () => {
         }) as unknown as typeof pluginLoadersModuleType,
     );
 
-    vi.doMock(import("./plugin-state"), () => {
+    vi.doMock(import("../infrastructure/plugin-state"), () => {
       return { isPluginEnabled: () => false };
     });
 
-    vi.doMock(import("./utilities"), () => {
+    vi.doMock(import("../infrastructure/utilities"), () => {
       return { loadPluginConfig: vi.fn(loadEnabledPluginConfig) };
     });
 
     // Act
     const actualConfigs = await (async () => {
-      const { config } = await import("./config-factory");
+      const { config } = await import("./config");
 
       return config({
         scopedPlugins: [
