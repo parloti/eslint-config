@@ -7,7 +7,6 @@
 ## Interfaces
 
 - [ConfigOptions](interfaces/ConfigOptions.md)
-- [ScopedPluginConfig](interfaces/ScopedPluginConfig.md)
 
 ## Type Aliases
 
