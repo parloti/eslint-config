@@ -1,14 +1,15 @@
-export type {
-  BoundariesElementTypesRuleEntry,
-  ConfigOptions,
-  PluginName,
-  PluginStateOverrides,
-  ScopedPluginConfig,
-} from "../domain";
 export { boundaries, importX } from "./architecture";
-export { config } from "./config-factory";
-export { codeperfect, eslint, resolver, typescript } from "./core";
-export { comments, jsdoc } from "./docs";
+export { codeperfect, eslint, json, resolver, typescript } from "./core";
+export { comments, jsdoc, markdown } from "./docs";
+export { isPluginEnabled } from "./plugin-state";
+export { angularEslint } from "./runtime";
 export { rxjsX } from "./rxjs-x";
-export { perfectionist, prettier, stylistic, unicorn } from "./style";
+export {
+  packageJson,
+  perfectionist,
+  prettier,
+  stylistic,
+  unicorn,
+} from "./style";
 export { playwright, vitest, vitestE2e } from "./testing";
+export { loadPluginConfig } from "./utilities";

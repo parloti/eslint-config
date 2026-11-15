@@ -2,12 +2,26 @@ import type { Linter } from "eslint";
 
 import { defineConfig } from "eslint/config";
 
-import type { ConfigOptions, ScopedPluginConfig } from "../domain";
+import type {
+  PluginStateOverrides as DomainPluginStateOverrides,
+  ScopedPluginConfig,
+} from "../domain";
 
 import { moduleTaxonomy } from "../domain";
+import { isPluginEnabled, loadPluginConfig } from "../infrastructure";
 import { pluginLoaders } from "./plugin-loaders";
-import { isPluginEnabled } from "./plugin-state";
-import { loadPluginConfig } from "./utilities";
+
+/** Configuration options accepted by the public config factory. */
+export interface ConfigOptions {
+  /** Explicit plugin state overrides keyed by public plugin name. */
+  plugins?: PluginStateOverrides;
+
+  /** Package-scoped plugin profiles for monorepo configuration. */
+  scopedPlugins?: readonly ScopedPluginConfig[];
+}
+
+/** Plugin state overrides accepted by the public configuration factory. */
+export type PluginStateOverrides = DomainPluginStateOverrides;
 
 /**
  * Scopes config entries to a package base directory.

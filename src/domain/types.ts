@@ -14,15 +14,6 @@ type BoundariesElementTypesRuleEntry = [
 ];
 
 /** Type definition for rule data. */
-interface ConfigOptions {
-  /** Explicit plugin state overrides keyed by public plugin name. */
-  plugins?: PluginStateOverrides;
-
-  /** Package-scoped plugin profiles for monorepo configuration. */
-  scopedPlugins?: readonly ScopedPluginConfig[];
-}
-
-/** Type definition for rule data. */
 type CorePluginName =
   "codeperfect" | "eslint" | "json" | "resolver" | "typescript";
 
@@ -73,7 +64,6 @@ type TestingPluginName = "playwright" | "vitest" | "vitest-e2e";
 
 export type {
   BoundariesElementTypesRuleEntry,
-  ConfigOptions,
   DefaultDisabledPluginName,
   PluginName,
   PluginStateOverrides,

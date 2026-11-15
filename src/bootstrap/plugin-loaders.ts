@@ -1,20 +1,30 @@
 import type { Linter } from "eslint";
 
-import type { ConfigOptions, PluginName } from "../domain";
+import type { PluginName } from "../domain";
+import type { ConfigOptions } from "./config";
 
-import { boundaries, importX } from "./architecture";
-import { codeperfect, eslint, json, resolver, typescript } from "./core";
-import { comments, jsdoc, markdown } from "./docs";
-import { angularEslint } from "./runtime";
-import { rxjsX } from "./rxjs-x";
 import {
+  angularEslint,
+  boundaries,
+  codeperfect,
+  comments,
+  eslint,
+  importX,
+  jsdoc,
+  json,
+  markdown,
   packageJson,
   perfectionist,
+  playwright,
   prettier,
+  resolver,
+  rxjsX,
   stylistic,
+  typescript,
   unicorn,
-} from "./style";
-import { playwright, vitest, vitestE2e } from "./testing";
+  vitest,
+  vitestE2e,
+} from "../infrastructure";
 
 /** Loader function for a single config module. */
 type ConfigLoader = () => Linter.Config[] | Promise<Linter.Config[]>;

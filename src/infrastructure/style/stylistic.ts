@@ -21,7 +21,10 @@ export async function stylistic(): Promise<Linter.Config[]> {
     {
       files: stylisticFileGlobs,
       name: "stylistic/custom",
-      rules: { "@stylistic/multiline-comment-style": "off" },
+      rules: {
+        "@stylistic/list-style": "off",
+        "@stylistic/multiline-comment-style": "off",
+      },
     },
   );
 }

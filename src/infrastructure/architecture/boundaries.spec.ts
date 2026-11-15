@@ -1,5 +1,6 @@
 import type { Settings } from "eslint-plugin-boundaries";
 
+import { ESLint } from "eslint";
 import { describe, expect, it, vi } from "vitest";
 
 import type { BoundariesElementTypesRuleEntry } from "../../domain";
@@ -85,8 +86,21 @@ const expectedElementTypesRule: BoundariesElementTypesRuleEntry = [
     default: "disallow",
     policies: [
       {
-        allow: { to: { element: { type: ["bootstrap"] } } },
-        from: { element: { type: "entrypoint" } },
+        allow: {
+          to: {
+            element: {
+              type: [
+                "bootstrap",
+                "presentation",
+                "infrastructure",
+                "application",
+                "domain",
+                "shared",
+              ],
+            },
+          },
+        },
+        from: { file: { categories: "entrypoint" } },
       },
       {
         allow: {
@@ -151,10 +165,9 @@ describe("boundaries config", () => {
     expect(stderrSpy).not.toHaveBeenCalled();
   });
 
-  it("exposes fixed files, ignores, and seven-layer descriptors", () => {
+  it("exposes fixed files, ignores, and layer descriptors", () => {
     // Arrange
     const expectedTypes = [
-      "entrypoint",
       "bootstrap",
       "presentation",
       "infrastructure",
@@ -184,5 +197,71 @@ describe("boundaries config", () => {
 
     // Assert
     expect(actualDependenciesRule).toStrictEqual(expectedDependenciesRule);
+  });
+
+  it.each([
+    {
+      code: 'export * from "./bootstrap/index.ts";',
+      filePath: "tests/e2e/fixtures/src/index.ts",
+      ruleId: undefined,
+    },
+    {
+      code: 'export * from "./domain/index.ts";',
+      filePath: "tests/e2e/fixtures/src/index.ts",
+      ruleId: undefined,
+    },
+    {
+      code: 'export * from "../shared/index.ts";',
+      filePath: "tests/e2e/fixtures/src/domain/user.ts",
+      ruleId: undefined,
+    },
+    {
+      code: 'export * from "../domain/index.ts";',
+      filePath: "tests/e2e/fixtures/src/application/user-service.ts",
+      ruleId: undefined,
+    },
+    {
+      code: 'export * from "./user.ts";',
+      filePath: "tests/e2e/fixtures/src/domain/index.ts",
+      ruleId: undefined,
+    },
+    {
+      code: 'export * from "../bootstrap/index.ts";',
+      filePath: "tests/e2e/fixtures/src/domain/user.ts",
+      ruleId: "boundaries/dependencies",
+    },
+    {
+      code: 'export * from "../application/index.ts";',
+      filePath: "tests/e2e/fixtures/src/domain/index.ts",
+      ruleId: "boundaries/dependencies",
+    },
+    {
+      code: "export const component = 1;",
+      filePath: "tests/e2e/fixtures/src/app/pages/component.ts",
+      ruleId: "boundaries/no-unknown-files",
+    },
+    {
+      code: "export const app = 1;",
+      filePath: "tests/e2e/fixtures/src/app/index.ts",
+      ruleId: "boundaries/no-unknown-files",
+    },
+    {
+      code: "export const main = 1;",
+      filePath: "tests/e2e/fixtures/src/main.ts",
+      ruleId: "boundaries/no-unknown-files",
+    },
+  ])("checks $filePath importing $code", async ({ code, filePath, ruleId }) => {
+    // Arrange
+    const eslint = new ESLint({
+      overrideConfig: boundaries(),
+      overrideConfigFile: true,
+    });
+
+    // Act
+    const [result] = await eslint.lintText(code, { filePath });
+    const ruleIds = result?.messages.map((message) => message.ruleId);
+
+    // Assert
+    expect(ruleIds).toStrictEqual(ruleId === undefined ? [] : [ruleId]);
   });
 });
