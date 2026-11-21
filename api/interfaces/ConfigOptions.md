@@ -6,7 +6,7 @@
 
 # Interface: ConfigOptions
 
-Defined in: [config.ts:15](https://github.com/parloti/eslint-config/blob/8283671754129d40f9490693f22c834a5030cd4b/src/bootstrap/config.ts#L15)
+Defined in: [config.ts:15](https://github.com/parloti/eslint-config/blob/aeeddedfb0b8911f35d0136cc9f96f2223c928af/src/bootstrap/config.ts#L15)
 
 Configuration options accepted by the public config factory.
 
@@ -16,7 +16,7 @@ Configuration options accepted by the public config factory.
 
 > `optional` **plugins?**: `Partial`\<`Record`\<`DefaultDisabledPluginName`, `true`\> & `Record`\<`DefaultEnabledPluginName`, `false`\>\>
 
-Defined in: [config.ts:17](https://github.com/parloti/eslint-config/blob/8283671754129d40f9490693f22c834a5030cd4b/src/bootstrap/config.ts#L17)
+Defined in: [config.ts:17](https://github.com/parloti/eslint-config/blob/aeeddedfb0b8911f35d0136cc9f96f2223c928af/src/bootstrap/config.ts#L17)
 
 Explicit plugin state overrides keyed by public plugin name.
 
@@ -26,6 +26,6 @@ Explicit plugin state overrides keyed by public plugin name.
 
 > `optional` **scopedPlugins?**: readonly `ScopedPluginConfig`[]
 
-Defined in: [config.ts:20](https://github.com/parloti/eslint-config/blob/8283671754129d40f9490693f22c834a5030cd4b/src/bootstrap/config.ts#L20)
+Defined in: [config.ts:20](https://github.com/parloti/eslint-config/blob/aeeddedfb0b8911f35d0136cc9f96f2223c928af/src/bootstrap/config.ts#L20)
 
 Package-scoped plugin profiles for monorepo configuration.

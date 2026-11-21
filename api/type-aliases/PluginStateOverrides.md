@@ -8,6 +8,6 @@
 
 > **PluginStateOverrides** = `DomainPluginStateOverrides`
 
-Defined in: [config.ts:24](https://github.com/parloti/eslint-config/blob/8283671754129d40f9490693f22c834a5030cd4b/src/bootstrap/config.ts#L24)
+Defined in: [config.ts:24](https://github.com/parloti/eslint-config/blob/aeeddedfb0b8911f35d0136cc9f96f2223c928af/src/bootstrap/config.ts#L24)
 
 Plugin state overrides accepted by the public configuration factory.
