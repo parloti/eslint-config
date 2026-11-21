@@ -1,7 +1,8 @@
 import { ESLint } from "eslint";
 import { describe, expect, it } from "vitest";
 
-import { config } from "../../src";
+import { config } from "#root";
+
 import { lintFixtureCode, lintFixtureFiles } from "./helpers";
 
 describe("eslint end-to-end", () => {

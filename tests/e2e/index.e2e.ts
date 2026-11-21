@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
-import type { ConfigOptions } from "../../src";
+import type { ConfigOptions } from "#root";
 
-import { config } from "../../src";
+import { config } from "#root";
+
 import {
   collectConfigNames,
   hasJsonRecommendedRules,
@@ -131,7 +132,7 @@ describe("config factory end-to-end", () => {
     vi.doMock(import("angular-eslint"), () => {
       throw new Error("Simulated optional plugin load failure");
     });
-    const { config: actualConfig } = await import("../../src");
+    const { config: actualConfig } = await import("#root");
 
     // Act
     const { result: actualFlatConfigs, stderrOutput: actualStderrOutput } =

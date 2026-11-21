@@ -4,7 +4,7 @@ import type { MockInstance } from "vitest";
 import { ESLint } from "eslint";
 import { vi } from "vitest";
 
-import { config } from "../../src";
+import { config } from "#root";
 
 /** Lint options shared by every end-to-end lint run. */
 const lintOptions = { cwd: process.cwd() } as const;

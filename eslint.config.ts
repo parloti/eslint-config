@@ -1,6 +1,6 @@
 import { defineConfig } from "eslint/config";
 
-import { config } from "./src";
+import { config } from "#root";
 
 /** CodePerfect ESLint configuration. */
 const codePerfect = await config({
